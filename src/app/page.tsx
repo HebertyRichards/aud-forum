@@ -170,7 +170,7 @@ export default function ForumHome() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3 space-y-4">
@@ -228,7 +228,6 @@ export default function ForumHome() {
                 </div>
               </CardContent>
             </Card>
-            {/* Recent Posts */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
@@ -291,10 +290,7 @@ export default function ForumHome() {
               </CardContent>
             </Card>
           </div>
-
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Stats */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Estatísticas</CardTitle>
@@ -321,8 +317,6 @@ export default function ForumHome() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Online Users */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
@@ -360,8 +354,6 @@ export default function ForumHome() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Quick Links */}
             <Card>
               <CardHeader>
                 <CardTitle>Links Rápidos</CardTitle>

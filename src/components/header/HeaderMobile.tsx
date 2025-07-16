@@ -20,7 +20,7 @@ export function HeaderMobile() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">A</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Auditore</h1>
+            <h1 className="text-2xl font-bold">Auditore</h1>
             <Badge variant="secondary">Família</Badge>
           </div>
           <button
