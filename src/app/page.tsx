@@ -4,8 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ForumTopicRow } from "@/components/ForumTopicRow";
+import {
   MessageSquare,
+  Annoyed,
+  FileText,
+  Download,
   Users,
+  MessagesSquare,
+  Pencil,
+  Bell,
   Eye,
   Clock,
   Pin,
@@ -13,89 +26,113 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-export default function ForumHome() {
-  const categories = [
-    {
-      id: 1,
-      name: "Avisos da Liderança",
-      description: "Comunicados importantes da liderança da família",
-      posts: 23,
-      topics: 8,
-      lastPost: {
-        title: "Novas regras internas - Leiam todos!",
-        author: "Don_Auditore",
-        time: "1 hora atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-      isPinned: true,
-    },
-    {
-      id: 2,
-      name: "Discussões Gerais",
-      description: "Conversas gerais entre os membros da família",
-      posts: 456,
-      topics: 67,
-      lastPost: {
-        title: "Melhor estratégia para territórios",
-        author: "Soldado_Marco",
-        time: "30 min atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    },
-    {
-      id: 3,
-      name: "Membros",
-      description: "Apresentações, promoções e assuntos dos membros",
-      posts: 234,
-      topics: 45,
-      lastPost: {
-        title: "Apresentação - Novo na família",
-        author: "Recruta_João",
-        time: "2 horas atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    },
-    {
-      id: 4,
-      name: "Eventos & Atividades",
-      description: "Eventos da família e atividades em grupo",
-      posts: 189,
-      topics: 34,
-      lastPost: {
-        title: "Guerra marcada para hoje às 21h",
-        author: "Capitão_Silva",
-        time: "45 min atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    },
-    {
-      id: 5,
-      name: "Galeria",
-      description: "Screenshots e vídeos dos membros",
-      posts: 123,
-      topics: 28,
-      lastPost: {
-        title: "Fotos da última guerra",
-        author: "Fotografo_Luis",
-        time: "3 horas atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    },
-    {
-      id: 6,
-      name: "Suporte & Dúvidas",
-      description: "Ajuda e esclarecimento de dúvidas",
-      posts: 67,
-      topics: 19,
-      lastPost: {
-        title: "Como usar o sistema de ranks?",
-        author: "Novato_Pedro",
-        time: "4 horas atrás",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    },
-  ];
+type Topic = {
+  id: number;
+  icon: typeof MessageSquare;
+  title: string;
+  lastPostInfo: string;
+  author: string;
+  authorColorClass: string;
+  postCount: number;
+  hasInfoIcon?: boolean;
+};
 
+type Category = {
+  id: string;
+  title: string;
+  topics: Topic[];
+};
+
+// se for membro da family ou autorizado pelo dono aparece area oculta
+const forumData: Category[] = [
+  {
+    id: "area-oculta",
+    title: "Área Oculta",
+    topics: [
+      {
+        id: 1,
+        icon: Annoyed,
+        title: "Regras",
+        lastPostInfo: "Qui 15 Ago 2021 - 15:09",
+        author: "Admin_Auditore--",
+        authorColorClass: "text-red-600",
+        postCount: 2,
+        hasInfoIcon: true,
+      },
+    ],
+  },
+  {
+    id: "auditore",
+    title: "Auditore",
+    topics: [
+      {
+        id: 1,
+        icon: Bell,
+        title: "Atualizações",
+        lastPostInfo: "Qua 1 Dez 2021 - 20:11",
+        author: "xMatheus_Auditore--",
+        authorColorClass: "text-blue-600",
+        postCount: 37,
+      },
+      {
+        id: 2,
+        icon: Pencil,
+        title: "Inscreva-se",
+        lastPostInfo: "Qui 19 Out 2023 - 7:25",
+        author: "insyne--",
+        authorColorClass: "text-purple-600",
+        postCount: 176,
+        hasInfoIcon: true,
+      },
+    ],
+  },
+  {
+    id: "info-gerais",
+    title: "Informações Gerais",
+    topics: [
+      {
+        id: 1,
+        icon: Users,
+        title: "Membros",
+        lastPostInfo: "Qua 25 Maio 2020 - 12:48",
+        author: "Admin_Auditore--",
+        authorColorClass: "text-red-600",
+        postCount: 1,
+        hasInfoIcon: true,
+      },
+      {
+        id: 2,
+        icon: MessagesSquare,
+        title: "Discussões Gerais",
+        lastPostInfo: "Seg 25 Maio 2020 - 15:13",
+        author: "EMKz--",
+        authorColorClass: "text-green-600",
+        postCount: 1,
+        hasInfoIcon: true,
+      },
+      {
+        id: 3,
+        icon: FileText,
+        title: "Manuais",
+        lastPostInfo: "Dom 23 Maio 2021 - 23:25",
+        author: "Member_Auditore--",
+        authorColorClass: "text-cyan-600",
+        postCount: 37,
+      },
+      {
+        id: 4,
+        icon: Download,
+        title: "Downloads",
+        lastPostInfo: "",
+        author: "",
+        authorColorClass: "",
+        postCount: 0,
+      },
+    ],
+  },
+];
+
+export default function ForumHome() {
   const recentPosts = [
     {
       id: 1,
@@ -170,125 +207,109 @@ export default function ForumHome() {
   ];
 
   return (
-    <div className="min-h-screen dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3 space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <MessageSquare className="w-5 h-5" />
-                  <span>Categorias do Fórum</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y">
-                  {categories.map((category) => (
-                    <div key={category.id} className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h3 className="font-semibold">{category.name}</h3>
-                            {category.isPinned && (
-                              <Pin className="w-4 h-4 text-blue-500" />
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">
-                            {category.description}
-                          </p>
-                          <div className="flex items-center space-x-4 text-xs text-gray-500">
-                            <span>{category.topics} tópicos</span>
-                            <span>{category.posts} posts</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-3 ml-4">
-                          <div className="text-right">
-                            <div className="text-sm font-medium">
-                              {category.lastPost.title}
+            <main className="p-4 sm:p-6 md:p-8">
+              <div className="w-full max-w-5xl mx-auto">
+                <Accordion
+                  type="multiple"
+                  defaultValue={["auditore", "info-gerais", "area-oculta"]}
+                  className="space-y-6"
+                >
+                  {forumData.map((category) => (
+                    <AccordionItem
+                      key={category.id}
+                      value={category.id}
+                      className="border-none"
+                    >
+                      <Card className="rounded-md shadow-md overflow-hidden">
+                        <AccordionTrigger className="bg-blue-600 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full">
+                          {category.title}
+                        </AccordionTrigger>
+                        <AccordionContent className="p-0 divide-y divide-border rounded-b-md">
+                          {category.topics.length > 0 ? (
+                            category.topics.map((topic) => (
+                              <ForumTopicRow key={topic.id} {...topic} />
+                            ))
+                          ) : (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                              Nenhum tópico nesta seção.
                             </div>
-                            <div className="text-xs text-gray-500">
-                              por {category.lastPost.author} •{" "}
-                              {category.lastPost.time}
-                            </div>
-                          </div>
-                          <Avatar className="w-8 h-8">
+                          )}
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            </main>
+            <div className="p-4 sm:p-6 md:p-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5" />
+                    <span>Últimas Publicações</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="divide-y">
+                    {recentPosts.map((post) => (
+                      <div key={post.id} className="p-4">
+                        <div className="flex items-start space-x-3">
+                          <Avatar className="w-10 h-10">
                             <AvatarImage
-                              src={
-                                category.lastPost.avatar || "/placeholder.svg"
-                              }
+                              src={post.avatar || "/placeholder.svg"}
                             />
-                            <AvatarFallback>
-                              {category.lastPost.author[0]}
-                            </AvatarFallback>
+                            <AvatarFallback>{post.author[0]}</AvatarFallback>
                           </Avatar>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5" />
-                  <span>Últimas Publicações</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y">
-                  {recentPosts.map((post) => (
-                    <div key={post.id} className="p-4">
-                      <div className="flex items-start space-x-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage
-                            src={post.avatar || "/placeholder.svg"}
-                          />
-                          <AvatarFallback>{post.author[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-medium truncate">
-                              {post.title}
-                            </h4>
-                            {post.isPinned && (
-                              <Pin className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                            )}
-                            {post.isHot && (
-                              <Star className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <span>
-                              por{" "}
-                              <span className="font-medium">{post.author}</span>
-                            </span>
-                            <span>
-                              em{" "}
-                              <span className="font-medium">
-                                {post.category}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h4 className="font-medium truncate">
+                                {post.title}
+                              </h4>
+                              {post.isPinned && (
+                                <Pin className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                              )}
+                              {post.isHot && (
+                                <Star className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="flex items-center space-x-4 text-sm text-gray-500">
+                              <span>
+                                por{" "}
+                                <span className="font-medium">
+                                  {post.author}
+                                </span>
                               </span>
-                            </span>
-                            <div className="flex items-center space-x-1">
-                              <MessageSquare className="w-4 h-4" />
-                              <span>{post.replies}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Eye className="w-4 h-4" />
-                              <span>{post.views}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{post.time}</span>
+                              <span>
+                                em{" "}
+                                <span className="font-medium">
+                                  {post.category}
+                                </span>
+                              </span>
+                              <div className="flex items-center space-x-1">
+                                <MessageSquare className="w-4 h-4" />
+                                <span>{post.replies}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Eye className="w-4 h-4" />
+                                <span>{post.views}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Clock className="w-4 h-4" />
+                                <span>{post.time}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
           <div className="space-y-6">
             <Card>

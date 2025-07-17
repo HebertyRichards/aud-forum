@@ -25,14 +25,21 @@ export function HeaderDestkop() {
             <Link href="/" className="text-gray-600 hover:text-gray-900">
               Início
             </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Fórum
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
+            <Link href="/membros" className="text-gray-600 hover:text-gray-900">
               Membros
             </Link>
+            <Link
+              href="/inscreva-se"
+              className="text-gray-600 hover:text-gray-900"
+            >
+              Inscreva-se
+            </Link>
+            {/* se estiver logado aparece regras e for membro / dono*/}
             <Link href="#" className="text-gray-600 hover:text-gray-900">
               Regras
+            </Link>
+            <Link href="#" className="text-gray-600 hover:text-gray-900">
+              Downloads
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
