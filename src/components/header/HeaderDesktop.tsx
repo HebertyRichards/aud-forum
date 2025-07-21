@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -7,7 +5,7 @@ import { ModeToggle } from "../ModeToggle";
 
 export function HeaderDestkop() {
   return (
-    <header className="border-b shadow-sm">
+    <header className="border-b shadow-sm bg-white dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
@@ -22,24 +20,36 @@ export function HeaderDestkop() {
             </div>
           </div>
           <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="text-gray-600 hover:text-gray-900">
+            <Link
+              href="/"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
+            >
               Início
             </Link>
-            <Link href="/membros" className="text-gray-600 hover:text-gray-900">
+            <Link
+              href="/membros"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
+            >
               Membros
             </Link>
             <Link
               href="/inscreva-se"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
             >
               Inscreva-se
             </Link>
-            {/* se estiver logado aparece regras e for membro / dono*/}
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Regras
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
+            <Link
+              href="#"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
+            >
               Downloads
+            </Link>
+            {/* se estiver logado aparece regras e for membro / dono*/}
+            <Link
+              href="#"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
+            >
+              Regras
             </Link>
           </nav>
           <div className="flex items-center space-x-3">

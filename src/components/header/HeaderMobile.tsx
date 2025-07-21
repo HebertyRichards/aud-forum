@@ -1,9 +1,8 @@
-"use client"; // Necessário se estiver usando Next.js 13+ (App Router)
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "../ModeToggle";
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,26 +22,29 @@ export function HeaderMobile() {
             <h1 className="text-2xl font-bold">Auditore</h1>
             <Badge variant="secondary">Família</Badge>
           </div>
-          <button
-            onClick={openNav}
-            className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
-            aria-label="Abrir menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
+          <div className="flex items-center space-x-2">
+            <ModeToggle />
+            <button
+              onClick={openNav}
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 cursor-pointer dark:text-gray-300 dark:hover:bg-gray-700"
+              aria-label="Abrir menu"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       {isMenuOpen && (
@@ -50,25 +52,32 @@ export function HeaderMobile() {
           <div className="px-2 pt-2 pb-4 space-y-2">
             <Link
               href="/"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
             >
               Início
             </Link>
             <Link
-              href="#"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
-            >
-              Fórum
-            </Link>
-            <Link
-              href="#"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+              href="/membros"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
             >
               Membros
             </Link>
             <Link
-              href="#"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+              href="/inscreva-se"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+            >
+              Inscreva-se
+            </Link>
+            <Link
+              href="/downloads"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+            >
+              Downloads
+            </Link>
+            {/* se estiver logado aparece regras e for membro / dono*/}
+            <Link
+              href="/regras"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
             >
               Regras
             </Link>
@@ -77,7 +86,6 @@ export function HeaderMobile() {
               <Button variant="outline" className="w-full">
                 Registar
               </Button>
-              <Button className="w-full">Registrar</Button>
             </div>
           </div>
         </div>

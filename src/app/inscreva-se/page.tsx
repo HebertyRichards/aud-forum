@@ -25,25 +25,25 @@ export default function Subscribe() {
         <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           <span>Família Auditore</span> › <span>Inscreva-se</span>
         </div>
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2 justify-between items-center mb-4">
+          <div className="flex flex-wrap gap-2">
             <Button variant="ghost" size="sm">
               <MessageSquare className="w-4 h-4 mr-2" />
               Novas mensagens
             </Button>
             <Button variant="ghost" size="sm">
               <Search className="w-4 h-4 mr-2" />
-              Encontrar as minhas mensagens
+              Minhas mensagens
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
               Tópicos sem resposta
             </Button>
           </div>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="hidden md:inline-flex">
             Marcar todos os fóruns como lidos
           </Button>
         </div>
-        <Card className="mb-6 p-0">
+        <Card className="mb-6 p-0 bg-white dark:bg-gray-800 shadow-md">
           <CardHeader className="bg-blue-600 text-white rounded-t-lg p-4">
             <CardTitle className="text-lg font-semibold flex justify-between items-center">
               <span>Inscreva-se</span>
@@ -71,37 +71,38 @@ export default function Subscribe() {
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
           <div className="flex items-center space-x-2">
             <Pencil className="w-5 h-5" />
             <span className="text-sm">Marcar todos os tópicos como lidos</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="relative w-48">
+            <div className="relative w-full sm:w-48">
               <Input type="text" placeholder="Procurar" className="pr-10" />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-blue-600 hover:bg-blue-700 whitespace-nowrap">
               <PlusCircle className="w-4 h-4 mr-2" />
               Novo tópico
             </Button>
           </div>
         </div>
-        <Card>
+        <Card className="mb-6 bg-white dark:bg-gray-800 shadow-md">
           <CardContent className="p-0">
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="p-4 flex items-start space-x-4 border-b last:border-b-0"
+                className="p-4 flex flex-col sm:flex-row items-start sm:space-x-4 border-b last:border-b-0"
               >
-                <Avatar className="w-20 h-20 rounded-md">
+                <Avatar className="w-20 h-20 rounded-md mb-4 sm:mb-0 flex-shrink-0">
                   <AvatarImage src={post.authorAvatar} />
                   <AvatarFallback className="rounded-md">
                     {post.author.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg text-blue-500 mb-1">
+                <div className="flex-1 min-w-0">
+                  {" "}
+                  <h3 className="font-bold text-lg text-blue-500 mb-1 break-words">
                     {post.title}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -119,27 +120,31 @@ export default function Subscribe() {
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col items-end space-y-2 text-sm">
+                <div className="flex flex-row sm:flex-col items-start sm:items-end gap-x-4 sm:gap-x-0 sm:space-y-2 text-sm mt-4 sm:mt-0 w-full sm:w-auto justify-between">
                   <div className="flex items-center space-x-2">
                     <MessageSquare className="w-4 h-4" />
-                    <span>{post.messages} Mensagens</span>
+                    <span className="whitespace-nowrap">
+                      {post.messages} Mensagens
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Eye className="w-4 h-4" />
-                    <span>{post.views} Visualizações</span>
+                    <span className="whitespace-nowrap">
+                      {post.views} Visualizações
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </CardContent>
         </Card>
-        <div className="flex justify-between items-center mt-4 text-sm">
-          <div className="flex items-center space-x-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-stretch sm:items-center gap-4 mt-4 text-sm">
+          <div className="flex flex-wrap gap-2">
             <Button variant="ghost" size="sm">
               Seguir este fórum
             </Button>
             <Button variant="ghost" size="sm">
-              Marcar todos os tópicos como lidos
+              Marcar lidos
             </Button>
             <Button variant="ghost" size="sm">
               Selecionar
@@ -154,7 +159,7 @@ export default function Subscribe() {
             <Input
               type="text"
               placeholder="Selecionar um fórum"
-              className="w-48"
+              className="w-full sm:w-48"
             />
             <Button variant="secondary">Ir</Button>
           </div>

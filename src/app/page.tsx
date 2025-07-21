@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -23,7 +22,7 @@ import {
   Clock,
   Pin,
   Star,
-  TrendingUp,
+  Album,
 } from "lucide-react";
 
 type Topic = {
@@ -79,6 +78,16 @@ const forumData: Category[] = [
         icon: Pencil,
         title: "Inscreva-se",
         lastPostInfo: "Qui 19 Out 2023 - 7:25",
+        author: "insyne--",
+        authorColorClass: "text-purple-600",
+        postCount: 176,
+        hasInfoIcon: true,
+      },
+      {
+        id: 3,
+        icon: Album,
+        title: "Sobre",
+        lastPostInfo: "Qui 20 Out 2023 - 7:30",
         author: "insyne--",
         authorColorClass: "text-purple-600",
         postCount: 176,
@@ -207,214 +216,163 @@ export default function ForumHome() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3 space-y-4">
-            <main className="p-4 sm:p-6 md:p-8">
-              <div className="w-full max-w-5xl mx-auto">
-                <Accordion
-                  type="multiple"
-                  defaultValue={["auditore", "info-gerais", "area-oculta"]}
-                  className="space-y-6"
-                >
-                  {forumData.map((category) => (
-                    <AccordionItem
-                      key={category.id}
-                      value={category.id}
-                      className="border-none"
-                    >
-                      <Card className="rounded-md shadow-md overflow-hidden">
-                        <AccordionTrigger className="bg-blue-600 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full">
-                          {category.title}
-                        </AccordionTrigger>
-                        <AccordionContent className="p-0 divide-y divide-border rounded-b-md">
-                          {category.topics.length > 0 ? (
-                            category.topics.map((topic) => (
-                              <ForumTopicRow key={topic.id} {...topic} />
-                            ))
-                          ) : (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
-                              Nenhum tópico nesta seção.
-                            </div>
-                          )}
-                        </AccordionContent>
-                      </Card>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            </main>
-            <div className="p-4 sm:p-6 md:p-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <TrendingUp className="w-5 h-5" />
-                    <span>Últimas Publicações</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="divide-y">
-                    {recentPosts.map((post) => (
-                      <div key={post.id} className="p-4">
-                        <div className="flex items-start space-x-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage
-                              src={post.avatar || "/placeholder.svg"}
-                            />
-                            <AvatarFallback>{post.author[0]}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <h4 className="font-medium truncate">
-                                {post.title}
-                              </h4>
-                              {post.isPinned && (
-                                <Pin className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                              )}
-                              {post.isHot && (
-                                <Star className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                              )}
-                            </div>
-                            <div className="flex items-center space-x-4 text-sm text-gray-500">
-                              <span>
-                                por{" "}
-                                <span className="font-medium">
-                                  {post.author}
-                                </span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3 space-y-4">
+          <main className="px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8">
+            <div className="w-full max-w-5xl mx-auto">
+              <Accordion
+                type="multiple"
+                defaultValue={["auditore", "info-gerais", "area-oculta"]}
+                className="space-y-6"
+              >
+                {forumData.map((category) => (
+                  <AccordionItem
+                    key={category.id}
+                    value={category.id}
+                    className="border-none rounded-md overflow-hidden shadow-md"
+                  >
+                    <AccordionTrigger className="bg-blue-600 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full">
+                      {category.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="p-0 divide-y divide-border bg-white dark:bg-gray-800">
+                      {category.topics.length > 0 ? (
+                        category.topics.map((topic) => (
+                          <ForumTopicRow key={topic.id} {...topic} />
+                        ))
+                      ) : (
+                        <div className="p-4 text-center text-sm text-muted-foreground">
+                          Nenhum tópico nesta seção.
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </main>
+          <div className="p-4 sm:p-6 md:p-8">
+            <Card className="bg-white dark:bg-gray-800">
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {recentPosts.map((post) => (
+                    <div key={post.id} className="p-4">
+                      <div className="flex items-start space-x-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarImage
+                            src={post.avatar || "/placeholder.svg"}
+                          />
+                          <AvatarFallback>{post.author[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-medium truncate hover:underline cursor-pointer">
+                              {post.title}
+                            </h4>
+                            {post.isPinned && (
+                              <Pin className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                            )}
+                            {post.isHot && (
+                              <Star className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                            )}
+                          </div>
+                          <div className="hidden sm:flex items-center space-x-4 text-sm text-gray-500">
+                            <span>
+                              por{" "}
+                              <span className="font-medium">{post.author}</span>
+                            </span>
+                            <span>
+                              em{" "}
+                              <span className="font-medium">
+                                {post.category}
                               </span>
-                              <span>
-                                em{" "}
-                                <span className="font-medium">
-                                  {post.category}
-                                </span>
-                              </span>
-                              <div className="flex items-center space-x-1">
-                                <MessageSquare className="w-4 h-4" />
-                                <span>{post.replies}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Eye className="w-4 h-4" />
-                                <span>{post.views}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Clock className="w-4 h-4" />
-                                <span>{post.time}</span>
-                              </div>
+                            </span>
+                            <div className="flex items-center space-x-1">
+                              <MessageSquare className="w-4 h-4" />
+                              <span>{post.replies}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Eye className="w-4 h-4" />
+                              <span>{post.views}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Clock className="w-4 h-4" />
+                              <span>{post.time}</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Estatísticas</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Membros Ativos</span>
-                  <span className="font-semibold">47</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Posts Totais</span>
-                  <span className="font-semibold">1,234</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Tópicos Totais</span>
-                  <span className="font-semibold">201</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Novo Membro</span>
-                  <span className="font-semibold text-blue-600">
-                    Recruta_João
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Users className="w-5 h-5" />
-                  <span>Usuários Online</span>
-                  <Badge variant="secondary" className="ml-auto">
-                    5
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {onlineUsers.map((user, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div className="relative">
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage
-                            src={user.avatar || "/placeholder.svg"}
-                          />
-                          <AvatarFallback className="text-xs">
-                            {user.name[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div
-                          className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                            user.status === "online"
-                              ? "bg-green-500"
-                              : "bg-yellow-500"
-                          }`}
-                        ></div>
-                      </div>
-                      <span className="text-sm font-medium">{user.name}</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Links Rápidos</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  size="sm"
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Criar Novo Tópico
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  size="sm"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Lista de Membros
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  size="sm"
-                >
-                  <Star className="w-4 h-4 mr-2" />
-                  Posts em Destaque
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  size="sm"
-                >
-                  <Clock className="w-4 h-4 mr-2" />
-                  Atividade Recente
-                </Button>
-              </CardContent>
-            </Card>
           </div>
+        </div>
+        <div className="space-y-6">
+          <Card className="bg-white dark:bg-gray-800">
+            <CardHeader>
+              <CardTitle className="text-lg">Estatísticas</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Membros Ativos</span>
+                <span className="font-semibold">47</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Posts Totais</span>
+                <span className="font-semibold">1,234</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Tópicos Totais</span>
+                <span className="font-semibold">201</span>
+              </div>
+              <Separator />
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Novo Membro</span>
+                <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
+                  Recruta_João
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white dark:bg-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="w-5 h-5" />
+                <span>Usuários Online</span>
+                <Badge variant="secondary" className="ml-auto">
+                  5
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {onlineUsers.map((user, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className="relative">
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={user.avatar || "/placeholder.svg"} />
+                        <AvatarFallback className="text-xs">
+                          {user.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div
+                        className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                          user.status === "online"
+                            ? "bg-green-500"
+                            : "bg-yellow-500"
+                        }`}
+                      ></div>
+                    </div>
+                    <span className="text-sm font-medium hover:underline cursor-pointer">
+                      {user.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

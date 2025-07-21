@@ -34,9 +34,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          {children}
-          <Footer />
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <Header />
+            {children}
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>
