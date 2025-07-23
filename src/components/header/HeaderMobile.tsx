@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
 
 export function HeaderMobile() {
@@ -57,13 +57,13 @@ export function HeaderMobile() {
               Início
             </Link>
             <Link
-              href="/membros"
+              href="/members-list"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
             >
               Membros
             </Link>
             <Link
-              href="/inscreva-se"
+              href="/subscribe"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
             >
               Inscreva-se
@@ -83,9 +83,16 @@ export function HeaderMobile() {
             </Link>
             <hr className="my-2" />
             <div className="flex items-center space-x-2 px-3">
-              <Button variant="outline" className="w-full">
-                Registar
-              </Button>
+              <Link
+                href="/login"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Entrar
+              </Link>
+
+              <Link href="/register" className={buttonVariants({ size: "sm" })}>
+                Registrar
+              </Link>
             </div>
           </div>
         </div>

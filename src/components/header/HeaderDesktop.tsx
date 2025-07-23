@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import { ModeToggle } from "../ModeToggle";
 
 export function HeaderDestkop() {
@@ -27,19 +27,19 @@ export function HeaderDestkop() {
               Início
             </Link>
             <Link
-              href="/membros"
+              href="/members-list"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
             >
               Membros
             </Link>
             <Link
-              href="/inscreva-se"
+              href="/subscribe"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
             >
               Inscreva-se
             </Link>
             <Link
-              href="#"
+              href="/downalods"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
             >
               Downloads
@@ -53,10 +53,16 @@ export function HeaderDestkop() {
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">
+            <Link
+              href="/login"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
               Entrar
-            </Button>
-            <Button size="sm">Registrar</Button>
+            </Link>
+
+            <Link href="/register" className={buttonVariants({ size: "sm" })}>
+              Registrar
+            </Link>
             <ModeToggle />
           </div>
         </div>

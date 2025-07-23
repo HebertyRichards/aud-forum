@@ -23,6 +23,7 @@ import {
   Pin,
   Star,
   Album,
+  TrendingUp,
 } from "lucide-react";
 
 type Topic = {
@@ -253,6 +254,12 @@ export default function ForumHome() {
           </main>
           <div className="p-4 sm:p-6 md:p-8">
             <Card className="bg-white dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <TrendingUp className="w-5 h-5" />
+                  <span>Últimas Publicações</span>
+                </CardTitle>
+              </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y">
                   {recentPosts.map((post) => (
