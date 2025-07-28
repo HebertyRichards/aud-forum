@@ -3,6 +3,7 @@ import { Header } from "@/components/header/Header";
 import Footer from "../components/Footer";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/services/auth";
 
 export const metadata: Metadata = {
   title: "Auditore Family",
@@ -36,7 +37,7 @@ export default function RootLayout({
         >
           <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <Header />
-            {children}
+            <AuthProvider>{children}</AuthProvider>
             <Footer />
           </div>
         </ThemeProvider>

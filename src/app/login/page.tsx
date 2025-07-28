@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/services/auth";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,12 +18,34 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 
 export default function Login() {
-  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const auth = useAuth();
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      setError("Erro de autenticação. Tente recarregar a página.");
+      return;
+    }
+    if (!email || !password) {
+      setError("Por favor, preencha todos os campos.");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    try {
+      await auth.login(email, password, keepLoggedIn);
+      router.push("/");
+    } catch (err: any) {
+      setError(err.message || "Ocorreu um erro inesperado.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,25 +63,25 @@ export default function Login() {
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  id="name"
-                  type="text"
-                  value={user}
-                  onChange={(e) => setUser(e.target.value)}
-                  autoComplete="username"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   autoFocus
-                  placeholder="Digite o seu nick"
+                  placeholder="seu@email.com"
                   required
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
+                  <Label htmlFor="password">Senha</Label>
+                  <Link
                     href="/recovery-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Esqueceu a senha?
-                  </a>
+                  </Link>
                 </div>
                 <Input
                   id="password"
@@ -81,10 +105,13 @@ export default function Login() {
                   Mantenha-me conectado
                 </Label>
               </div>
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
+              )}
             </div>
             <CardFooter className="flex flex-col gap-4 pt-6 px-0 pb-0">
-              <Button type="submit" className="w-full cursor-pointer">
-                Entrar
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Entrando..." : "Entrar"}
               </Button>
               <Button variant="link" asChild>
                 <Link href="/register">Não tem uma conta? Registre-se</Link>

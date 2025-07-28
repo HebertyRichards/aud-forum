@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/services/auth";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,9 +20,40 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const auth = useAuth();
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      console.error("Erro de autenticação. Contexto não disponível.");
+      return;
+    }
+
+    if (!username || !email || !password) {
+      console.error("Tentativa de registro com campos vazios.");
+      return;
+    }
+
+    setSuccess(null);
+    setLoading(true);
+
+    try {
+      await auth.register(username, email, password);
+      setSuccess("Conta criada com sucesso! Redirecionando para o login...");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    } catch (error: any) {
+      console.error(
+        "Falha no registro:",
+        error.message || "Ocorreu um erro ao criar a conta."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,6 +79,8 @@ export default function Register() {
                   placeholder="Digite seu nome de usuário"
                   required
                 />
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -58,9 +93,7 @@ export default function Register() {
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Senha</Label>
-                </div>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   type="password"
@@ -69,12 +102,17 @@ export default function Register() {
                   required
                 />
               </div>
+              {success && (
+                <p className="text-sm text-green-500 text-center">{success}</p>
+              )}
             </div>
             <CardFooter className="flex flex-col gap-4 pt-6 px-0 pb-0">
-              <Button type="submit" className="w-full cursor-pointer">
-                Criar Conta
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Criando conta..." : "Criar Conta"}
               </Button>
-              <Link href="/login">Já tem uma conta? Faça login</Link>
+              <Button variant="link" asChild>
+                <Link href="/login">Já tem uma conta? Faça login</Link>
+              </Button>
             </CardFooter>
           </form>
         </CardContent>
