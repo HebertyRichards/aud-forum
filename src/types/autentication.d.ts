@@ -6,3 +6,6 @@ interface AuthContextType {
     logout: () => Promise<void>;
   }
   
+  interface UserWithProfile extends User {
+    username?: string;
+  }
