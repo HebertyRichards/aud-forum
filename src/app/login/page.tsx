@@ -41,8 +41,12 @@ export default function Login() {
     try {
       await auth.login(email, password, keepLoggedIn);
       router.push("/");
-    } catch (err: any) {
-      setError(err.message || "Ocorreu um erro inesperado.");
+    } catch (error: unknown) { 
+      let errorMessage = "Ocorreu um erro inesperado.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
