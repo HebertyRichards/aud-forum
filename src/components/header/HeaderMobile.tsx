@@ -11,6 +11,10 @@ export function HeaderMobile() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeNav = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,24 +57,28 @@ export function HeaderMobile() {
             <Link
               href="/"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+              onClick={closeNav}
             >
               Início
             </Link>
             <Link
               href="/members-list"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+              onClick={closeNav}
             >
               Membros
             </Link>
             <Link
               href="/subscribe"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+              onClick={closeNav}
             >
               Inscreva-se
             </Link>
             <Link
               href="/downloads"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+              onClick={closeNav}
             >
               Downloads
             </Link>
@@ -78,6 +86,7 @@ export function HeaderMobile() {
             <Link
               href="/regras"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+              onClick={closeNav}
             >
               Regras
             </Link>
@@ -86,11 +95,16 @@ export function HeaderMobile() {
               <Link
                 href="/login"
                 className={buttonVariants({ variant: "outline", size: "sm" })}
+                onClick={closeNav}
               >
                 Entrar
               </Link>
 
-              <Link href="/register" className={buttonVariants({ size: "sm" })}>
+              <Link
+                href="/register"
+                className={buttonVariants({ size: "sm" })}
+                onClick={closeNav}
+              >
                 Registrar
               </Link>
             </div>

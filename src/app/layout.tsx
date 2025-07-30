@@ -36,9 +36,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <Header />
-            <AuthProvider>{children}</AuthProvider>
-            <Footer />
+            <AuthProvider>
+              <Header />
+              {children}
+              <Footer />
+            </AuthProvider>
           </div>
         </ThemeProvider>
       </body>

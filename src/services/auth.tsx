@@ -1,27 +1,28 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { User } from "@supabase/supabase-js";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const checkUserSession = async () => {
     try {
-      const res = await fetch(`${API_URL}/auth/session`);
+      const res = await fetch(`${API_URL}/auth/session`, {
+        credentials: "include",
+      });
 
       if (res.ok) {
-        const { user } = await res.json();
+        const user = await res.json();
         setUser(user);
       } else {
         setUser(null);
       }
     } catch (error) {
       setUser(null);
-      console.error("Falha ao buscar sessão", error);
+      console.error("Erro ao verificar sessão do usuário:", error);
     } finally {
       setLoading(false);
     }
@@ -36,17 +37,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     keepLogged: boolean
   ) => {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, keepLogged }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, keepLogged }),
+        credentials: "include",
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || "Falha no login");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Falha no login");
+      }
+      await checkUserSession();
+    } catch (error) {
+      console.error("Falha ao fazer login:", error);
+      throw error;
     }
-    await checkUserSession();
   };
 
   const register = async (
@@ -67,8 +74,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    await fetch(`${API_URL}/auth/logout`, { method: "POST" });
-    setUser(null);
+    try {
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      setUser(null);
+    } catch (error) {
+      console.error("Falha ao fazer logout:", error);
+      throw error;
+    }
   };
 
   return (

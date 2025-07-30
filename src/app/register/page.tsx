@@ -21,6 +21,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const auth = useAuth();
   const router = useRouter();
@@ -46,11 +47,12 @@ export default function Register() {
       setTimeout(() => {
         router.push("/login");
       }, 2000);
-    } catch (error: any) {
-      console.error(
-        "Falha no registro:",
-        error.message || "Ocorreu um erro ao criar a conta."
-      );
+    } catch (error: unknown) {
+      let errorMessage = "Ocorreu um erro inesperado.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -104,6 +106,9 @@ export default function Register() {
               </div>
               {success && (
                 <p className="text-sm text-green-500 text-center">{success}</p>
+              )}
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
               )}
             </div>
             <CardFooter className="flex flex-col gap-4 pt-6 px-0 pb-0">
