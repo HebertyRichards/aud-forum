@@ -57,7 +57,7 @@ export function HeaderDestkop() {
               Inscreva-se
             </Link>
             <Link
-              href="/downalods"
+              href="/downloads"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-sm"
             >
               Downloads
