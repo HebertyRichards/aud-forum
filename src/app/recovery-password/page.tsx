@@ -32,12 +32,7 @@ export default function RecoveryPassword() {
                   <Label htmlFor="email" className="text-gray-300">
                     Email
                   </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    className="bg-[#1e1e2e] border-gray-600 text-white placeholder:text-gray-500 focus:ring-blue-500 focus:border-blue-500"
-                  />
+                  <Input id="email" type="email" placeholder="seu@email.com" />
                 </div>
               </div>
             </form>
