@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,7 +34,7 @@ export default function Profile() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  async function fetchProfile(userId: string) {
+  const fetchProfile = useCallback(async (userId: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -42,18 +42,22 @@ export default function Profile() {
       if (!res.ok) throw new Error("Erro ao carregar perfil.");
       const data = await res.json();
       setProfile(data);
-    } catch (err: any) {
-      setError(err.message || "Erro desconhecido.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Erro desconhecido.");
+      } else {
+        setError("Erro desconhecido.");
+      }
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (user?.id) {
       fetchProfile(user.id);
     }
-  }, [user]);
+  }, [user, fetchProfile]);
 
   function formatDate(dateStr?: string) {
     if (!dateStr) return "--";
