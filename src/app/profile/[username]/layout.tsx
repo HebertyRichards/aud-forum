@@ -24,9 +24,10 @@ export async function generateMetadata({
       description: `Perfil de ${data.username} na Auditore Family.`,
     };
   } catch (error) {
+    console.error("Erro ao gerar metadata:", error);
     return {
-      title: "Perfil não encontrado",
-      description: "O perfil solicitado não existe.",
+      title: "Auditore Family - Perfil não encontrado",
+      description: "Usuário não encontrado na Auditore Family.",
     };
   }
 }
