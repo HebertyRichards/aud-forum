@@ -54,20 +54,16 @@ export function PublishTopicForm({
   onSubmit,
   isSubmitting = false,
 }: PublishTopicFormProps) {
-  const [selectedIcon, setSelectedIcon] = React.useState("default");
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
-  const [selectedForum, setSelectedForum] = React.useState<string>(
-    forums[0]?.id || ""
-  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      icon: selectedIcon,
+      icon: "default",
       title,
       content,
-      forumId: selectedForum,
+      forumId: forums[0]?.id || "",
     });
   };
 
@@ -191,7 +187,12 @@ const ToolbarButton = ({
 }) => (
   <Tooltip>
     <TooltipTrigger asChild>
-      <Button variant="ghost" size="icon" className="h-8 w-8">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        aria-label={tooltip}
+      >
         {icon}
       </Button>
     </TooltipTrigger>

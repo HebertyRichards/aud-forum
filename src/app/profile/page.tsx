@@ -180,14 +180,6 @@ export default function Profile() {
               </Tabs>
             </div>
             <aside className="space-y-6">
-              <div className="flex items-center gap-4 text-sm text-blue-400">
-                <a href="#" className="hover:underline flex items-center gap-1">
-                  <UserPlus size={16} /> Adicionar amigo(a)
-                </a>
-                <a href="#" className="hover:underline flex items-center gap-1">
-                  <UserX size={16} /> Adicionar como ignorado(a)
-                </a>
-              </div>
               <Card className="border-gray-700 text-center bg-white dark:bg-gray-800">
                 <CardContent className="p-6 flex flex-col items-center">
                   <h2 className="text-xl font-bold text-blue-400 hover:underline cursor-pointer mb-4">

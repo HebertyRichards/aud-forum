@@ -75,9 +75,12 @@ export function HeaderDestkop() {
               <div className="h-9 w-40 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
             ) : auth?.user ? (
               <>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Link
+                  href="/profile"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline"
+                >
                   Olá, {getUsername()}
-                </span>
+                </Link>
                 <Button variant="outline" size="sm" onClick={handleLogout}>
                   Sair
                 </Button>
