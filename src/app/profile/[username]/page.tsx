@@ -1,15 +1,16 @@
+// app/perfil/[username]/page.tsx
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { formatLastLogin } from "@/utils/dateUtils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, AlertTriangle } from "lucide-react";
-import { useAuth } from "@/services/auth";
-import { UpdateData } from "@/components/UpdateData";
-import { formatLastLogin } from "@/utils/dateUtils";
+import { UserPlus, UserX, Loader2, AlertTriangle } from "lucide-react";
+
 interface UserProfile {
   username: string;
   gender?: string;
@@ -23,41 +24,35 @@ interface UserProfile {
   role?: string;
 }
 
-export default function Profile() {
-  const auth = useAuth();
-  const user = auth?.user;
-
+export default function OtherProfile() {
+  const { username } = useParams();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(false);
-  const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const fetchProfile = useCallback(async (userId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`${API_URL}/profile/${userId}`);
-      if (!res.ok) throw new Error("Erro ao carregar perfil.");
-      const data = await res.json();
-      setProfile(data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || "Erro desconhecido.");
-      } else {
-        setError("Erro desconhecido.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [API_URL]);
-
   useEffect(() => {
-    if (user?.id) {
-      fetchProfile(user.id);
+    async function fetchProfile() {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_URL}/profile/user/${username}`);
+        if (!res.ok) throw new Error("Erro ao carregar perfil.");
+        const data = await res.json();
+        setProfile(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || "Erro desconhecido.");
+        } else {
+          setError("Erro desconhecido.");
+        }
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [user, fetchProfile]);
+
+    if (username) fetchProfile();
+  }, [username, API_URL]);
 
   function formatDate(dateStr?: string) {
     if (!dateStr) return "--";
@@ -89,6 +84,7 @@ export default function Profile() {
         return "text-gray-400";
     }
   }
+
   return (
     <div className="min-h-screen font-sans">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
@@ -120,25 +116,8 @@ export default function Profile() {
                   <Card className="border-gray-700 bg-white dark:bg-gray-800">
                     <CardHeader>
                       <CardTitle>Sobre</CardTitle>
-                      {user?.id && profile && (
-                        <UpdateData
-                          profile={profile}
-                          onSuccess={() => {
-                            setUpdating(true);
-                            fetchProfile(user.id).finally(() =>
-                              setUpdating(false)
-                            );
-                          }}
-                        />
-                      )}
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {updating && (
-                        <div className="text-sm text-blue-500 flex items-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Atualizando perfil...
-                        </div>
-                      )}
                       <div className="flex justify-between py-2">
                         <span className="font-semibold">Gênero:</span>
                         <span>{profile?.gender || "--"}</span>
@@ -180,6 +159,14 @@ export default function Profile() {
               </Tabs>
             </div>
             <aside className="space-y-6">
+              <div className="flex items-center gap-4 text-sm text-blue-400">
+                <a href="#" className="hover:underline flex items-center gap-1">
+                  <UserPlus size={16} /> Adicionar amigo(a)
+                </a>
+                <a href="#" className="hover:underline flex items-center gap-1">
+                  <UserX size={16} /> Adicionar como ignorado(a)
+                </a>
+              </div>
               <Card className="border-gray-700 text-center bg-white dark:bg-gray-800">
                 <CardContent className="p-6 flex flex-col items-center">
                   <h2 className="text-xl font-bold text-blue-400 hover:underline cursor-pointer mb-4">
