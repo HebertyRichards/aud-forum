@@ -51,7 +51,7 @@ export default function Profile() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [API_URL]);
 
   useEffect(() => {
     if (user?.id) {

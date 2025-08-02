@@ -1,41 +1,17 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { generateMetadata } from "./metadata";
 
-export async function generateMetadata({
+export { generateMetadata };
+
+export default async function Layout({
+  children,
   params,
 }: {
-  params: { username: string };
-}): Promise<Metadata> {
-  const username = params.username;
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/profile/user/${username}`,
-      { cache: "no-store" }
-    );
-
-    if (!res.ok) {
-      throw new Error("Usuário não encontrado");
-    }
-
-    const data = await res.json();
-
-    return {
-      title: `Auditore Family - perfil de ${data.username}`,
-      description: `Perfil de ${data.username} na Auditore Family.`,
-    };
-  } catch (error) {
-    console.error("Erro ao gerar metadata:", error);
-    return {
-      title: "Auditore Family - Perfil não encontrado",
-      description: "Usuário não encontrado na Auditore Family.",
-    };
-  }
-}
-
-export default function OtherProfileLayout({
-  children,
-}: {
-  children: React.ReactNode;
+  children: ReactNode;
+  params: Promise<{ username: string }>; 
 }) {
+  const resolvedParams = await params;
+  void resolvedParams.username; 
+
   return <>{children}</>;
 }

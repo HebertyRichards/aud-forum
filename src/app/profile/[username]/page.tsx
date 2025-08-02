@@ -52,7 +52,7 @@ export default function OtherProfile() {
     }
 
     if (username) fetchProfile();
-  }, [username]);
+  }, [username, API_URL]);
 
   function formatDate(dateStr?: string) {
     if (!dateStr) return "--";
