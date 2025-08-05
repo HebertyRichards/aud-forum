@@ -45,8 +45,8 @@ export default function Register() {
       await auth.register(username, email, password);
       setSuccess("Conta criada com sucesso! Redirecionando para o login...");
       setTimeout(() => {
-        router.push("/login");
-      }, 2000);
+        router.push("/verification");
+      }, 1000);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado.";
       if (error instanceof Error) {
