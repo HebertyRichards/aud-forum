@@ -32,22 +32,8 @@ import {
   Paperclip,
 } from "lucide-react";
 import * as React from "react";
+import { PublishTopicFormProps } from "@/types/post";
 
-interface Forum {
-  id: string;
-  name: string;
-}
-
-interface PublishTopicFormProps {
-  forums: Forum[];
-  onSubmit: (data: {
-    icon: string;
-    title: string;
-    content: string;
-    forumId: string;
-  }) => void;
-  isSubmitting?: boolean;
-}
 
 export function PublishTopicForm({
   forums,

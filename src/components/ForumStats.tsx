@@ -3,19 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-
-interface ForumStatsProps {
-  stats: {
-    activeMembers: number;
-    totalPosts: string;
-    totalTopics: number;
-    newestMember: string;
-  };
-}
-
-interface ProfileData {
-  username: string;
-}
+import { ForumStatsProps, ProfileData } from "@/types/users";
 
 export function ForumStats({ stats }: ForumStatsProps) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -34,7 +22,7 @@ export function ForumStats({ stats }: ForumStatsProps) {
     };
 
     fetchLastRegisteredUser();
-  }, []);
+  }, [API_URL]);
 
   return (
     <Card className="bg-white dark:bg-gray-800">

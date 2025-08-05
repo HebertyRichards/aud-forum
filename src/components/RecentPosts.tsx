@@ -1,11 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Pin, Star, MessageSquare, Eye, Clock } from "lucide-react";
-import type { RecentPost } from "@/utils/forum-data";
-
-interface RecentPostsProps {
-  posts: RecentPost[];
-}
+import { RecentPostsProps } from "@/types/post";
 
 export function RecentPosts({ posts }: RecentPostsProps) {
   return (

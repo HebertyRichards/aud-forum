@@ -1,17 +1,4 @@
-export type MemberRole = 'default' | 'auditore' | 'leader';
-
-export type Member = {
-  id: number;
-  avatar: string;
-  username: string;
-  role: MemberRole;
-  humor?: string;
-  joinDate: string;
-  lastVisit: string;
-  messages: number;
-  hasPrivateMessage: boolean;
-  hasWebsite: boolean;
-};
+import { Member } from "@/types/users";
 
 export const members: Member[] = [
   {

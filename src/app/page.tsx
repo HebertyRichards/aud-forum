@@ -4,12 +4,7 @@ import { ForumCategoryList } from "@/components/ForumCategoryList";
 import { RecentPosts } from "@/components/RecentPosts";
 import { ForumStats } from "@/components/ForumStats";
 import { OnlineUsers } from "@/components/OnlineUsers";
-import {
-  forumData,
-  recentPosts,
-  onlineUsers,
-  forumStats,
-} from "@/utils/forum-data";
+import { forumData, recentPosts, forumStats } from "@/utils/forum-data";
 import { useEffect } from "react";
 import { useAuth } from "@/services/auth";
 

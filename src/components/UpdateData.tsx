@@ -12,19 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth } from "@/services/auth";
 import { Loader2 } from "lucide-react";
+import { UpdateDataProps } from "@/types/profile";
 
-interface AtualizarDadosProps {
-  profile: {
-    username: string;
-    gender?: string;
-    birthdate?: string;
-    location?: string;
-    website?: string;
-  };
-  onSuccess?: () => void;
-}
-
-export function UpdateData({ profile, onSuccess }: AtualizarDadosProps) {
+export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   const { user } = useAuth()!;
   const [form, setForm] = useState({
     username: profile.username || "",

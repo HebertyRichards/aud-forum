@@ -1,15 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Eye, MessageSquare } from "lucide-react";
-
-// Definindo as propriedades que o nosso card vai receber
-type DownloadCardProps = {
-  icon: React.ReactNode;
-  title: string;
-  author: string;
-  postDate: string;
-  replies: number;
-  views: number;
-};
+import { DownloadCardProps } from "@/types/post";
 
 export function DownloadCard({
   icon,

@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import { AuthContextType, UserWithProfile } from "@/types/autentication";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

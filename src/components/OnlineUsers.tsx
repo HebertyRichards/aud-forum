@@ -5,11 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
-import type { OnlineUser } from "@/utils/forum-data";
-
-interface OnlineUsersProps {
-  users: OnlineUser[];
-}
+import { OnlineUser, RawOnlineUser } from "@/types/users";
 
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
@@ -28,12 +24,13 @@ export function OnlineUsers() {
         }
 
         const data = await res.json();
-
-        const onlineUsers: OnlineUser[] = data.map((item: any) => ({
-          name: item.profiles.username,
-          avatar: "/placeholder.svg",
-          status: "online",
-        }));
+        const onlineUsers: OnlineUser[] = (data as RawOnlineUser[]).map(
+          (item) => ({
+            name: item.profiles.username,
+            avatar: "/placeholder.svg",
+            status: "online",
+          })
+        );
 
         setUsers(onlineUsers);
       } catch (error) {
@@ -45,7 +42,7 @@ export function OnlineUsers() {
 
     const interval = setInterval(fetchOnlineUsers, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [API_URL]);
 
   return (
     <Card className="bg-white dark:bg-gray-800">

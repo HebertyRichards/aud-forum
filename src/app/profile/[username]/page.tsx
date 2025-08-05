@@ -10,19 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserPlus, UserX, Loader2, AlertTriangle } from "lucide-react";
-
-interface UserProfile {
-  username: string;
-  gender?: string;
-  birthdate?: string;
-  location?: string;
-  website?: string;
-  joined_at?: string;
-  last_login?: string;
-  total_posts?: number;
-  avatarUrl?: string;
-  role?: string;
-}
+import { UserProfile } from "@/types/users";
 
 export default function OtherProfile() {
   const { username } = useParams();
