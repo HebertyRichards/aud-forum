@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +11,42 @@ interface OnlineUsersProps {
   users: OnlineUser[];
 }
 
-export function OnlineUsers({ users }: OnlineUsersProps) {
+export function OnlineUsers() {
+  const [users, setUsers] = useState<OnlineUser[]>([]);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    async function fetchOnlineUsers() {
+      try {
+        const res = await fetch(`${API_URL}/user/online`, {
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          console.error("Erro ao buscar usuários online:", res.status);
+          return;
+        }
+
+        const data = await res.json();
+
+        const onlineUsers: OnlineUser[] = data.map((item: any) => ({
+          name: item.profiles.username,
+          avatar: "/placeholder.svg",
+          status: "online",
+        }));
+
+        setUsers(onlineUsers);
+      } catch (error) {
+        console.error("Erro ao buscar usuários online:", error);
+      }
+    }
+
+    fetchOnlineUsers();
+
+    const interval = setInterval(fetchOnlineUsers, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Card className="bg-white dark:bg-gray-800">
       <CardHeader>
@@ -26,10 +64,13 @@ export function OnlineUsers({ users }: OnlineUsersProps) {
             <div key={index} className="flex items-center space-x-2">
               <div className="relative">
                 <Avatar className="w-6 h-6">
-                  <AvatarImage src={user.avatar || "/placeholder.svg"} />
-                  <AvatarFallback className="text-xs">
-                    {user.name[0]}
-                  </AvatarFallback>
+                  {user.avatar ? (
+                    <AvatarImage src={user.avatar} />
+                  ) : (
+                    <AvatarFallback className="text-xs">
+                      {user.name[0]}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div
                   className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
