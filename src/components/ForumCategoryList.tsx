@@ -5,11 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ForumTopicRow } from "@/components/ForumTopicRow";
-import type { Category } from "@/utils/forum-data";
-
-interface ForumCategoryListProps {
-  categories: Category[];
-}
+import { ForumCategoryListProps } from "@/types/post";
 
 export function ForumCategoryList({ categories }: ForumCategoryListProps) {
   const defaultOpenCategories = categories.map((category) => category.id);

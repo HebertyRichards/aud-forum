@@ -1,13 +1,4 @@
-import { type LucideIcon } from "lucide-react";
-
-interface ForumTopicRowProps {
-  icon: LucideIcon;
-  title: string;
-  lastPostInfo: string;
-  author: string;
-  authorColorClass: string;
-  postCount: number;
-}
+import { ForumTopicRowProps } from "@/types/post";
 
 export function ForumTopicRow({
   icon: Icon,

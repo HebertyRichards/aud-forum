@@ -38,9 +38,7 @@ export default function RecoveryPassword() {
             </form>
           </CardContent>
           <CardFooter className="flex flex-col gap-4 pt-4">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-              Enviar link de recuperação
-            </Button>
+            <Button>Enviar link de recuperação</Button>
             <Button variant="link" asChild>
               <Link href="/login" className="text-blue-400 hover:text-blue-300">
                 Voltar para o login

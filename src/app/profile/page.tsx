@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,18 +9,7 @@ import { Loader2, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { UpdateData } from "@/components/UpdateData";
 import { formatLastLogin } from "@/utils/dateUtils";
-interface UserProfile {
-  username: string;
-  gender?: string;
-  birthdate?: string;
-  location?: string;
-  website?: string;
-  joined_at?: string;
-  last_login?: string;
-  total_posts?: number;
-  avatarUrl?: string;
-  role?: string;
-}
+import { UserProfile } from "@/types/users";
 
 export default function Profile() {
   const auth = useAuth();
@@ -34,24 +22,27 @@ export default function Profile() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const fetchProfile = useCallback(async (userId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`${API_URL}/profile/${userId}`);
-      if (!res.ok) throw new Error("Erro ao carregar perfil.");
-      const data = await res.json();
-      setProfile(data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || "Erro desconhecido.");
-      } else {
-        setError("Erro desconhecido.");
+  const fetchProfile = useCallback(
+    async (userId: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`${API_URL}/profile/${userId}`);
+        if (!res.ok) throw new Error("Erro ao carregar perfil.");
+        const data = await res.json();
+        setProfile(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || "Erro desconhecido.");
+        } else {
+          setError("Erro desconhecido.");
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  }, [API_URL]);
+    },
+    [API_URL]
+  );
 
   useEffect(() => {
     if (user?.id) {
@@ -194,9 +185,6 @@ export default function Profile() {
                       {profile?.username?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <Button className="cursor-pointer text-white bg-blue-600 hover:bg-blue-700 w-full mb-4">
-                    Seguir
-                  </Button>
                   <div className="text-sm">
                     <span className="font-semibold">Rank: </span>
                     <span

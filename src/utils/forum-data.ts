@@ -1,7 +1,4 @@
-// src/lib/forum-data.ts
-
 import {
-    type LucideIcon,
     Annoyed,
     FileText,
     Download,
@@ -11,42 +8,8 @@ import {
     Bell,
     Album,
   } from "lucide-react";
-  
-  export type Topic = {
-    id: number;
-    icon: LucideIcon;
-    title: string;
-    lastPostInfo: string;
-    author: string;
-    authorColorClass: string;
-    postCount: number;
-    hasInfoIcon?: boolean;
-  };
-  
-  export type Category = {
-    id: string;
-    title: string;
-    topics: Topic[];
-  };
-  
-  export type RecentPost = {
-    id: number;
-    title: string;
-    author: string;
-    category: string;
-    replies: number;
-    views: number;
-    time: string;
-    avatar: string;
-    isPinned?: boolean;
-    isHot?: boolean;
-  };
-  
-  export type OnlineUser = {
-    name: string;
-    status: "online" | "away";
-    avatar: string;
-  };
+  import { OnlineUser } from "@/types/users";
+  import { Category, RecentPost } from "@/types/post";
   
   // se for membro da family ou autorizado pelo dono aparece area oculta
   export const forumData: Category[] = [

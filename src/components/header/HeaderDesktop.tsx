@@ -7,7 +7,7 @@ import { Button, buttonVariants } from "../ui/button";
 import { ModeToggle } from "../ModeToggle";
 import { useRouter } from "next/navigation";
 
-export function HeaderDestkop() {
+export function HeaderDesktop() {
   const auth = useAuth();
   const router = useRouter();
 

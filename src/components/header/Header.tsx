@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HeaderDestkop } from "./HeaderDesktop";
+import { HeaderDesktop } from "./HeaderDesktop";
 import { HeaderMobile } from "./HeaderMobile";
 
 export function Header() {
@@ -22,5 +22,5 @@ export function Header() {
     }
   }, []);
 
-  return <>{isMobile ? <HeaderMobile /> : <HeaderDestkop />}</>;
+  return <>{isMobile ? <HeaderMobile /> : <HeaderDesktop />}</>;
 }
