@@ -1,11 +1,16 @@
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { useAuth } from "@/services/auth";
+import { useRouter } from "next/navigation";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const auth = useAuth();
+  const router = useRouter();
 
   const openNav = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,8 +20,21 @@ export function HeaderMobile() {
     setIsMenuOpen(false);
   };
 
+  const handleLogout = async () => {
+    if (auth) {
+      await auth.logout();
+    }
+    closeNav();
+    router.push("/login");
+  };
+
+  const getUsername = () => {
+    if (!auth?.user) return "";
+    return auth.user.username || auth.user.email?.split("@")[0];
+  };
+
   return (
-    <header className="border-b shadow-sm">
+    <header className="border-b shadow-sm bg-white dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
@@ -24,7 +42,6 @@ export function HeaderMobile() {
               <span className="text-white font-bold text-sm">A</span>
             </div>
             <h1 className="text-2xl font-bold">Auditore</h1>
-            <Badge variant="secondary">Família</Badge>
           </div>
           <div className="flex items-center space-x-2">
             <ModeToggle />
@@ -52,7 +69,7 @@ export function HeaderMobile() {
         </div>
       </div>
       {isMenuOpen && (
-        <div className="border-t">
+        <div className="border-t dark:border-gray-700">
           <div className="px-2 pt-2 pb-4 space-y-2">
             <Link
               href="/"
@@ -84,29 +101,56 @@ export function HeaderMobile() {
             </Link>
             {/* se estiver logado aparece regras e for membro / dono*/}
             <Link
-              href="/regras"
+              href="/rules"
               className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
               onClick={closeNav}
             >
               Regras
             </Link>
-            <hr className="my-2" />
-            <div className="flex items-center space-x-2 px-3">
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "outline", size: "sm" })}
-                onClick={closeNav}
-              >
-                Entrar
-              </Link>
+            <hr className="my-2 border-gray-200 dark:border-gray-700" />
+            <div className="px-3 py-2">
+              {auth?.loading ? (
+                <div className="h-9 w-full bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+              ) : auth?.user ? (
+                <div className="space-y-3">
+                  <Link
+                    href="/profile"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline"
+                    onClick={closeNav}
+                  >
+                    Olá, {getUsername()}
+                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleLogout}
+                  >
+                    Sair
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Link
+                    href="/login"
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "sm",
+                    })}
+                    onClick={closeNav}
+                  >
+                    Entrar
+                  </Link>
 
-              <Link
-                href="/register"
-                className={buttonVariants({ size: "sm" })}
-                onClick={closeNav}
-              >
-                Registrar
-              </Link>
+                  <Link
+                    href="/register"
+                    className={buttonVariants({ size: "sm" })}
+                    onClick={closeNav}
+                  >
+                    Registrar
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
