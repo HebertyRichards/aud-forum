@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const updatePassword = async (newPassword: string) => {
+  const updatePassword = async (newPassword: string, accessToken?: string) => {
     try {
       const response = await fetch(`${API_URL}/auth/change-password`, {
         method: "PUT",
@@ -95,25 +95,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ newPassword }),
+        body: JSON.stringify({ newPassword, accessToken }),
       });
 
       if (!response.ok) {
         let errorMessage = "Erro ao atualizar a senha.";
 
         try {
-          const contentType = response.headers.get("content-type");
-          if (contentType?.includes("application/json")) {
-            const errorJson = await response.json();
-            errorMessage = errorJson?.error || errorMessage;
-          } else {
-            const errorText = await response.text();
-            errorMessage = errorText || errorMessage;
-          }
+          const errorJson = await response.json();
+          errorMessage = errorJson?.error || errorMessage;
         } catch {
-          errorMessage = "Erro inesperado no servidor.";
+            errorMessage = "Erro inesperado no servidor.";
         }
-
+        
         throw new Error(errorMessage);
       }
 
@@ -123,6 +117,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw error;
     }
   };
+
   const forgotPassword = async (email: string) => {
     const response = await fetch(`${API_URL}/auth/forgot-password`, {
       method: "POST",
