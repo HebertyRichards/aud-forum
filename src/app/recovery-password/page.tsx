@@ -45,11 +45,14 @@ export default function RecoveryPassword() {
     try {
       await auth.forgotPassword(email.trim());
       setSucesso("Enviamos a alteração para o seu email, confira!");
-    } catch (error: any) {
-      setErro(error.message || "Erro ao enviar e-mail.");
-    } finally {
+    } catch (error: unknown) {
+      let errorMessage = "Erro ao enviar e-mail.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setErro(errorMessage);
       setLoading(false);
-    }
+    } 
   };
 
   return (

@@ -34,7 +34,6 @@ import {
 import * as React from "react";
 import { PublishTopicFormProps } from "@/types/post";
 
-
 export function PublishTopicForm({
   forums,
   onSubmit,

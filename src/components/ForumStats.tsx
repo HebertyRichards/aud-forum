@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { ForumStatsProps, ProfileData } from "@/types/users";
+import Link from "next/link";
 
 export function ForumStats({ stats }: ForumStatsProps) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -45,9 +46,11 @@ export function ForumStats({ stats }: ForumStatsProps) {
         <Separator />
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Novo Membro</span>
-          <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
-            {newestMember}
-          </span>
+          <Link href={`/profile/${newestMember}`}>
+            <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
+              {newestMember}
+            </span>
+          </Link>
         </div>
       </CardContent>
     </Card>

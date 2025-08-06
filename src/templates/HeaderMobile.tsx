@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { ModeToggle } from "../ModeToggle";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

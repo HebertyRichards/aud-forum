@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
-import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
-import { ModeToggle } from "../ModeToggle";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ModeToggle";
 import { useRouter } from "next/navigation";
 
 export function HeaderDesktop() {
