@@ -87,8 +87,76 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updatePassword = async (newPassword: string, accessToken?: string) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/change-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ newPassword, accessToken }),
+      });
+
+      if (!response.ok) {
+        let errorMessage = "Erro ao atualizar a senha.";
+
+        try {
+          const errorJson = await response.json();
+          errorMessage = errorJson?.error || errorMessage;
+        } catch {
+            errorMessage = "Erro inesperado no servidor.";
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Falha ao atualizar a senha", error);
+      throw error;
+    }
+  };
+
+  const forgotPassword = async (email: string) => {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+
+      let errorMessage = "Erro ao enviar e-mail.";
+
+      if (contentType?.includes("application/json")) {
+        const errorJson = await response.json();
+        errorMessage = errorJson?.error || errorMessage;
+      } else {
+        const errorText = await response.text();
+        errorMessage = errorText || errorMessage;
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  };
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        updatePassword,
+        forgotPassword,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

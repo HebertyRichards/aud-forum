@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { ForumTopicRowProps } from "@/types/post";
 
 export function ForumTopicRow({
   icon: Icon,
   title,
+  route, 
   lastPostInfo,
   author,
   authorColorClass,
@@ -12,9 +14,12 @@ export function ForumTopicRow({
     <div className="flex items-center px-4 py-3">
       <div className="flex items-center flex-grow space-x-3">
         <Icon className="h-5 w-5 text-primary" />
-        <h3 className="text-sm font-semibold text-primary hover:underline cursor-pointer">
-          {title}
-        </h3>
+
+        <Link href={route} passHref>
+          <h3 className="text-sm font-semibold text-primary hover:underline cursor-pointer">
+            {title}
+          </h3>
+        </Link>
       </div>
       <div className="hidden sm:flex flex-col items-end text-xs text-right mr-4">
         {lastPostInfo && (

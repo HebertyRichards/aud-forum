@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/header/Header";
-import Footer from "../components/Footer";
+import Header from "@/templates/Header";
+import Footer from "@/templates/Footer";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/services/auth";

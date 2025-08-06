@@ -15,6 +15,7 @@ export type DownloadCardProps = {
     id: number;
     icon: LucideIcon;
     title: string;
+    route: string;
     lastPostInfo: string;
     author: string;
     authorColorClass: string;
@@ -27,10 +28,10 @@ export type DownloadCardProps = {
     title: string;
     topics: Topic[];
   };
-  
+
   export type RecentPost = {
     id: number;
-    title: string;
+    title:string;
     author: string;
     category: string;
     replies: number;
@@ -44,12 +45,12 @@ export type DownloadCardProps = {
   export interface RecentPostsProps {
     posts: RecentPost[];
   }
-  
+
   export interface Forum {
     id: string;
     name: string;
   }
-  
+
   export interface PublishTopicFormProps {
     forums: Forum[];
     onSubmit: (data: {
@@ -62,8 +63,10 @@ export type DownloadCardProps = {
   }
 
   export interface ForumTopicRowProps {
+    id: number; 
     icon: LucideIcon;
     title: string;
+    route: string;
     lastPostInfo: string;
     author: string;
     authorColorClass: string;

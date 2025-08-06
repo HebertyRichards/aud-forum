@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +13,48 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/services/auth";
 
 export default function RecoveryPassword() {
+  const [email, setEmail] = useState("");
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
+  const [loading, setLoading] = useState(false);
+  const auth = useAuth();
+
+  function isValidEmail(email: string) {
+    return /\S+@\S+\.\S+/.test(email.trim());
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth) {
+      setErro("Erro de autenticação. Tente recarregar a página.");
+      return;
+    }
+
+    if (!email || !isValidEmail(email)) {
+      setErro("Informe um e-mail válido.");
+      return;
+    }
+
+    setErro("");
+    setSucesso("");
+    setLoading(true);
+
+    try {
+      await auth.forgotPassword(email.trim());
+      setSucesso("Enviamos a alteração para o seu email, confira!");
+    } catch (error: unknown) {
+      let errorMessage = "Erro ao enviar e-mail.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setErro(errorMessage);
+      setLoading(false);
+    } 
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <main className="flex-grow flex items-center justify-center p-4">
@@ -26,19 +69,27 @@ export default function RecoveryPassword() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-2">
-                  <Label htmlFor="email" className="text-gray-300">
-                    Email
-                  </Label>
-                  <Input id="email" type="email" placeholder="seu@email.com" />
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="email" className="text-gray-300">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
+              {erro && <p className="text-red-500 text-sm">{erro}</p>}
+              {sucesso && <p className="text-green-500 text-sm">{sucesso}</p>}
             </form>
           </CardContent>
           <CardFooter className="flex flex-col gap-4 pt-4">
-            <Button>Enviar link de recuperação</Button>
+            <Button onClick={handleSubmit} disabled={loading}>
+              {loading ? "Enviando..." : "Enviar link de recuperação"}
+            </Button>
             <Button variant="link" asChild>
               <Link href="/login" className="text-blue-400 hover:text-blue-300">
                 Voltar para o login

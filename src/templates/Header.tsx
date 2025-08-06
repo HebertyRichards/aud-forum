@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { HeaderDesktop } from "./HeaderDesktop";
 import { HeaderMobile } from "./HeaderMobile";
 
-export function Header() {
+export default function Header() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
