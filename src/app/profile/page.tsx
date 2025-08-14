@@ -5,9 +5,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, AlertTriangle } from "lucide-react";
+import {
+  Globe,
+  Facebook,
+  Instagram,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
+import { FaDiscord, FaSteam } from "react-icons/fa";
 import { useAuth } from "@/services/auth";
 import { UpdateData } from "@/components/UpdateData";
+import { UpdateContacts } from "@/components/UpdateContacts";
+import { formatUrl } from "@/utils/urlUtils";
 import { formatLastLogin } from "@/utils/dateUtils";
 import { UserProfile } from "@/types/users";
 
@@ -106,7 +115,6 @@ export default function Profile() {
                   <TabsTrigger value="amigos">Amigos</TabsTrigger>
                   <TabsTrigger value="contato">Contato</TabsTrigger>
                 </TabsList>
-
                 <TabsContent value="perfil" className="mt-4">
                   <Card className="border-gray-700 bg-white dark:bg-gray-800">
                     <CardHeader>
@@ -164,6 +172,103 @@ export default function Profile() {
                       <div className="flex justify-between py-2">
                         <span className="font-semibold">Localização:</span>
                         <span>{profile?.location || "--"}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="contato" className="mt-4">
+                  <Card className="border-gray-700 bg-white dark:bg-gray-800">
+                    <CardHeader>
+                      <CardTitle>Contatos</CardTitle>
+                      {user?.id && profile && (
+                        <UpdateContacts
+                          profile={profile}
+                          onSuccess={() => fetchProfile(user.id)}
+                        />
+                      )}
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Website:</span>
+                        {profile?.website ? (
+                          <a
+                            href={formatUrl(profile.website)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-500"
+                          >
+                            <Globe size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Facebook:</span>
+                        {profile?.facebook ? (
+                          <a
+                            href={formatUrl(profile.facebook)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-500"
+                          >
+                            <Facebook size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Instagram:</span>
+                        {profile?.instagram ? (
+                          <a
+                            href={formatUrl(profile.instagram)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-pink-500"
+                          >
+                            <Instagram size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Discord:</span>
+                        {profile?.discord ? (
+                          <a
+                            href={formatUrl(profile.discord)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-indigo-500"
+                          >
+                            <FaDiscord size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Steam:</span>
+                        {profile?.steam ? (
+                          <a
+                            href={formatUrl(profile.steam)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-700"
+                          >
+                            <FaSteam size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

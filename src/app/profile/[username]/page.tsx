@@ -9,8 +9,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlus, UserX, Loader2, AlertTriangle } from "lucide-react";
+import {
+  Globe,
+  Facebook,
+  Instagram,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
+import { FaDiscord, FaSteam } from "react-icons/fa";
 import { UserProfile } from "@/types/users";
+import { formatUrl } from "@/utils/urlUtils";
 
 export default function OtherProfile() {
   const { username } = useParams();
@@ -99,7 +107,6 @@ export default function OtherProfile() {
                   <TabsTrigger value="amigos">Amigos</TabsTrigger>
                   <TabsTrigger value="contato">Contato</TabsTrigger>
                 </TabsList>
-
                 <TabsContent value="perfil" className="mt-4">
                   <Card className="border-gray-700 bg-white dark:bg-gray-800">
                     <CardHeader>
@@ -144,17 +151,101 @@ export default function OtherProfile() {
                     </CardContent>
                   </Card>
                 </TabsContent>
+                <TabsContent value="contato" className="mt-4">
+                  <Card className="border-gray-700 bg-white dark:bg-gray-800">
+                    <CardHeader>
+                      <CardTitle>Contatos</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Website:</span>
+                        {profile?.website ? (
+                          <a
+                            href={formatUrl(profile.website)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-500"
+                          >
+                            <Globe size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Facebook:</span>
+                        {profile?.facebook ? (
+                          <a
+                            href={formatUrl(profile.facebook)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-500"
+                          >
+                            <Facebook size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Instagram:</span>
+                        {profile?.instagram ? (
+                          <a
+                            href={formatUrl(profile.instagram)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-pink-500"
+                          >
+                            <Instagram size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Discord:</span>
+                        {profile?.discord ? (
+                          <a
+                            href={formatUrl(profile.discord)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-indigo-500"
+                          >
+                            <FaDiscord size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                      <Separator className="bg-gray-600" />
+
+                      <div className="flex justify-between py-2 items-center">
+                        <span className="font-semibold">Steam:</span>
+                        {profile?.steam ? (
+                          <a
+                            href={profile.steam}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 dark:text-gray-200 hover:text-blue-700"
+                          >
+                            <FaSteam size={20} />
+                          </a>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
               </Tabs>
             </div>
             <aside className="space-y-6">
-              <div className="flex items-center gap-4 text-sm text-blue-400">
-                <a href="#" className="hover:underline flex items-center gap-1">
-                  <UserPlus size={16} /> Adicionar amigo(a)
-                </a>
-                <a href="#" className="hover:underline flex items-center gap-1">
-                  <UserX size={16} /> Adicionar como ignorado(a)
-                </a>
-              </div>
               <Card className="border-gray-700 text-center bg-white dark:bg-gray-800">
                 <CardContent className="p-6 flex flex-col items-center">
                   <h2 className="text-xl font-bold text-blue-400 hover:underline cursor-pointer mb-4">
