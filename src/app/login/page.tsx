@@ -41,12 +41,12 @@ export default function Login() {
     try {
       await auth.login(email, password, keepLoggedIn);
       router.push("/");
-    } catch (error: unknown) { 
-      let errorMessage = "Ocorreu um erro inesperado.";
+    } catch (error: unknown) {
       if (error instanceof Error) {
-        errorMessage = error.message;
+        setError(error.message);
+      } else {
+        setError("Ocorreu uma falha inesperada.");
       }
-      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -75,6 +75,7 @@ export default function Login() {
                   autoFocus
                   placeholder="seu@email.com"
                   required
+                  disabled={loading}
                 />
               </div>
               <div className="grid gap-2">
@@ -94,6 +95,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
+                  disabled={loading}
                 />
               </div>
               <div className="flex items-center space-x-2">
@@ -101,6 +103,7 @@ export default function Login() {
                   id="keep-logged-in"
                   checked={keepLoggedIn}
                   onCheckedChange={(checked) => setKeepLoggedIn(!!checked)}
+                  disabled={loading}
                 />
                 <Label
                   htmlFor="keep-logged-in"

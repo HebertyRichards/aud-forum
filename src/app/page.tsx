@@ -10,14 +10,9 @@ import {
   forumStats,
 } from "@/utils/forum-data";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/services/auth";
 import { Category } from "@/types/post";
 
 export default function ForumPage() {
-  const auth = useAuth();
-  const user = auth?.user;
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const [forumData, setForumData] = useState<Category[]>([]);
   const isAuthorized = true;
 
@@ -28,29 +23,6 @@ export default function ForumPage() {
 
     setForumData(dataToLoad);
   }, [isAuthorized]);
-
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-
-    async function ping() {
-      try {
-        await fetch(`${API_URL}/user/ping`, {
-          method: "POST",
-          credentials: "include",
-        });
-      } catch (error) {
-        console.error("Erro ao enviar ping:", error);
-      }
-    }
-
-    ping();
-
-    const interval = setInterval(ping, 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [user, API_URL]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

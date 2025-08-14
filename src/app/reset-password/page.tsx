@@ -14,7 +14,7 @@ export default function NewPasswordForm() {
   const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [sucesso, setSucesso] = useState("");
-  const [erro, setErro] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
@@ -29,7 +29,7 @@ export default function NewPasswordForm() {
     if (token) {
       setAccessToken(token);
     } else {
-      setErro(
+      setError(
         "Token de recuperação não encontrado na URL. Por favor, use o link enviado para o seu e-mail."
       );
     }
@@ -38,27 +38,27 @@ export default function NewPasswordForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      setErro("Erro de autenticação. Tente recarregar a página.");
+      setError("Erro de autenticação. Tente recarregar a página.");
       return;
     }
 
     if (!accessToken) {
-      setErro(
+      setError(
         "Token de recuperação inválido. Por favor, solicite um novo link."
       );
       return;
     }
 
     if (!novaSenha || !confirmacaoSenha) {
-      setErro("Preencha todos os campos.");
+      setError("Preencha todos os campos.");
       return;
     }
 
     if (novaSenha !== confirmacaoSenha) {
-      setErro("As senhas não coincidem.");
+      setError("As senhas não coincidem.");
       return;
     }
-    setErro("");
+    setError("");
     setLoading(true);
 
     try {
@@ -68,11 +68,10 @@ export default function NewPasswordForm() {
       );
       router.push("/login");
     } catch (error: unknown) {
-      let errorMessage = "Ocorreu um erro inesperado.";
       if (error instanceof Error) {
-        errorMessage = error.message;
+        setError(error.message);
       }
-      setErro(errorMessage);
+      setError("Ocorreu uma falha inesperada");
       setLoading(false);
     }
   };
@@ -106,7 +105,7 @@ export default function NewPasswordForm() {
               value={confirmacaoSenha}
               onChange={(e) => setConfirmacaoSenha(e.target.value)}
             />
-            {erro && <p className="text-red-500 text-sm">{erro}</p>}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             {sucesso && <p className="text-green-600 text-sm">{sucesso}</p>}
             <Button
               type="submit"

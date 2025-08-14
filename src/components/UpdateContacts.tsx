@@ -5,29 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Dialog,
   DialogContent,
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useAuth } from "@/services/auth";
 import { Loader2 } from "lucide-react";
-import { UpdateDataProps } from "@/types/profile";
+import { useAuth } from "@/services/auth";
+import { UpdateContactsProps } from "@/types/users";
 
-export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
+export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
   const { user } = useAuth()!;
   const [form, setForm] = useState({
-    username: profile.username || "",
-    gender: profile.gender || "",
-    birthdate: profile.birthdate || "",
-    location: profile.location || "",
+    website: profile.website || "",
+    facebook: profile.facebook || "",
+    instagram: profile.instagram || "",
+    discord: profile.discord || "",
+    steam: profile.steam || "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -59,25 +53,19 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          ...form,
-          id: user?.id,
-        }),
+        body: JSON.stringify({ ...form, id: user?.id }),
       });
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.error || "Erro ao atualizar perfil");
+        throw new Error(errorData?.error || "Erro ao atualizar contatos");
       }
 
       if (onSuccess) onSuccess();
       setOpen(false);
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu uma falha inesperada.");
-      }
+      if (error instanceof Error) setError(error.message);
+      else setError("Ocorreu uma falha inesperada.");
     } finally {
       setLoading(false);
     }
@@ -87,52 +75,53 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full cursor-pointer">
-          <DialogTitle>Atualizar Perfil</DialogTitle>
+          <DialogTitle>Atualizar Contatos</DialogTitle>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-white dark:bg-gray-800">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Label htmlFor="username">Nick do usuário</Label>
+          <Label htmlFor="website">Website</Label>
           <Input
-            id="username"
-            name="username"
-            value={form.username}
+            id="website"
+            name="website"
+            value={form.website}
             onChange={handleChange}
           />
-          <Label htmlFor="gender">Gênero</Label>
-          <Select
-            value={form.gender || ""}
-            onValueChange={(value) => handleChange({ name: "gender", value })}
-          >
-            <SelectTrigger
-              id="gender"
-              className="flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs"
-            >
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Masculino">Masculino</SelectItem>
-              <SelectItem value="Feminino">Feminino</SelectItem>
-            </SelectContent>
-          </Select>
-          <Label htmlFor="birthdate">Nascimento</Label>
+
+          <Label htmlFor="facebook">Facebook</Label>
           <Input
-            id="birthdate"
-            name="birthdate"
-            type="date"
-            value={form.birthdate}
+            id="facebook"
+            name="facebook"
+            value={form.facebook}
             onChange={handleChange}
           />
-          <Label htmlFor="location">Localização</Label>
+
+          <Label htmlFor="instagram">Instagram</Label>
           <Input
-            id="location"
-            name="location"
-            value={form.location}
+            id="instagram"
+            name="instagram"
+            value={form.instagram}
+            onChange={handleChange}
+          />
+
+          <Label htmlFor="discord">Discord</Label>
+          <Input
+            id="discord"
+            name="discord"
+            value={form.discord}
+            onChange={handleChange}
+          />
+
+          <Label htmlFor="steam">Steam</Label>
+          <Input
+            id="steam"
+            name="steam"
+            value={form.steam}
             onChange={handleChange}
           />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+            {loading && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
             Salvar alterações
           </Button>
         </form>

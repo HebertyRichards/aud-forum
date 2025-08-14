@@ -39,14 +39,31 @@ export interface ForumStatsProps {
   }
 
   export interface UserProfile {
+    id: string;
     username: string;
     gender?: string;
     birthdate?: string;
     location?: string;
     website?: string;
+    facebook?: string;
+    instagram?: string;
+    discord?: string;
+    steam: string;
     joined_at?: string;
     last_login?: string;
     total_posts?: number;
     avatarUrl?: string;
     role?: string;
+  }
+
+  export interface UpdateContactsProps {
+    profile: {
+      website?: string;
+      facebook?: string;
+      instagram?: string;
+      discord?: string;
+      steam?: string;
+      id: string;
+    };
+    onSuccess?: () => void;
   }

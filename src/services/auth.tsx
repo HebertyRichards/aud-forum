@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContextType, UserWithProfile } from "@/types/autentication";
+import { handleAuthError } from "@/utils/errorsAuth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,9 +22,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setUser(null);
       }
-    } catch (error) {
+    } catch {
       setUser(null);
-      console.error("Erro ao verificar sessão do usuário:", error);
     } finally {
       setLoading(false);
     }
@@ -51,9 +51,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(errorData.error || "Falha no login");
       }
       await checkUserSession();
-    } catch (error) {
-      console.error("Falha ao fazer login:", error);
-      throw error;
+    } catch (error: unknown) {
+      throw handleAuthError(error, "Não foi possível fazer o login.");
     }
   };
 
@@ -62,104 +61,106 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: string,
     password: string
   ) => {
-    const res = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || "Falha no registro");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Falha no registro");
+      }
+    } catch (error: unknown) {
+      throw handleAuthError(error, "Não foi possível completar o registro.");
     }
   };
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/auth/logout`, {
+      const res = await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.error || "Falha ao comunicar com o servidor."
+        );
+      }
+    } catch (error: unknown) {
+      throw handleAuthError(error, "Não foi possível fazer o logout.");
+    } finally {
       setUser(null);
-    } catch (error) {
-      console.error("Falha ao fazer logout:", error);
-      throw error;
     }
   };
 
   const updatePassword = async (newPassword: string, accessToken?: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/change-password`, {
+      const res = await fetch(`${API_URL}/auth/change-password`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ newPassword, accessToken }),
       });
-
-      if (!response.ok) {
-        let errorMessage = "Erro ao atualizar a senha.";
-
-        try {
-          const errorJson = await response.json();
-          errorMessage = errorJson?.error || errorMessage;
-        } catch {
-            errorMessage = "Erro inesperado no servidor.";
-        }
-        
-        throw new Error(errorMessage);
+      if (!res.ok) {
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Erro ao atualizar a senha." }));
+        throw new Error(errorData.error);
       }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Falha ao atualizar a senha", error);
-      throw error;
+      return await res.json();
+    } catch (error: unknown) {
+      throw handleAuthError(error, "Não foi possível atualizar a senha.");
     }
   };
 
   const forgotPassword = async (email: string) => {
-    const response = await fetch(`${API_URL}/auth/forgot-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    if (!response.ok) {
-      const contentType = response.headers.get("content-type");
-
-      let errorMessage = "Erro ao enviar e-mail.";
-
-      if (contentType?.includes("application/json")) {
-        const errorJson = await response.json();
-        errorMessage = errorJson?.error || errorMessage;
-      } else {
-        const errorText = await response.text();
-        errorMessage = errorText || errorMessage;
+      if (!res.ok) {
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Erro ao enviar e-mail de recuperação." }));
+        throw new Error(errorData.error);
       }
-
-      throw new Error(errorMessage);
+      return await res.json();
+    } catch (error: unknown) {
+      throw handleAuthError(
+        error,
+        "Não foi possível enviar o e-mail de recuperação."
+      );
     }
-
-    return await response.json();
   };
+
+  const authContextValue: AuthContextType = {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    updatePassword,
+    forgotPassword,
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        register,
-        logout,
-        updatePassword,
-        forgotPassword,
-      }}
-    >
+    <AuthContext.Provider value={authContextValue}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+  }
+  return context;
+};
