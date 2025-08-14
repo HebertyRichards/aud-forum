@@ -17,7 +17,7 @@ import { useAuth } from "@/services/auth";
 
 export default function RecoveryPassword() {
   const [email, setEmail] = useState("");
-  const [erro, setErro] = useState("");
+  const [error, setError] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
@@ -29,16 +29,16 @@ export default function RecoveryPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      setErro("Erro de autenticação. Tente recarregar a página.");
+      setError("Erro de autenticação. Tente recarregar a página.");
       return;
     }
 
     if (!email || !isValidEmail(email)) {
-      setErro("Informe um e-mail válido.");
+      setError("Informe um e-mail válido.");
       return;
     }
 
-    setErro("");
+    setError("");
     setSucesso("");
     setLoading(true);
 
@@ -46,13 +46,13 @@ export default function RecoveryPassword() {
       await auth.forgotPassword(email.trim());
       setSucesso("Enviamos a alteração para o seu email, confira!");
     } catch (error: unknown) {
-      let errorMessage = "Erro ao enviar e-mail.";
       if (error instanceof Error) {
-        errorMessage = error.message;
+        setError(error.message);
+      } else {
+        setError("Ocorreu uma falha inesperada");
       }
-      setErro(errorMessage);
       setLoading(false);
-    } 
+    }
   };
 
   return (
@@ -82,7 +82,7 @@ export default function RecoveryPassword() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              {erro && <p className="text-red-500 text-sm">{erro}</p>}
+              {error && <p className="text-red-500 text-sm">{error}</p>}
               {sucesso && <p className="text-green-500 text-sm">{sucesso}</p>}
             </form>
           </CardContent>

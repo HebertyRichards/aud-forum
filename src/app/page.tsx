@@ -34,16 +34,14 @@ export default function ForumPage() {
       return;
     }
 
-    async function ping() {
+    const ping = async () => {
       try {
         await fetch(`${API_URL}/user/ping`, {
           method: "POST",
           credentials: "include",
         });
-      } catch (error) {
-        console.error("Erro ao enviar ping:", error);
-      }
-    }
+      } catch (error: unknown) {}
+    };
 
     ping();
 

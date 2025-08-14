@@ -33,9 +33,7 @@ export function OnlineUsers() {
         );
 
         setUsers(onlineUsers);
-      } catch (error) {
-        console.error("Erro ao buscar usuários online:", error);
-      }
+      } catch (error: unknown) {}
     }
 
     fetchOnlineUsers();

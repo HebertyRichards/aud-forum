@@ -17,9 +17,7 @@ export function ForumStats({ stats }: ForumStatsProps) {
         if (!res.ok) throw new Error("Erro ao buscar último usuário");
         const data: ProfileData = await res.json();
         setNewestMember(data.username);
-      } catch (err) {
-        console.error("Erro ao buscar último registro:", err);
-      }
+      } catch (error: unknown) {}
     };
 
     fetchLastRegisteredUser();

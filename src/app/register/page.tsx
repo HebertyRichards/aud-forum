@@ -45,11 +45,9 @@ export default function Register() {
         router.push("/verification");
       }, 1000);
     } catch (error: unknown) {
-      let errorMessage = "Ocorreu um erro inesperado.";
       if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
+        setError(error.message);
+      } else setError("Ocorreu uma falha inesperada.");
     } finally {
       setLoading(false);
     }
@@ -76,6 +74,7 @@ export default function Register() {
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
                   placeholder="Digite seu nome de usuário"
+                  disabled={loading}
                   required
                 />
               </div>
@@ -88,6 +87,7 @@ export default function Register() {
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   placeholder="usuario@example.com"
+                  disabled={loading}
                   required
                 />
               </div>
@@ -98,6 +98,7 @@ export default function Register() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                   required
                 />
               </div>

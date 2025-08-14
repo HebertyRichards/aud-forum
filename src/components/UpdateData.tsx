@@ -26,6 +26,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,6 +40,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch(`${API_URL}/profile/update`, {
@@ -51,12 +53,19 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
         }),
       });
 
-      if (!res.ok) throw new Error("Erro ao atualizar perfil");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error || "Erro ao atualizar perfil");
+      }
 
       if (onSuccess) onSuccess();
       setOpen(false);
-    } catch (err) {
-      console.error(err);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Ocorreu uma falha inesperada.");
+      }
     } finally {
       setLoading(false);
     }
@@ -71,52 +80,43 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-white dark:bg-gray-800">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="username">Nome de usuário</Label>
-            <Input
-              id="username"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="gender">Gênero</Label>
-            <Input
-              id="gender"
-              name="gender"
-              value={form.gender}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="birthdate">Nascimento</Label>
-            <Input
-              id="birthdate"
-              name="birthdate"
-              type="date"
-              value={form.birthdate}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="location">Localização</Label>
-            <Input
-              id="location"
-              name="location"
-              value={form.location}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="website">Website</Label>
-            <Input
-              id="website"
-              name="website"
-              value={form.website}
-              onChange={handleChange}
-            />
-          </div>
+          <Label htmlFor="username">Nome de usuário</Label>
+          <Input
+            id="username"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+          />
+          <Label htmlFor="gender">Gênero</Label>
+          <Input
+            id="gender"
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+          />
+          <Label htmlFor="birthdate">Nascimento</Label>
+          <Input
+            id="birthdate"
+            name="birthdate"
+            type="date"
+            value={form.birthdate}
+            onChange={handleChange}
+          />
+          <Label htmlFor="location">Localização</Label>
+          <Input
+            id="location"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+          />
+          <Label htmlFor="website">Website</Label>
+          <Input
+            id="website"
+            name="website"
+            value={form.website}
+            onChange={handleChange}
+          />
+          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
             Salvar alterações

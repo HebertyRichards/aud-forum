@@ -28,11 +28,11 @@ export default function OtherProfile() {
         if (!res.ok) throw new Error("Erro ao carregar perfil.");
         const data = await res.json();
         setProfile(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message || "Erro desconhecido.");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
         } else {
-          setError("Erro desconhecido.");
+          setError("Ocorreu uma falha inesperada.");
         }
       } finally {
         setLoading(false);
