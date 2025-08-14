@@ -4,6 +4,7 @@ import Footer from "@/templates/Footer";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/services/auth";
+import { UserActivityTracker } from "@/components/UserActivityTracker";
 
 export const metadata: Metadata = {
   title: "Auditore Family",
@@ -37,6 +38,7 @@ export default function RootLayout({
         >
           <div className="min-h-screen bg-gray-200 dark:bg-gray-900">
             <AuthProvider>
+              <UserActivityTracker />
               <Header />
               {children}
               <Footer />
