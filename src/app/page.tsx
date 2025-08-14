@@ -40,7 +40,7 @@ export default function ForumPage() {
           method: "POST",
           credentials: "include",
         });
-      } catch (error: unknown) {}
+      } catch {}
     };
 
     ping();

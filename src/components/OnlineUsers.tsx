@@ -33,7 +33,7 @@ export function OnlineUsers() {
         );
 
         setUsers(onlineUsers);
-      } catch (error: unknown) {}
+      } catch {}
     }
 
     fetchOnlineUsers();

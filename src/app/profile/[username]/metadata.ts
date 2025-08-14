@@ -27,7 +27,7 @@ export async function generateMetadata({
       title: `Auditore Family - perfil de ${data.username}`,
       description: `Perfil de ${data.username} na Auditore Family.`,
     };
-  } catch (error: unknown) {
+  } catch {
     return {
       title: "Auditore Family - Erro ao carregar",
       description: "Não foi possível carregar as informações do perfil.",

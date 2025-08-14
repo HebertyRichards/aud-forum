@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setUser(null);
       }
-    } catch (error: unknown) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);
