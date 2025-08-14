@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogTrigger,
@@ -21,7 +28,6 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
     gender: profile.gender || "",
     birthdate: profile.birthdate || "",
     location: profile.location || "",
-    website: profile.website || "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,10 +37,16 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { name: string; value: string }
   ) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    if ("target" in e) {
+      const { name, value } = e.target;
+      setForm((prev) => ({ ...prev, [name]: value }));
+    } else {
+      setForm((prev) => ({ ...prev, [e.name]: e.value }));
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -80,7 +92,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-white dark:bg-gray-800">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Label htmlFor="username">Nome de usuário</Label>
+          <Label htmlFor="username">Nick do usuário</Label>
           <Input
             id="username"
             name="username"
@@ -88,12 +100,21 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
             onChange={handleChange}
           />
           <Label htmlFor="gender">Gênero</Label>
-          <Input
-            id="gender"
-            name="gender"
-            value={form.gender}
-            onChange={handleChange}
-          />
+          <Select
+            value={form.gender || ""}
+            onValueChange={(value) => handleChange({ name: "gender", value })}
+          >
+            <SelectTrigger
+              id="gender"
+              className="flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs"
+            >
+              <SelectValue placeholder="Selecione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Masculino">Masculino</SelectItem>
+              <SelectItem value="Feminino">Feminino</SelectItem>
+            </SelectContent>
+          </Select>
           <Label htmlFor="birthdate">Nascimento</Label>
           <Input
             id="birthdate"
@@ -107,13 +128,6 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
             id="location"
             name="location"
             value={form.location}
-            onChange={handleChange}
-          />
-          <Label htmlFor="website">Website</Label>
-          <Input
-            id="website"
-            name="website"
-            value={form.website}
             onChange={handleChange}
           />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}

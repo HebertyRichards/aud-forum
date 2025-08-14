@@ -4,7 +4,6 @@ export interface UpdateDataProps {
       gender?: string;
       birthdate?: string;
       location?: string;
-      website?: string;
     };
     onSuccess?: () => void;
   }
