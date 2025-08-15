@@ -28,7 +28,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   return (
-    <div className="mt-6 rounded-md border bg-white dark:bg-gray-800">
+    <div className="mt-6 rounded-md border bg-white dark:bg-gray-800 overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -37,10 +37,16 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               Avatar - Nome de usuário
             </TableHead>
             <TableHead>Data de inscrição</TableHead>
-            <TableHead>Última visita</TableHead>
-            <TableHead>Mensagens</TableHead>
-            <TableHead className="text-center">MP</TableHead>
-            <TableHead className="text-center">Web site</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Última visita
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Mensagens</TableHead>
+            <TableHead className="hidden lg:table-cell text-center">
+              MP
+            </TableHead>
+            <TableHead className="hidden lg:table-cell text-center">
+              Web site
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,16 +79,20 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                 </div>
               </TableCell>
               <TableCell>{formatJoinDate(member.joinDate)}</TableCell>
-              <TableCell>{formatLastLogin(member.lastVisit)}</TableCell>
-              <TableCell className="font-medium">{member.messages}</TableCell>
-              <TableCell className="text-center">
+              <TableCell className="hidden md:table-cell">
+                {formatLastLogin(member.lastVisit)}
+              </TableCell>
+              <TableCell className="hidden md:table-cell font-medium">
+                {member.messages}
+              </TableCell>
+              <TableCell className="hidden lg:table-cell text-center">
                 {member.hasPrivateMessage && (
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <Mail className="h-4 w-4" />
                   </Button>
                 )}
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className="hidden lg:table-cell text-center">
                 {member.hasWebsite && (
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <Globe className="h-4 w-4" />
