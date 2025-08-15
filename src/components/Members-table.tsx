@@ -44,9 +44,9 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {members.map((member) => (
+          {members.map((member, index) => (
             <TableRow key={member.id}>
-              <TableCell className="font-medium">{member.id}</TableCell>
+              <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
