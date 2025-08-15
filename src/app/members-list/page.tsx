@@ -1,5 +1,3 @@
-// src/app/members/page.tsx
-
 "use client";
 
 import { MembersFilters } from "@/components/Members-filter";
@@ -9,15 +7,13 @@ import { Member } from "@/types/users";
 import { useEffect, useMemo, useState } from "react";
 
 export default function MembersList() {
-  // Estado original com todos os membros
   const [allMembers, setAllMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // --- NOVOS ESTADOS PARA OS FILTROS ---
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("ultima-visita"); // Valor padrão do Select
-  const [sortOrder, setSortOrder] = useState("decrescente"); // Valor padrão do Select
+  const [sortBy, setSortBy] = useState("ultima-visita");
+  const [sortOrder, setSortOrder] = useState("decrescente");
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -34,18 +30,15 @@ export default function MembersList() {
     fetchMembers();
   }, []);
 
-  // --- LÓGICA PARA FILTRAR E ORDENAR OS MEMBROS ---
   const filteredMembers = useMemo(() => {
     let members = [...allMembers];
 
-    // 1. Lógica de Filtragem (pelo nome de usuário)
     if (searchTerm) {
       members = members.filter((member) =>
         member.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Lógica de Ordenação
     members.sort((a, b) => {
       let compareResult = 0;
       switch (sortBy) {
@@ -62,7 +55,7 @@ export default function MembersList() {
         case "ultima-visita":
         default:
           compareResult =
-            new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime(); // Note: datas são strings, precisam ser convertidas
+            new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime();
           break;
       }
       return sortOrder === "crescente" ? compareResult : -compareResult;

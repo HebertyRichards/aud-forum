@@ -15,13 +15,13 @@ export async function getAllMembers(): Promise<Member[]> {
       id: index + 1,
       avatar: `https://ui-avatars.com/api/?name=${apiMember.username}&background=random`,
       username: apiMember.username,
-      role: apiMember.role as Member["role"],
-      joinDate: new Date(apiMember.joined_at).toLocaleDateString("pt-BR"),
-      lastVisit: new Date(apiMember.last_login).toLocaleDateString("pt-BR"),
-      messages: 0,
-      hasPrivateMessage: false,
-      hasWebsite: false,
-      humor: "",
+      role: apiMember.role as Member['role'],
+      joinDate: apiMember.joined_at,
+      lastVisit: apiMember.last_login,
+      messages: 0, 
+      hasPrivateMessage: false, 
+      hasWebsite: false, 
+      humor: '', 
     }));
 
     return transformedData;

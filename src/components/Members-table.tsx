@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Mail, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MembersTableProps } from "@/types/users";
+import { formatLastLogin, formatJoinDate } from "@/utils/dateUtils";
+import Link from "next/link";
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   if (isLoading) {
@@ -51,22 +53,27 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                     <AvatarImage src={member.avatar} alt={member.username} />
                     <AvatarFallback>{member.username.charAt(0)}</AvatarFallback>
                   </Avatar>
-                  <span
-                    className={cn("font-semibold", {
-                      "text-green-600": member.role === "Visitante",
-                      "text-orange-500": member.role === "Partner",
-                      "text-blue-500": member.role === "Membro",
-                      "text-pink-600": member.role === "Leader",
-                      "text-red-500": member.role === "Fundador",
-                      "text-yellow-500": member.role === "Desenvolvedor",
-                    })}
+                  <Link
+                    href={`/profile/${member.username}`}
+                    className="hover:underline"
                   >
-                    {member.username}
-                  </span>
+                    <span
+                      className={cn("font-semibold", {
+                        "text-green-600": member.role === "Visitante",
+                        "text-orange-500": member.role === "Partner",
+                        "text-blue-500": member.role === "Membro",
+                        "text-pink-600": member.role === "Leader",
+                        "text-red-500": member.role === "Fundador",
+                        "text-yellow-500": member.role === "Desenvolvedor",
+                      })}
+                    >
+                      {member.username}
+                    </span>
+                  </Link>
                 </div>
               </TableCell>
-              <TableCell>{member.joinDate}</TableCell>
-              <TableCell>{member.lastVisit}</TableCell>
+              <TableCell>{formatJoinDate(member.joinDate)}</TableCell>
+              <TableCell>{formatLastLogin(member.lastVisit)}</TableCell>
               <TableCell className="font-medium">{member.messages}</TableCell>
               <TableCell className="text-center">
                 {member.hasPrivateMessage && (
