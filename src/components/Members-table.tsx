@@ -9,10 +9,22 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Mail, Globe } from "lucide-react";
-import { members } from "@/utils/data";
 import { cn } from "@/lib/utils";
+import { MembersTableProps } from "@/types/users";
 
-export function MembersTable() {
+export function MembersTable({ members, isLoading, error }: MembersTableProps) {
+  if (isLoading) {
+    return <div className="text-center mt-10">Carregando membros...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-10 text-red-500">{error}</div>;
+  }
+
+  if (members.length === 0) {
+    return <div className="text-center mt-10">Nenhum membro encontrado.</div>;
+  }
+
   return (
     <div className="mt-6 rounded-md border bg-white dark:bg-gray-800">
       <Table>
@@ -41,9 +53,12 @@ export function MembersTable() {
                   </Avatar>
                   <span
                     className={cn("font-semibold", {
-                      "text-red-600": member.role === "leader",
-                      "text-orange-500": member.role === "auditore",
-                      "text-blue-600": member.role === "default",
+                      "text-green-600": member.role === "Visitante",
+                      "text-orange-500": member.role === "Partner",
+                      "text-blue-500": member.role === "Membro",
+                      "text-pink-600": member.role === "Leader",
+                      "text-red-500": member.role === "Fundador",
+                      "text-yellow-500": member.role === "Desenvolvedor",
                     })}
                   >
                     {member.username}

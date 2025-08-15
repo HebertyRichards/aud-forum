@@ -19,6 +19,7 @@ import { UpdateContacts } from "@/components/UpdateContacts";
 import { formatUrl } from "@/utils/urlUtils";
 import { formatLastLogin } from "@/utils/dateUtils";
 import { UserProfile } from "@/types/users";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const auth = useAuth();
@@ -28,8 +29,15 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [loading, user, router]);
 
   const fetchProfile = useCallback(
     async (userId: string) => {
@@ -88,6 +96,15 @@ export default function Profile() {
       default:
         return "text-gray-400";
     }
+  }
+
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <p className="ml-2">Verificando sessão...</p>
+      </div>
+    );
   }
   return (
     <div className="min-h-screen font-sans">

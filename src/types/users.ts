@@ -11,7 +11,7 @@ export type OnlineUser = {
   };
 
   
-export type MemberRole = 'default' | 'auditore' | 'leader';
+export type MemberRole = 'Visitante' | 'Membro' | 'Leader' | 'Desenvolvedor' | 'Partner' | 'Fundador';
 export type Member = {
   id: number;
   avatar: string;
@@ -24,6 +24,29 @@ export type Member = {
   hasPrivateMessage: boolean;
   hasWebsite: boolean;
 };
+
+export interface ApiMember {
+  username: string;
+  role: string;
+  joined_at: string;
+  last_login: string;
+}
+
+
+export type MembersTableProps = {
+  members: Member[];
+  isLoading: boolean;
+  error: string | null;
+};
+
+export interface MembersFiltersProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  sortBy: string;
+  setSortBy: (value: string) => void;
+  sortOrder: string;
+  setSortOrder: (value: string) => void;
+}
 
 export interface ForumStatsProps {
     stats: {
