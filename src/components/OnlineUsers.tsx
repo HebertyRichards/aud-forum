@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { OnlineUser, RawOnlineUser } from "@/types/users";
+import Link from "next/link";
 
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
@@ -19,7 +20,6 @@ export function OnlineUsers() {
         });
 
         if (!res.ok) {
-          console.error("Erro ao buscar usuários online:", res.status);
           return;
         }
 
@@ -73,9 +73,11 @@ export function OnlineUsers() {
                   }`}
                 />
               </div>
-              <span className="text-sm font-medium hover:underline cursor-pointer">
-                {user.name}
-              </span>
+              <Link href={`/profile/${user.name}`}>
+                <span className="text-sm font-medium hover:underline cursor-pointer">
+                  {user.name}
+                </span>
+              </Link>
             </div>
           ))}
         </div>
