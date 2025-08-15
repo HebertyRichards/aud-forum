@@ -1,18 +1,19 @@
 import { Member, ApiMember } from "@/types/users";
-export async function getAllMembers(): Promise<Member[]> {
+export async function getAllMembers(page: number): Promise<{ members: Member[], totalCount: number }> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  console.log("Tentando buscar dados de:", `${API_URL}/profile/user/all`);
+  const limit = 20;
+  
   try {
-    const res = await fetch(`${API_URL}/profile/user/all`);
+    const res = await fetch(`${API_URL}/profile/user/all?page=${page}&limit=${limit}`);
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.message || "Falha ao buscar os membros.");
     }
 
-    const data: ApiMember[] = await res.json();
+    const { data, totalCount }: { data: ApiMember[], totalCount: number } = await res.json();
 
     const transformedData: Member[] = data.map((apiMember, index) => ({
-      id: index + 1,
+      id: (page - 1) * limit + index + 1,
       avatar: `https://ui-avatars.com/api/?name=${apiMember.username}&background=random`,
       username: apiMember.username,
       role: apiMember.role as Member['role'],
@@ -24,7 +25,8 @@ export async function getAllMembers(): Promise<Member[]> {
       humor: '', 
     }));
 
-    return transformedData;
+    return { members: transformedData, totalCount }
+    
   } catch (error: unknown) {
     throw error;
   }

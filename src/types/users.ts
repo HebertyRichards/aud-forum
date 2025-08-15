@@ -10,7 +10,6 @@ export type OnlineUser = {
     };
   };
 
-  
 export type MemberRole = 'Visitante' | 'Membro' | 'Leader' | 'Desenvolvedor' | 'Partner' | 'Fundador';
 export type Member = {
   id: number;
@@ -26,12 +25,12 @@ export type Member = {
 };
 
 export interface ApiMember {
+  id: number;
   username: string;
   role: string;
   joined_at: string;
   last_login: string;
 }
-
 
 export type MembersTableProps = {
   members: Member[];
