@@ -1,7 +1,7 @@
 "use client";
 
-import { MembersFilters } from "@/components/Members-filter";
-import { MembersTable } from "@/components/Members-table";
+import { MembersFilters } from "@/components/members-list/Members-filter";
+import { MembersTable } from "@/components/members-list/Members-table";
 import { getAllMembers } from "@/services/member";
 import { Member } from "@/types/users";
 import { useEffect, useMemo, useState } from "react";
