@@ -8,6 +8,7 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   updatePassword: (newPassword: string, accessToken: string) => Promise<void>
   forgotPassword:(email: string) => Promise<void>
+  updateUserAvatar: (newAvatarUrl: string) => void;
 }
 
 export interface UserWithProfile extends User {

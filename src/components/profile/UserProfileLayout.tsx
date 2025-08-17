@@ -19,6 +19,7 @@ import { formatUrl } from "@/utils/urlUtils";
 import { formatLastLogin } from "@/utils/dateUtils";
 import { UpdateData } from "./UpdateData";
 import { UpdateContacts } from "./UpdateContacts";
+import { UpdateAvatar } from "./UpdateAvatar";
 
 function formatDate(dateStr?: string) {
   if (!dateStr) return "--";
@@ -87,7 +88,6 @@ export function UserProfileLayout({
             <TabsTrigger value="amigos">Amigos</TabsTrigger>
             <TabsTrigger value="contato">Contato</TabsTrigger>
           </TabsList>
-
           <TabsContent value="perfil" className="mt-4">
             <Card className="border-gray-700 bg-white dark:bg-gray-800">
               <CardHeader>
@@ -147,7 +147,6 @@ export function UserProfileLayout({
                 )}
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* ... Conteúdo do perfil com os campos de contato ... */}
                 <div className="flex justify-between py-2 items-center">
                   <span className="font-semibold">Website:</span>
                   {profile?.website ? (
@@ -180,7 +179,6 @@ export function UserProfileLayout({
                   )}
                 </div>
                 <Separator className="bg-gray-600" />
-
                 <div className="flex justify-between py-2 items-center">
                   <span className="font-semibold">Instagram:</span>
                   {profile?.instagram ? (
@@ -197,7 +195,6 @@ export function UserProfileLayout({
                   )}
                 </div>
                 <Separator className="bg-gray-600" />
-
                 <div className="flex justify-between py-2 items-center">
                   <span className="font-semibold">Discord:</span>
                   {profile?.discord ? (
@@ -214,7 +211,6 @@ export function UserProfileLayout({
                   )}
                 </div>
                 <Separator className="bg-gray-600" />
-
                 <div className="flex justify-between py-2 items-center">
                   <span className="font-semibold">Steam:</span>
                   {profile?.steam ? (
@@ -241,13 +237,17 @@ export function UserProfileLayout({
             <h2 className="text-xl font-bold text-blue-400 hover:underline cursor-pointer mb-4">
               {profile?.username}
             </h2>
-            <Avatar className="w-24 h-24 mb-4 border-2 border-gray-500">
-              <AvatarImage
-                src={profile?.avatarUrl || undefined}
-                alt={profile?.username}
-              />
-              <AvatarFallback>{profile?.username?.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <div className="relative group mb-4">
+              <Avatar className="w-24 h-24 border-2 border-gray-500">
+                <AvatarImage
+                  src={profile?.avatar_url || undefined}
+                  alt={profile?.username}
+                  key={profile?.avatar_url}
+                />
+                <AvatarFallback>{profile?.username?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              {isOwnProfile && <UpdateAvatar onSuccess={onSuccessUpdate} />}
+            </div>
             {!isOwnProfile && (
               <Button className="cursor-pointer text-white bg-blue-600 hover:bg-blue-700 w-full mb-4">
                 Seguir

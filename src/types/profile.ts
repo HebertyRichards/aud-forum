@@ -31,6 +31,11 @@ export interface UpdateDataProps {
     joined_at?: string;
     last_login?: string;
     total_posts?: number;
-    avatarUrl?: string;
+    avatar_url?: string;
     role?: string;
   }
+
+  export interface UpdateAvatarProps {
+    onSuccess: () => void;
+  }
+  
