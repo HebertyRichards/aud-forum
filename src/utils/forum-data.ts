@@ -126,11 +126,11 @@ import {
   ];
   
   export const onlineUsers: OnlineUser[] = [
-    { name: "Admin", role:"Visitante" ,avatar_url: "/placeholder.svg" },
-    { name: "PlayerOne", role:"Partner", avatar_url: "/placeholder.svg" },
-    { name: "MechanicPro", role:"Fundador", avatar_url: "/placeholder.svg" },
-    { name: "EventManager", role:"Leader", avatar_url: "/placeholder.svg" },
-    { name: "Newbie123", role:"Membro", avatar_url: "/placeholder.svg" },
+    { username: "Admin", role:"Visitante" ,avatar_url: "/placeholder.svg" },
+    { username: "PlayerOne", role:"Partner", avatar_url: "/placeholder.svg" },
+    { username: "MechanicPro", role:"Fundador", avatar_url: "/placeholder.svg" },
+    { username: "EventManager", role:"Leader", avatar_url: "/placeholder.svg" },
+    { username: "Newbie123", role:"Membro", avatar_url: "/placeholder.svg" },
   ];
   
   export const forumStats = {

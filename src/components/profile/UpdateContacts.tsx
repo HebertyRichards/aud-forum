@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UpdateContactsProps } from "@/types/users";
+import { UpdateContactsProps } from "@/types/profile";
 
 export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
   const { user } = useAuth()!;

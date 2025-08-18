@@ -7,12 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Mail, Globe } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { MembersTableProps } from "@/types/users";
 import { formatLastLogin, formatJoinDate } from "@/utils/dateUtils";
 import Link from "next/link";
+import { getRoleColor } from "@/utils/colors";
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   if (isLoading) {
@@ -45,13 +43,13 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
         </TableHeader>
         <TableBody>
           {members.map((member, index) => (
-            <TableRow key={member.id}>
+            <TableRow key={member.username}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage
-                      src={member.avatar_url}
+                      src={member.avatar_url || undefined}
                       alt={member.username}
                     />
                     <AvatarFallback>{member.username.charAt(0)}</AvatarFallback>
@@ -61,23 +59,16 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                     className="hover:underline"
                   >
                     <span
-                      className={cn("font-semibold", {
-                        "text-green-600": member.role === "Visitante",
-                        "text-orange-500": member.role === "Partner",
-                        "text-blue-500": member.role === "Membro",
-                        "text-pink-600": member.role === "Leader",
-                        "text-red-500": member.role === "Fundador",
-                        "text-yellow-500": member.role === "Desenvolvedor",
-                      })}
+                      className={`font-semibold ${getRoleColor(member.role)}`}
                     >
                       {member.username}
                     </span>
                   </Link>
                 </div>
               </TableCell>
-              <TableCell>{formatJoinDate(member.joinDate)}</TableCell>
+              <TableCell>{formatJoinDate(member.joined_at)}</TableCell>
               <TableCell className="hidden md:table-cell">
-                {formatLastLogin(member.lastVisit)}
+                {formatLastLogin(member.last_login)}
               </TableCell>
               <TableCell className="hidden md:table-cell font-medium">
                 {member.messages}

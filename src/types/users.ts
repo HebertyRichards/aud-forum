@@ -1,36 +1,24 @@
-export type OnlineUser = {
-    name: string;
-    avatar_url: string;
-    role: string
-  };
+import { UserProfile } from "./profile";
 
-  export type RawOnlineUser = {
-    profiles: {
-      username: string;
-      role: string;
-      avatar_url: string;
-    };
-  };
-
-export type MemberRole = 'Visitante' | 'Membro' | 'Leader' | 'Desenvolvedor' | 'Partner' | 'Fundador';
-export type Member = {
-  id: number;
-  avatar_url: string;
-  username: string;
-  role: MemberRole;
-  joinDate: string;
-  lastVisit: string;
-  messages: number;
+export type RawOnlineUser = {
+  profiles: Pick<UserProfile, "username" | "role" | "avatar_url">;
 };
 
-export interface ApiMember {
-  avatar_url: string;
-  id: number;
-  username: string;
-  role: string;
-  joined_at: string;
-  last_login: string;
-}
+export type OnlineUser = Pick<UserProfile, "username" | "role" | "avatar_url">;
+
+export type Member = Pick<
+  UserProfile,
+  "id" | "username" | "role" | "avatar_url" | "joined_at" | "last_login"
+> & {
+  messages: number; 
+  rowNumber: number;
+};
+
+
+export type ApiMember = Pick<
+  UserProfile,
+  "id" | "username" | "role" | "joined_at" | "last_login" | "avatar_url"
+>;
 
 export type MembersTableProps = {
   members: Member[];
@@ -48,26 +36,10 @@ export interface MembersFiltersProps {
 }
 
 export interface ForumStatsProps {
-    stats: {
-      activeMembers: number;
-      totalPosts: string;
-      totalTopics: number;
-      newestMember: string;
-    };
-  }
-  
-  export interface ProfileData {
-    username: string;
-  }
-  
-  export interface UpdateContactsProps {
-    profile: {
-      website?: string;
-      facebook?: string;
-      instagram?: string;
-      discord?: string;
-      steam?: string;
-      id: string;
-    };
-    onSuccess?: () => void;
-  }
+  stats: {
+    activeMembers: number;
+    totalPosts: string;
+    totalTopics: number;
+    newestMember: string;
+  };
+}

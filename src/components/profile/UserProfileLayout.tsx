@@ -20,34 +20,8 @@ import { formatLastLogin } from "@/utils/dateUtils";
 import { UpdateData } from "./UpdateData";
 import { UpdateContacts } from "./UpdateContacts";
 import { UpdateAvatar } from "./UpdateAvatar";
-
-function formatDate(dateStr?: string) {
-  if (!dateStr) return "--";
-  const date = new Date(dateStr);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-function getRoleColor(role?: string) {
-  switch (role?.toLowerCase()) {
-    case "visitante":
-      return "text-green-500";
-    case "partner":
-      return "text-yellow-500";
-    case "membro":
-      return "text-blue-500";
-    case "leader":
-      return "text-pink-500";
-    case "fundador":
-      return "text-red-500";
-    case "desenvolvedor":
-      return "text-yellow-400";
-    default:
-      return "text-gray-400";
-  }
-}
+import { getRoleColor } from "@/utils/colors";
+import { formatDate } from "@/utils/dateUtils";
 
 export function UserProfileLayout({
   profile,

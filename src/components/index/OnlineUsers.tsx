@@ -8,25 +8,7 @@ import { Users } from "lucide-react";
 import { OnlineUser, RawOnlineUser } from "@/types/users";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
-
-function getRoleColor(role?: string) {
-  switch (role?.toLowerCase()) {
-    case "visitante":
-      return "text-green-500";
-    case "partner":
-      return "text-yellow-500";
-    case "membro":
-      return "text-blue-500";
-    case "leader":
-      return "text-pink-500";
-    case "fundador":
-      return "text-red-500";
-    case "desenvolvedor":
-      return "text-yellow-400";
-    default:
-      return "text-gray-400";
-  }
-}
+import { getRoleColor } from "@/utils/colors";
 
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
@@ -47,7 +29,7 @@ export function OnlineUsers() {
         const data = await res.json();
         const onlineUsers: OnlineUser[] = (data as RawOnlineUser[]).map(
           (item) => ({
-            name: item.profiles.username,
+            username: item.profiles.username,
             avatar_url: item.profiles.avatar_url,
             role: item.profiles.role,
           })
@@ -78,11 +60,10 @@ export function OnlineUsers() {
         <div className="space-y-3">
           {users.map((user, index) => {
             const isCurrentUser =
-              currentUser && user.name === currentUser.username;
-
+              currentUser && user.username === currentUser.username;
             const profileUrl = isCurrentUser
               ? "/profile"
-              : `/profile/${user.name}`;
+              : `/profile/${user.username}`;
             return (
               <div key={index} className="flex items-center space-x-2">
                 <Avatar className="w-6 h-6">
@@ -90,7 +71,7 @@ export function OnlineUsers() {
                     <AvatarImage src={user.avatar_url} />
                   ) : (
                     <AvatarFallback className="text-xs">
-                      {user.name[0]}
+                      {user.username[0]}
                     </AvatarFallback>
                   )}
                 </Avatar>
@@ -100,7 +81,7 @@ export function OnlineUsers() {
                       user.role
                     )}`}
                   >
-                    {user.name}
+                    {user.username}
                   </span>
                 </Link>
               </div>

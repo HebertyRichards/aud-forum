@@ -55,7 +55,7 @@ export default function MembersList() {
           break;
         case "data-inscricao":
           compareResult =
-            new Date(a.joinDate).getTime() - new Date(b.joinDate).getTime();
+            new Date(a.joined_at).getTime() - new Date(b.joined_at).getTime();
           break;
         case "mensagens":
           compareResult = a.messages - b.messages;
@@ -63,7 +63,7 @@ export default function MembersList() {
         case "ultima-visita":
         default:
           compareResult =
-            new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
+            new Date(b.last_login).getTime() - new Date(a.last_login).getTime();
           break;
       }
       return sortOrder === "crescente" ? compareResult : -compareResult;
