@@ -42,23 +42,30 @@ export default function OtherProfile() {
   );
 
   useEffect(() => {
-    if (!auth.loading && !user) {
+    if (auth.loading) {
+      return;
+    }
+    if (!user) {
       router.push("/login");
+      return;
+    }
+    if (typeof username === "string" && user.username === username) {
+      router.push("/profile");
       return;
     }
     if (typeof username === "string") {
       fetchProfile(username);
-    } else if (!auth.loading) {
+    } else {
       setLoading(false);
       setError("Nome de usuário inválido.");
     }
   }, [user, auth.loading, router, fetchProfile, username]);
 
-  if (auth.loading) {
+  if (auth.loading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-        <p className="ml-2">Verificando sessão...</p>
+        <p className="ml-2">Carregando...</p>
       </div>
     );
   }

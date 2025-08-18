@@ -11,8 +11,11 @@ import { MembersTableProps } from "@/types/users";
 import { formatLastLogin, formatJoinDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
+import { useAuth } from "@/services/auth";
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
+  const { user } = useAuth();
+
   if (isLoading) {
     return <div className="text-center mt-10">Carregando membros...</div>;
   }
@@ -42,39 +45,45 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {members.map((member, index) => (
-            <TableRow key={member.username}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage
-                      src={member.avatar_url || undefined}
-                      alt={member.username}
-                    />
-                    <AvatarFallback>{member.username.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <Link
-                    href={`/profile/${member.username}`}
-                    className="hover:underline"
-                  >
-                    <span
-                      className={`font-semibold ${getRoleColor(member.role)}`}
-                    >
-                      {member.username}
-                    </span>
-                  </Link>
-                </div>
-              </TableCell>
-              <TableCell>{formatJoinDate(member.joined_at)}</TableCell>
-              <TableCell className="hidden md:table-cell">
-                {formatLastLogin(member.last_login)}
-              </TableCell>
-              <TableCell className="hidden md:table-cell font-medium">
-                {member.messages}
-              </TableCell>
-            </TableRow>
-          ))}
+          {members.map((member, index) => {
+            const isOwnProfile = user?.username === member.username;
+            const profileHref = isOwnProfile
+              ? "/profile"
+              : `/profile/${member.username}`;
+
+            return (
+              <TableRow key={member.username}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage
+                        src={member.avatar_url || undefined}
+                        alt={member.username}
+                      />
+                      <AvatarFallback>
+                        {member.username.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Link href={profileHref} className="hover:underline">
+                      <span
+                        className={`font-semibold ${getRoleColor(member.role)}`}
+                      >
+                        {member.username}
+                      </span>
+                    </Link>
+                  </div>
+                </TableCell>
+                <TableCell>{formatJoinDate(member.joined_at)}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {formatLastLogin(member.last_login)}
+                </TableCell>
+                <TableCell className="hidden md:table-cell font-medium">
+                  {member.messages}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
