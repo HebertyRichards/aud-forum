@@ -7,11 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { OnlineUser, RawOnlineUser } from "@/types/users";
 import Link from "next/link";
+import { useAuth } from "@/services/auth";
+import { getRoleColor } from "@/utils/colors";
 
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+  const { user: currentUser } = useAuth();
   useEffect(() => {
     async function fetchOnlineUsers() {
       try {
@@ -26,9 +29,9 @@ export function OnlineUsers() {
         const data = await res.json();
         const onlineUsers: OnlineUser[] = (data as RawOnlineUser[]).map(
           (item) => ({
-            name: item.profiles.username,
-            avatar: "/placeholder.svg",
-            status: "online",
+            username: item.profiles.username,
+            avatar_url: item.profiles.avatar_url,
+            role: item.profiles.role,
           })
         );
 
@@ -55,31 +58,35 @@ export function OnlineUsers() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {users.map((user, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <div className="relative">
+          {users.map((user, index) => {
+            const isCurrentUser =
+              currentUser && user.username === currentUser.username;
+            const profileUrl = isCurrentUser
+              ? "/profile"
+              : `/profile/${user.username}`;
+            return (
+              <div key={index} className="flex items-center space-x-2">
                 <Avatar className="w-6 h-6">
-                  {user.avatar ? (
-                    <AvatarImage src={user.avatar} />
+                  {user.avatar_url ? (
+                    <AvatarImage src={user.avatar_url} />
                   ) : (
                     <AvatarFallback className="text-xs">
-                      {user.name[0]}
+                      {user.username[0]}
                     </AvatarFallback>
                   )}
                 </Avatar>
-                <div
-                  className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                    user.status === "online" ? "bg-green-500" : "bg-yellow-500"
-                  }`}
-                />
+                <Link href={profileUrl}>
+                  <span
+                    className={`text-sm font-medium hover:underline cursor-pointer ${getRoleColor(
+                      user.role
+                    )}`}
+                  >
+                    {user.username}
+                  </span>
+                </Link>
               </div>
-              <Link href={`/profile/${user.name}`}>
-                <span className="text-sm font-medium hover:underline cursor-pointer">
-                  {user.name}
-                </span>
-              </Link>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>

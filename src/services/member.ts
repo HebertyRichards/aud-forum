@@ -13,16 +13,15 @@ export async function getAllMembers(page: number): Promise<{ members: Member[], 
     const { data, totalCount }: { data: ApiMember[], totalCount: number } = await res.json();
 
     const transformedData: Member[] = data.map((apiMember, index) => ({
-      id: (page - 1) * limit + index + 1,
-      avatar: `https://ui-avatars.com/api/?name=${apiMember.username}&background=random`,
+      id: apiMember.id,
+      rowNumber: (page - 1) * limit + index + 1,
+      avatar_url: apiMember.avatar_url,
       username: apiMember.username,
       role: apiMember.role as Member['role'],
-      joinDate: apiMember.joined_at,
-      lastVisit: apiMember.last_login,
+      joined_at: apiMember.joined_at,
+      last_login: apiMember.last_login,
       messages: 0, 
-      hasPrivateMessage: false, 
-      hasWebsite: false, 
-      humor: '', 
+
     }));
 
     return { members: transformedData, totalCount }

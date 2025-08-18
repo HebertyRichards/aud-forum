@@ -4,7 +4,7 @@ import Footer from "@/templates/Footer";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/services/auth";
-import { UserActivityTracker } from "@/components/UserActivityTracker";
+import { UserActivityTracker } from "@/services/activity";
 
 export const metadata: Metadata = {
   title: "Auditore Family",
