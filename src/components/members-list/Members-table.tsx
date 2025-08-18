@@ -41,12 +41,6 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               Última visita
             </TableHead>
             <TableHead className="hidden md:table-cell">Mensagens</TableHead>
-            <TableHead className="hidden lg:table-cell text-center">
-              MP
-            </TableHead>
-            <TableHead className="hidden lg:table-cell text-center">
-              Web site
-            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -56,7 +50,10 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src={member.avatar} alt={member.username} />
+                    <AvatarImage
+                      src={member.avatar_url}
+                      alt={member.username}
+                    />
                     <AvatarFallback>{member.username.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <Link
@@ -84,20 +81,6 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               </TableCell>
               <TableCell className="hidden md:table-cell font-medium">
                 {member.messages}
-              </TableCell>
-              <TableCell className="hidden lg:table-cell text-center">
-                {member.hasPrivateMessage && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Mail className="h-4 w-4" />
-                  </Button>
-                )}
-              </TableCell>
-              <TableCell className="hidden lg:table-cell text-center">
-                {member.hasWebsite && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Globe className="h-4 w-4" />
-                  </Button>
-                )}
               </TableCell>
             </TableRow>
           ))}

@@ -15,18 +15,16 @@ export type OnlineUser = {
 export type MemberRole = 'Visitante' | 'Membro' | 'Leader' | 'Desenvolvedor' | 'Partner' | 'Fundador';
 export type Member = {
   id: number;
-  avatar: string;
+  avatar_url: string;
   username: string;
   role: MemberRole;
-  humor?: string;
   joinDate: string;
   lastVisit: string;
   messages: number;
-  hasPrivateMessage: boolean;
-  hasWebsite: boolean;
 };
 
 export interface ApiMember {
+  avatar_url: string;
   id: number;
   username: string;
   role: string;
