@@ -145,9 +145,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!currentUser) return null;
       return {
         ...currentUser,
+        avatar_url: newAvatarUrl,
         user_metadata: {
           ...currentUser.user_metadata,
-          avatar_url: newAvatarUrl,
+          avatar_url: newAvatarUrl, 
         },
       };
     });

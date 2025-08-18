@@ -13,7 +13,7 @@ export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const { user: currentUser } = useAuth(); 
+  const { user: currentUser } = useAuth();
   useEffect(() => {
     async function fetchOnlineUsers() {
       try {
@@ -29,7 +29,7 @@ export function OnlineUsers() {
         const onlineUsers: OnlineUser[] = (data as RawOnlineUser[]).map(
           (item) => ({
             name: item.profiles.username,
-            avatar: "/placeholder.svg",
+            avatar_url: item.profiles.avatar_url,
             status: "online",
           })
         );
@@ -68,8 +68,8 @@ export function OnlineUsers() {
               <div key={index} className="flex items-center space-x-2">
                 <div className="relative">
                   <Avatar className="w-6 h-6">
-                    {user.avatar ? (
-                      <AvatarImage src={user.avatar} />
+                    {user.avatar_url ? (
+                      <AvatarImage src={user.avatar_url} />
                     ) : (
                       <AvatarFallback className="text-xs">
                         {user.name[0]}
