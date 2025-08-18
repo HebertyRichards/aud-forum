@@ -9,6 +9,25 @@ import { OnlineUser, RawOnlineUser } from "@/types/users";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
 
+function getRoleColor(role?: string) {
+  switch (role?.toLowerCase()) {
+    case "visitante":
+      return "text-green-500";
+    case "partner":
+      return "text-yellow-500";
+    case "membro":
+      return "text-blue-500";
+    case "leader":
+      return "text-pink-500";
+    case "fundador":
+      return "text-red-500";
+    case "desenvolvedor":
+      return "text-yellow-400";
+    default:
+      return "text-gray-400";
+  }
+}
+
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -30,7 +49,7 @@ export function OnlineUsers() {
           (item) => ({
             name: item.profiles.username,
             avatar_url: item.profiles.avatar_url,
-            status: "online",
+            role: item.profiles.role,
           })
         );
 
@@ -66,26 +85,21 @@ export function OnlineUsers() {
               : `/profile/${user.name}`;
             return (
               <div key={index} className="flex items-center space-x-2">
-                <div className="relative">
-                  <Avatar className="w-6 h-6">
-                    {user.avatar_url ? (
-                      <AvatarImage src={user.avatar_url} />
-                    ) : (
-                      <AvatarFallback className="text-xs">
-                        {user.name[0]}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div
-                    className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                      user.status === "online"
-                        ? "bg-green-500"
-                        : "bg-yellow-500"
-                    }`}
-                  />
-                </div>
+                <Avatar className="w-6 h-6">
+                  {user.avatar_url ? (
+                    <AvatarImage src={user.avatar_url} />
+                  ) : (
+                    <AvatarFallback className="text-xs">
+                      {user.name[0]}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
                 <Link href={profileUrl}>
-                  <span className="text-sm font-medium hover:underline cursor-pointer">
+                  <span
+                    className={`text-sm font-medium hover:underline cursor-pointer ${getRoleColor(
+                      user.role
+                    )}`}
+                  >
                     {user.name}
                   </span>
                 </Link>

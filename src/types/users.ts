@@ -1,12 +1,13 @@
 export type OnlineUser = {
     name: string;
-    status: "online" | "away";
     avatar_url: string;
+    role: string
   };
 
   export type RawOnlineUser = {
     profiles: {
       username: string;
+      role: string;
       avatar_url: string;
     };
   };
