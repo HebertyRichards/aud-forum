@@ -220,7 +220,12 @@ export function UserProfileLayout({
                 />
                 <AvatarFallback>{profile?.username?.charAt(0)}</AvatarFallback>
               </Avatar>
-              {isOwnProfile && <UpdateAvatar onSuccess={onSuccessUpdate} />}
+              {isOwnProfile && (
+                <UpdateAvatar
+                  onSuccess={onSuccessUpdate}
+                  currentAvatarUrl={profile?.avatar_url}
+                />
+              )}
             </div>
             {!isOwnProfile && (
               <Button className="cursor-pointer text-white bg-blue-600 hover:bg-blue-700 w-full mb-4">

@@ -3,10 +3,13 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "@/services/auth";
 import imageCompression from "browser-image-compression";
-import { Loader2, Camera } from "lucide-react";
+import { Loader2, Camera, Trash2 } from "lucide-react";
 import { UpdateAvatarProps } from "@/types/profile";
 
-export function UpdateAvatar({ onSuccess }: UpdateAvatarProps) {
+export function UpdateAvatar({
+  onSuccess,
+  currentAvatarUrl,
+}: UpdateAvatarProps & { currentAvatarUrl?: string | null }) {
   const { user, updateUserAvatar } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,6 +58,33 @@ export function UpdateAvatar({ onSuccess }: UpdateAvatarProps) {
     }
   };
 
+  const handleRemoveAvatar = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}/profile/user/avatar`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.error || "Falha ao remover o avatar.");
+      }
+
+      updateUserAvatar(result.avatar_url);
+      onSuccess();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Ocorreu um erro inesperado ao remover o avatar.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleClick = () => {
     fileInputRef.current?.click();
   };
@@ -69,18 +99,38 @@ export function UpdateAvatar({ onSuccess }: UpdateAvatarProps) {
         accept="image/png, image/jpeg, image/webp"
         disabled={loading}
       />
-      <button
-        onClick={handleClick}
-        disabled={loading}
-        className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-      >
+      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer gap-4">
         {loading ? (
           <Loader2 className="h-6 w-6 animate-spin text-white" />
         ) : (
-          <Camera className="h-6 w-6 text-white" />
+          <>
+            <button
+              onClick={handleClick}
+              disabled={loading}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              title="Alterar avatar"
+            >
+              <Camera className="h-6 w-6 text-white" />
+            </button>
+
+            {currentAvatarUrl && (
+              <button
+                onClick={handleRemoveAvatar}
+                disabled={loading}
+                className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+                title="Remover avatar"
+              >
+                <Trash2 className="h-6 w-6 text-white" />
+              </button>
+            )}
+          </>
         )}
-      </button>
-      {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
+      </div>
+      {error && (
+        <p className="text-xs text-red-500 mt-2 text-center absolute -bottom-6 w-full">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
