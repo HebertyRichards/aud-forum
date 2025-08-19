@@ -3,10 +3,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { useParams } from "next/navigation";
-import { UserProfile } from "@/types/profile";
+import { useParams, useRouter } from "next/navigation";
+import { UserProfile, FollowStats } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
-import { useRouter } from "next/navigation";
 export default function OtherProfile() {
   const auth = useAuth();
   const user = auth?.user;
@@ -16,6 +15,9 @@ export default function OtherProfile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<FollowStats | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,9 +27,26 @@ export default function OtherProfile() {
       setError(null);
       try {
         const res = await fetch(`${API_URL}/profile/user/${profileUsername}`);
-        if (!res.ok) throw new Error("Erro ao carregar perfil.");
-        const data = await res.json();
+        if (!res.ok) {throw new Error("Erro ao carregar perfil.");}
+        const data: UserProfile = await res.json();
         setProfile(data);
+        if (data && data.id && user?.id) {
+          const [statsRes, followersRes] = await Promise.all([
+            fetch(`${API_URL}/profile/${data.id}/stats`),
+            fetch(`${API_URL}/profile/${data.id}/followers`),
+          ]);
+          if (statsRes.ok) {
+            const statsData = await statsRes.json();
+            setStats(statsData);
+          }
+          if (followersRes.ok) {
+            const followersData = await followersRes.json();
+            const userIsFollower = followersData.some(
+              (follower: any) => follower.id === user.id
+            );
+            setIsFollowing(userIsFollower);
+          }
+        }
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);
@@ -38,7 +57,7 @@ export default function OtherProfile() {
         setLoading(false);
       }
     },
-    [API_URL]
+    [API_URL, user?.id]
   );
 
   useEffect(() => {
@@ -61,6 +80,45 @@ export default function OtherProfile() {
     }
   }, [user, auth.loading, router, fetchProfile, username]);
 
+  const handleApiAction = async (method: "POST" | "DELETE") => {
+    if (!profile?.id) {
+      alert("Ação não disponível: ID do usuário não encontrado.");
+      return;
+    }
+    setIsFollowLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/profile/${profile.id}/follow`, {
+        method,
+        credentials: "include",
+      });
+      if (!res.ok) {throw new Error('Ação falhou.');}
+      if (method === "POST") {
+        setIsFollowing(true);
+        setStats((prev) => ({
+          ...prev!,
+          followers_count: (prev?.followers_count ?? 0) + 1,
+        }));
+      } else {
+        setIsFollowing(false);
+        setStats((prev) => ({
+          ...prev!,
+          followers_count: Math.max(0, (prev?.followers_count ?? 0) - 1),
+        }));
+      }
+    } catch (error: unknown) {
+      if(error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Ocorreu uma falha inesperada.");
+      }
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
+
+  const handleFollow = () => handleApiAction("POST");
+  const handleUnfollow = () => handleApiAction("DELETE");
+
   if (auth.loading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -79,6 +137,11 @@ export default function OtherProfile() {
           error={error}
           isOwnProfile={false}
           onSuccessUpdate={() => {}}
+          stats={stats}
+          isFollowing={isFollowing}
+          isFollowLoading={isFollowLoading}
+          onFollow={handleFollow}
+          onUnfollow={handleUnfollow}
         />
       </main>
     </div>

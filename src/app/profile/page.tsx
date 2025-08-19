@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UserProfile } from "@/types/profile";
+import { UserProfile, FollowStats } from "@/types/profile";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 
@@ -13,6 +13,7 @@ export default function Profile() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<FollowStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,16 +25,19 @@ export default function Profile() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/${userId}`);
+        const [res, statsRes] = await Promise.all([
+          fetch(`${API_URL}/profile/${userId}`),
+          fetch(`${API_URL}/profile/${userId}/stats`),
+        ]);
         if (!res.ok) throw new Error("Erro ao carregar perfil.");
         const data = await res.json();
         setProfile(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("Ocorreu uma falha inesperada.");
+
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
         }
+      } catch (error: unknown) {
       } finally {
         setLoading(false);
       }
@@ -80,6 +84,7 @@ export default function Profile() {
           error={error}
           isOwnProfile={true}
           onSuccessUpdate={handleSuccessUpdate}
+          stats={stats}
         />
       </main>
     </div>

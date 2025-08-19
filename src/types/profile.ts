@@ -10,6 +10,11 @@ export interface UserProfileLayoutProps {
   error: string | null;
   isOwnProfile: boolean;
   onSuccessUpdate: () => void;
+  stats?: FollowStats | null;
+  isFollowing?: boolean;
+  isFollowLoading?: boolean;
+  onFollow?: () => void;
+  onUnfollow?: () => void;
 }
 
 export interface UserProfile {
@@ -30,6 +35,11 @@ export interface UserProfile {
   total_posts?: number;
 }
 
+export interface FollowStats {
+  followers_count: number;
+  following_count: number;
+}
+
 export interface UpdateContactsProps {
   profile: Partial<UserProfile>;
   onSuccess?: () => void;
@@ -38,4 +48,5 @@ export interface UpdateContactsProps {
 
 export interface UpdateAvatarProps {
   onSuccess: () => void;
+  currentAvatarUrl?: string | null;
 }
