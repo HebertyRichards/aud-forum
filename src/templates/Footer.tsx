@@ -36,7 +36,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/membros"
+                  href="/member-list"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Lista de Membros
@@ -44,15 +44,15 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/regras"
+                  href="#"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
-                  Regras da Família
+                  Regras do fórum
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/inscreva-se"
+                  href="/subscribe"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Recrutamento
@@ -68,12 +68,12 @@ export default function Footer() {
                   href="#"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
-                  Avisos da Liderança
+                  Downloads
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="general-discussions"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Discussões Gerais
@@ -81,18 +81,18 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/about"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
-                  Eventos & Atividades
+                  História da Família
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/manuals"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
-                  Galeria
+                  Manuais
                 </Link>
               </li>
             </ul>

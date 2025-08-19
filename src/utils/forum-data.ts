@@ -59,7 +59,7 @@ import {
           id: 3,
           icon: Album,
           title: "Sobre",
-          route:"/#",
+          route:"/about",
           lastPostInfo: "Qui 20 Out 2023 - 7:30",
           author: "insyne--",
           authorColorClass: "text-purple-600",
