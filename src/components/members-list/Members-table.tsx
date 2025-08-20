@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MembersTableProps } from "@/types/users";
-import { formatLastLogin, formatJoinDate } from "@/utils/dateUtils";
+import { formatLastLogin, formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
 import { useAuth } from "@/services/auth";
@@ -74,7 +74,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                     </Link>
                   </div>
                 </TableCell>
-                <TableCell>{formatJoinDate(member.joined_at)}</TableCell>
+                <TableCell>{formatDate(member.joined_at)}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {formatLastLogin(member.last_login)}
                 </TableCell>
