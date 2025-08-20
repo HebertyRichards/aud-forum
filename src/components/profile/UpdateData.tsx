@@ -26,7 +26,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   const [form, setForm] = useState({
     username: profile.username || "",
     gender: profile.gender || "",
-    birthdate: profile.birthdate || "",
+    birthdate: profile.birthdate ? profile.birthdate.split("T")[0] : "",
     location: profile.location || "",
   });
 
@@ -120,7 +120,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
             id="birthdate"
             name="birthdate"
             type="date"
-            value={form.birthdate}
+            value={form.birthdate ? form.birthdate.split("T")[0] : ""}
             onChange={handleChange}
           />
           <Label htmlFor="location">Localização</Label>
