@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
-import { UserProfile, FollowStats } from "@/types/profile";
+import { UserProfile, FollowStats, FollowerInfo } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 export default function OtherProfile() {
   const auth = useAuth();
@@ -27,22 +27,26 @@ export default function OtherProfile() {
       setError(null);
       try {
         const res = await fetch(`${API_URL}/profile/user/${profileUsername}`);
-        if (!res.ok) {throw new Error("Erro ao carregar perfil.");}
+        if (!res.ok) {
+          throw new Error("Erro ao carregar perfil.");
+        }
         const data: UserProfile = await res.json();
         setProfile(data);
+
         if (data && data.id && user?.id) {
           const [statsRes, followersRes] = await Promise.all([
             fetch(`${API_URL}/profile/${data.id}/stats`),
             fetch(`${API_URL}/profile/${data.id}/followers`),
           ]);
           if (statsRes.ok) {
-            const statsData = await statsRes.json();
+            const statsData: FollowStats = await statsRes.json();
             setStats(statsData);
           }
+
           if (followersRes.ok) {
-            const followersData = await followersRes.json();
+            const followersData: FollowerInfo[] = await followersRes.json();
             const userIsFollower = followersData.some(
-              (follower: any) => follower.id === user.id
+              (follower) => follower.id === user.id
             );
             setIsFollowing(userIsFollower);
           }
@@ -91,22 +95,24 @@ export default function OtherProfile() {
         method,
         credentials: "include",
       });
-      if (!res.ok) {throw new Error('Ação falhou.');}
+      if (!res.ok) {
+        throw new Error("Ação falhou.");
+      }
       if (method === "POST") {
         setIsFollowing(true);
         setStats((prev) => ({
-          ...prev!,
           followers_count: (prev?.followers_count ?? 0) + 1,
+          following_count: prev?.following_count ?? 0,
         }));
       } else {
         setIsFollowing(false);
         setStats((prev) => ({
-          ...prev!,
           followers_count: Math.max(0, (prev?.followers_count ?? 0) - 1),
+          following_count: prev?.following_count ?? 0,
         }));
       }
     } catch (error: unknown) {
-      if(error instanceof Error) {
+      if (error instanceof Error) {
         alert(error.message);
       } else {
         alert("Ocorreu uma falha inesperada.");
@@ -133,10 +139,10 @@ export default function OtherProfile() {
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
         <UserProfileLayout
           profile={profile}
-          isLoading={loading}
+          isLoading={loading || auth.loading}
           error={error}
           isOwnProfile={false}
-          onSuccessUpdate={() => {}}
+          onSuccessUpdate={() => fetchProfile(username as string)}
           stats={stats}
           isFollowing={isFollowing}
           isFollowLoading={isFollowLoading}

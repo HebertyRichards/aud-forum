@@ -22,37 +22,49 @@ export default function Profile() {
 
   const fetchProfile = useCallback(
     async (userId: string) => {
-      setLoading(true);
+      if (!updating) {
+        setLoading(true);
+      }
       setError(null);
       try {
         const [res, statsRes] = await Promise.all([
           fetch(`${API_URL}/profile/${userId}`),
           fetch(`${API_URL}/profile/${userId}/stats`),
         ]);
-        if (!res.ok) throw new Error("Erro ao carregar perfil.");
-        const data = await res.json();
+        if (!res.ok) {
+          throw new Error("Erro ao carregar o perfil.");
+        }
+        const data: UserProfile = await res.json();
         setProfile(data);
 
         if (statsRes.ok) {
-          const statsData = await statsRes.json();
+          const statsData: FollowStats = await statsRes.json();
           setStats(statsData);
         }
       } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("Ocorreu uma falha inesperada ao carregar o perfil.");
+        }
       } finally {
         setLoading(false);
       }
     },
-    [API_URL]
+    [API_URL, updating]
   );
 
   useEffect(() => {
-    if (!auth.loading && !user) {
+    if (auth.loading) {
+      return; 
+    }
+    if (!user) {
       router.push("/login");
       return;
     }
-    if (user?.id) {
+    if (user.id) {
       fetchProfile(user.id);
-    } else if (!auth.loading && !user?.id) {
+    } else {
       setLoading(false);
       setError("Não foi possível identificar o usuário.");
     }
@@ -65,11 +77,13 @@ export default function Profile() {
     }
   };
 
-  if (auth.loading) {
+  if (auth.loading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-        <p className="ml-2">Verificando sessão...</p>
+        <p className="ml-2">
+          {auth.loading ? "Verificando sessão..." : "Carregando perfil..."}
+        </p>
       </div>
     );
   }
