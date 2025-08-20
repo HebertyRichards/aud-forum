@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export interface UserProfile {
   id: string;
   username: string;
@@ -76,3 +77,14 @@ export interface FollowListModalProps {
   listType: "followers" | "following";
   onClose: () => void;
 }
+=======
+export interface UpdateDataProps {
+    profile: {
+      username: string;
+      gender?: string;
+      birthdate?: string;
+      location?: string;
+    };
+    onSuccess?: () => void;
+  }
+>>>>>>> parent of 018768f (Merge pull request #8 from HebertyRichards/dev)

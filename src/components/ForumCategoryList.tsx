@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ForumTopicRow } from "./ForumTopicRow";
+import { ForumTopicRow } from "@/components/ForumTopicRow";
 import { ForumCategoryListProps } from "@/types/post";
 
 export function ForumCategoryList({ categories }: ForumCategoryListProps) {

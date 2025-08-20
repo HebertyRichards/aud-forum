@@ -1,24 +1,36 @@
-import { UserProfile } from "./profile";
+export type OnlineUser = {
+    name: string;
+    status: "online" | "away";
+    avatar: string;
+  };
 
-export type RawOnlineUser = {
-  profiles: Pick<UserProfile, "username" | "role" | "avatar_url">;
+  export type RawOnlineUser = {
+    profiles: {
+      username: string;
+    };
+  };
+
+export type MemberRole = 'Visitante' | 'Membro' | 'Leader' | 'Desenvolvedor' | 'Partner' | 'Fundador';
+export type Member = {
+  id: number;
+  avatar: string;
+  username: string;
+  role: MemberRole;
+  humor?: string;
+  joinDate: string;
+  lastVisit: string;
+  messages: number;
+  hasPrivateMessage: boolean;
+  hasWebsite: boolean;
 };
 
-export type OnlineUser = Pick<UserProfile, "username" | "role" | "avatar_url">;
-
-export type Member = Pick<
-  UserProfile,
-  "id" | "username" | "role" | "avatar_url" | "joined_at" | "last_login"
-> & {
-  messages: number; 
-  rowNumber: number;
-};
-
-
-export type ApiMember = Pick<
-  UserProfile,
-  "id" | "username" | "role" | "joined_at" | "last_login" | "avatar_url"
->;
+export interface ApiMember {
+  id: number;
+  username: string;
+  role: string;
+  joined_at: string;
+  last_login: string;
+}
 
 export type MembersTableProps = {
   members: Member[];
@@ -36,10 +48,44 @@ export interface MembersFiltersProps {
 }
 
 export interface ForumStatsProps {
-  stats: {
-    activeMembers: number;
-    totalPosts: string;
-    totalTopics: number;
-    newestMember: string;
-  };
-}
+    stats: {
+      activeMembers: number;
+      totalPosts: string;
+      totalTopics: number;
+      newestMember: string;
+    };
+  }
+  
+  export interface ProfileData {
+    username: string;
+  }
+
+  export interface UserProfile {
+    id: string;
+    username: string;
+    gender?: string;
+    birthdate?: string;
+    location?: string;
+    website?: string;
+    facebook?: string;
+    instagram?: string;
+    discord?: string;
+    steam: string;
+    joined_at?: string;
+    last_login?: string;
+    total_posts?: number;
+    avatarUrl?: string;
+    role?: string;
+  }
+
+  export interface UpdateContactsProps {
+    profile: {
+      website?: string;
+      facebook?: string;
+      instagram?: string;
+      discord?: string;
+      steam?: string;
+      id: string;
+    };
+    onSuccess?: () => void;
+  }

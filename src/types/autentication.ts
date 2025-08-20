@@ -1,5 +1,4 @@
 import type { User } from "@supabase/supabase-js";
-import { UserProfile } from "./profile";
 
 export interface AuthContextType {
   user: UserWithProfile | null;
@@ -7,9 +6,10 @@ export interface AuthContextType {
   login: (email: string, password: string, keepLogged: boolean) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  updatePassword: (newPassword: string, accessToken: string) => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
-  updateUserAvatar: (newAvatarUrl: string) => void;
+  updatePassword: (newPassword: string, accessToken: string) => Promise<void>
+  forgotPassword:(email: string) => Promise<void>
 }
 
-export interface UserWithProfile extends User, Partial<Pick<UserProfile, "username" | "avatar_url" | "role">> {}
+export interface UserWithProfile extends User {
+  username?: string;
+}

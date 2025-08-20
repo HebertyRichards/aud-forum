@@ -140,20 +140,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const updateUserAvatar = (newAvatarUrl: string) => {
-    setUser((currentUser) => {
-      if (!currentUser) return null;
-      return {
-        ...currentUser,
-        avatar_url: newAvatarUrl,
-        user_metadata: {
-          ...currentUser.user_metadata,
-          avatar_url: newAvatarUrl, 
-        },
-      };
-    });
-  };
-
   const authContextValue: AuthContextType = {
     user,
     loading,
@@ -162,7 +148,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     logout,
     updatePassword,
     forgotPassword,
-    updateUserAvatar,
   };
 
   return (

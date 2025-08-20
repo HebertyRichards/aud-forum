@@ -1,7 +1,7 @@
 "use client";
 
-import { MembersFilters } from "@/components/members-list/Members-filter";
-import { MembersTable } from "@/components/members-list/Members-table";
+import { MembersFilters } from "@/components/Members-filter";
+import { MembersTable } from "@/components/Members-table";
 import { getAllMembers } from "@/services/member";
 import { Member } from "@/types/users";
 import { useEffect, useMemo, useState } from "react";
@@ -55,7 +55,7 @@ export default function MembersList() {
           break;
         case "data-inscricao":
           compareResult =
-            new Date(a.joined_at).getTime() - new Date(b.joined_at).getTime();
+            new Date(a.joinDate).getTime() - new Date(b.joinDate).getTime();
           break;
         case "mensagens":
           compareResult = a.messages - b.messages;
@@ -63,7 +63,7 @@ export default function MembersList() {
         case "ultima-visita":
         default:
           compareResult =
-            new Date(b.last_login).getTime() - new Date(a.last_login).getTime();
+            new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
           break;
       }
       return sortOrder === "crescente" ? compareResult : -compareResult;
