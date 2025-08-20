@@ -50,3 +50,9 @@ export interface UpdateAvatarProps {
   onSuccess: () => void;
   currentAvatarUrl?: string | null;
 }
+
+export interface FollowerInfo {
+  id: string;
+  username: string;
+  avatar_url: string | null;
+}
