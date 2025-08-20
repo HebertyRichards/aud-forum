@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UserProfile, FollowStats } from "@/types/profile";
+import { UserProfile } from "@/types/profile";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 
@@ -13,7 +13,6 @@ export default function Profile() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [stats, setStats] = useState<FollowStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,49 +21,34 @@ export default function Profile() {
 
   const fetchProfile = useCallback(
     async (userId: string) => {
-      if (!updating) {
-        setLoading(true);
-      }
+      setLoading(true);
       setError(null);
       try {
-        const [res, statsRes] = await Promise.all([
-          fetch(`${API_URL}/profile/${userId}`),
-          fetch(`${API_URL}/profile/${userId}/stats`),
-        ]);
-        if (!res.ok) {
-          throw new Error("Erro ao carregar o perfil.");
-        }
-        const data: UserProfile = await res.json();
+        const res = await fetch(`${API_URL}/profile/${userId}`);
+        if (!res.ok) throw new Error("Erro ao carregar perfil.");
+        const data = await res.json();
         setProfile(data);
-
-        if (statsRes.ok) {
-          const statsData: FollowStats = await statsRes.json();
-          setStats(statsData);
-        }
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);
         } else {
-          setError("Ocorreu uma falha inesperada ao carregar o perfil.");
+          setError("Ocorreu uma falha inesperada.");
         }
       } finally {
         setLoading(false);
       }
     },
-    [API_URL, updating]
+    [API_URL]
   );
 
   useEffect(() => {
-    if (auth.loading) {
-      return;
-    }
-    if (!user) {
+    if (!auth.loading && !user) {
       router.push("/login");
       return;
     }
-    if (user.id) {
+    if (user?.id) {
       fetchProfile(user.id);
-    } else {
+    } else if (!auth.loading && !user?.id) {
       setLoading(false);
       setError("Não foi possível identificar o usuário.");
     }
@@ -77,20 +61,14 @@ export default function Profile() {
     }
   };
 
-  if (auth.loading || loading) {
+  if (auth.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-        <p className="ml-2">
-          {auth.loading ? "Verificando sessão..." : "Carregando perfil..."}
-        </p>
+        <p className="ml-2">Verificando sessão...</p>
       </div>
     );
   }
-
-  const followState = {
-    stats,
-  };
 
   return (
     <div className="min-h-screen font-sans">
@@ -102,7 +80,6 @@ export default function Profile() {
           error={error}
           isOwnProfile={true}
           onSuccessUpdate={handleSuccessUpdate}
-          followState={followState}
         />
       </main>
     </div>

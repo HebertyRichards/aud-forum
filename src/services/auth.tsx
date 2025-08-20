@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatar_url: newAvatarUrl,
         user_metadata: {
           ...currentUser.user_metadata,
-          avatar_url: newAvatarUrl, 
+          avatar_url: newAvatarUrl,
         },
       };
     });
