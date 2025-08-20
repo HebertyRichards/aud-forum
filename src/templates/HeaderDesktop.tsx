@@ -5,6 +5,7 @@ import { useAuth } from "@/services/auth";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function HeaderDesktop() {
   const auth = useAuth();
@@ -27,10 +28,13 @@ export function HeaderDesktop() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A</span>
-              </div>
-              <h1 className="text-2xl font-bold">Auditore</h1>
+              <Image
+                src="/header.png"
+                alt="Header Logo"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
             </div>
           </div>
           <nav className="hidden md:flex space-x-6">

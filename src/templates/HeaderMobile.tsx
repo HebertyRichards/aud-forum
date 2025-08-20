@@ -6,6 +6,7 @@ import { useAuth } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
+import Image from "next/image";
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,10 +39,13 @@ export function HeaderMobile() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
-            <h1 className="text-2xl font-bold">Auditore</h1>
+            <Image
+              src="/header.png"
+              alt="Header Logo"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
           </div>
           <div className="flex items-center space-x-2">
             <ModeToggle />
