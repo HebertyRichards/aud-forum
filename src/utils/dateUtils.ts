@@ -24,29 +24,26 @@ export function formatLastLogin(dateString: string | null): string {
   } else if (isYesterday) {
     return `Ontem às ${time}`;
   } else {
-    return `${formatDate(dateString)} às ${time}`;
+    return `${loginDate.toLocaleDateString("pt-BR")} às ${time}`;
   }
 }
 
 export function formatJoinDate(dateString: string): string {
     if (!dateString) return "-";
-    
+
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       return "Data inválida";
     }
 
-    return formatDate(dateString);
+    return date.toLocaleDateString("pt-BR");
 }
 
-export function formatDate(dateStr?: string): string {
+export function formatDate(dateStr?: string) {
   if (!dateStr) return "--";
-  const parts = dateStr.split('T')[0].split('-');
-  if (parts.length !== 3) return "Data inválida";
-
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
-
+  const date = new Date(dateStr);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
