@@ -1,7 +1,7 @@
 export default function Settings() {
-  return (
-    <>
-      <h1>Configurações</h1>
-    </>
-  );
-}
+    return (
+      <>
+        <h1>Configurações</h1>
+      </>
+    );
+  }
