@@ -24,36 +24,43 @@ export function HeaderDesktop() {
   const auth = useAuth();
   const router = useRouter();
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const userId = auth.user?.id;
     if (!userId) {
       setUserRole(null);
+      setUserAvatarUrl(null);
       return;
     }
 
-    const fetchUserRole = async () => {
+    const fetchUserProfile = async () => {
       try {
         const res = await fetch(`${API_URL}/profile/${userId}`);
         if (res.ok) {
           const profileData = await res.json();
           setUserRole(profileData.role);
+          setUserAvatarUrl(profileData.avatar_url);
         } else {
           setUserRole(null);
+          setUserAvatarUrl(null);
         }
       } catch {
         setUserRole(null);
+        setUserAvatarUrl(null);
       }
     };
 
-    fetchUserRole();
+    fetchUserProfile();
   }, [auth.user?.id]);
 
   const allowedRoles = ["Fundador", "Leader", "Membro", "Desenvolvedor"];
   const canViewRules = userRole && allowedRoles.includes(userRole);
 
   const handleLogout = async () => {
-    await auth.logout();
+    if (auth.logout) {
+      await auth.logout();
+    }
     router.push("/login");
   };
 
@@ -66,17 +73,15 @@ export function HeaderDesktop() {
     <header className="border-b shadow-sm bg-white dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image
-                src="/header.png"
-                alt="Header Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/header.png"
+              alt="Header Logo"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
+          </Link>
           <nav className="hidden md:flex space-x-6 items-center">
             <Link
               href="/"
@@ -123,7 +128,7 @@ export function HeaderDesktop() {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={auth.user.avatar_url || ""}
+                        src={userAvatarUrl || ""}
                         alt={getUsername()}
                       />
                       <AvatarFallback>

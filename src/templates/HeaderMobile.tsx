@@ -26,29 +26,34 @@ export function HeaderMobile() {
   const router = useRouter();
 
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null); 
   useEffect(() => {
     const userId = auth.user?.id;
     if (!userId) {
       setUserRole(null);
+      setUserAvatarUrl(null);
       return;
     }
 
-    const fetchUserRole = async () => {
+    const fetchUserProfile = async () => {
       try {
         const res = await fetch(`${API_URL}/profile/${userId}`);
         if (res.ok) {
           const profileData = await res.json();
           setUserRole(profileData.role);
+          setUserAvatarUrl(profileData.avatar_url);
         } else {
           setUserRole(null);
+          setUserAvatarUrl(null);
         }
-      } catch {
+      } catch (error) {
         setUserRole(null);
+        setUserAvatarUrl(null);
       }
     };
 
-    fetchUserRole();
-  }, [auth.user?.id]);
+    fetchUserProfile();
+  }, [auth.user?.id]); 
 
   const allowedRoles = ["Fundador", "Leader", "Membro", "Desenvolvedor"];
   const canViewRules = userRole && allowedRoles.includes(userRole);
@@ -98,7 +103,7 @@ export function HeaderMobile() {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={auth.user.avatar_url || ""}
+                        src={userAvatarUrl || ""}
                         alt={getUsername()}
                       />
                       <AvatarFallback>
