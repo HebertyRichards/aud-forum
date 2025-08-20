@@ -46,7 +46,7 @@ export function HeaderMobile() {
           setUserRole(null);
           setUserAvatarUrl(null);
         }
-      } catch (error) {
+      } catch {
         setUserRole(null);
         setUserAvatarUrl(null);
       }
