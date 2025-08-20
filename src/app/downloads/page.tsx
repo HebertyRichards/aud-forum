@@ -1,4 +1,4 @@
-import { DownloadCard } from "@/components/download/download-card";
+import { DownloadCard } from "@/components/download-card";
 import { Car, Music, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
