@@ -1,44 +1,39 @@
-// components/profile/FollowListModal.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, X } from "lucide-react";
-
-interface UserItem {
-  id: string;
-  username: string;
-  avatar_url: string | null;
-}
-
-interface FollowListModalProps {
-  userId: string;
-  listType: "followers" | "following";
-  onClose: () => void;
-}
+import { Loader2, X, AlertTriangle } from "lucide-react";
+import { UserPreview, FollowListModalProps } from "@/types/profile";
 
 export function FollowListModal({
   userId,
   listType,
   onClose,
 }: FollowListModalProps) {
-  const [users, setUsers] = useState<UserItem[]>([]);
+  const [users, setUsers] = useState<UserPreview[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
+      setError(null);
       try {
         const res = await fetch(`${API_URL}/profile/${userId}/${listType}`);
-        if (!res.ok) throw new Error("Falha ao carregar a lista.");
-        const data = await res.json();
+        if (!res.ok) {
+          throw new Error("Falha ao carregar a lista de usuários.");
+        }
+        const data: UserPreview[] = await res.json();
         setUsers(data);
-      } catch (error) {
-        console.error(error);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("Ocorreu um erro desconhecido.");
+        }
       } finally {
         setLoading(false);
       }
@@ -47,15 +42,15 @@ export function FollowListModal({
   }, [userId, listType, API_URL]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center">
-      <Card className="w-full max-w-md border-gray-700 bg-white dark:bg-gray-800 relative">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+      <Card className="w-full max-w-md border-gray-700 bg-white dark:bg-gray-800 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader className="text-center">
           <CardTitle className="capitalize">
             {listType === "followers" ? "Seguidores" : "Seguindo"}
           </CardTitle>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-white"
+            className="absolute top-3 right-3 text-gray-400 hover:text-white transition-opacity"
           >
             <X size={24} />
           </button>
@@ -64,6 +59,11 @@ export function FollowListModal({
           {loading ? (
             <div className="flex justify-center items-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center p-8 text-red-500">
+              <AlertTriangle className="h-6 w-6 mb-2" />
+              <p>{error}</p>
             </div>
           ) : users.length > 0 ? (
             <ul className="space-y-4">

@@ -1,7 +1,3 @@
-// profile.ts
-
-// --- Tipos de Dados ---
-
 export interface UserProfile {
   id: string;
   username: string;
@@ -31,8 +27,6 @@ export interface FollowStats {
   following_count: number;
 }
 
-// --- Tipos de Props para Componentes ---
-
 interface FollowState {
   isFollowing?: boolean;
   isFollowLoading?: boolean;
@@ -48,7 +42,7 @@ export interface UserProfileLayoutProps {
   error: string | null;
   isOwnProfile: boolean;
   onSuccessUpdate: () => void;
-  followState: FollowState; // Apenas a versão correta
+  followState: FollowState;
 }
 
 export interface UpdateDataProps {
@@ -75,4 +69,10 @@ export interface FollowButtonProps {
 export interface FollowerListProps {
   userId: string;
   type: "followers" | "following";
+}
+
+export interface FollowListModalProps {
+  userId: string;
+  listType: "followers" | "following";
+  onClose: () => void;
 }
