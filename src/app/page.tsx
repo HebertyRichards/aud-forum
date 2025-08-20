@@ -30,7 +30,6 @@ export default function ForumPage() {
           <RecentPosts posts={recentPosts} />
           <ForumCategoryList categories={forumData} />
         </main>
-
         <aside className="space-y-6">
           <ForumStats stats={forumStats} />
           <OnlineUsers />

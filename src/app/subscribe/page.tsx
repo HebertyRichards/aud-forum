@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MessageSquare, Search, PlusCircle, Pencil, Eye } from "lucide-react";
+import Link from "next/link";
 
 export default function Subscribe() {
   const posts = [
@@ -31,16 +32,17 @@ export default function Subscribe() {
               <MessageSquare className="w-4 h-4 mr-2" />
               Novas mensagens
             </Button>
-            <Button variant="ghost" size="sm">
-              <Search className="w-4 h-4 mr-2" />
-              Minhas mensagens
-            </Button>
             <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
               Tópicos sem resposta
             </Button>
+            <Button variant="ghost" size="sm" className="hidden md:inline-flex">
+              Seguir este fórum
+            </Button>
           </div>
+          
           <Button variant="ghost" size="sm" className="hidden md:inline-flex">
-            Marcar todos os fóruns como lidos
+          <Pencil className="w-5 h-5" />
+            Marcar todos os tópicos como lidos
           </Button>
         </div>
         <Card className="mb-6 p-0 bg-white dark:bg-gray-800 shadow-md">
@@ -52,9 +54,12 @@ export default function Subscribe() {
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="font-semibold text-blue-500">
+                <Link
+                  href="/subscribe/old"
+                  className="font-semibold text-blue-500"
+                >
                   Inscrições Antigas
-                </h3>
+                </Link>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   Qua 10 Nov 2021 - 22:03
                 </p>
@@ -72,10 +77,6 @@ export default function Subscribe() {
           </CardContent>
         </Card>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
-          <div className="flex items-center space-x-2">
-            <Pencil className="w-5 h-5" />
-            <span className="text-sm">Marcar todos os tópicos como lidos</span>
-          </div>
           <div className="flex items-center space-x-2">
             <div className="relative w-full sm:w-48">
               <Input type="text" placeholder="Procurar" className="pr-10" />
@@ -138,38 +139,6 @@ export default function Subscribe() {
             ))}
           </CardContent>
         </Card>
-        <div className="flex flex-col sm:flex-row sm:justify-between items-stretch sm:items-center gap-4 mt-4 text-sm">
-          <div className="flex flex-wrap gap-2">
-            <Button variant="ghost" size="sm">
-              Seguir este fórum
-            </Button>
-            <Button variant="ghost" size="sm">
-              Marcar lidos
-            </Button>
-            <Button variant="ghost" size="sm">
-              Selecionar
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <PlusCircle className="w-4 h-4 mr-2" />
-              Novo tópico
-            </Button>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span>Ir para:</span>
-            <Input
-              type="text"
-              placeholder="Selecionar um fórum"
-              className="w-full sm:w-48"
-            />
-            <Button variant="secondary">Ir</Button>
-          </div>
-        </div>
-        <div className="text-xs text-gray-500 mt-2">
-          Usuários navegando neste sub-fórum:{" "}
-          <span className="text-blue-500 font-semibold">
-            KiraOkami_Auditore
-          </span>
-        </div>
       </div>
     </div>
   );
