@@ -33,12 +33,10 @@ export function UserProfileLayout({
   error,
   isOwnProfile,
   onSuccessUpdate,
-  stats,
-  isFollowing,
-  isFollowLoading,
-  onFollow,
-  onUnfollow,
+  followState,
 }: UserProfileLayoutProps) {
+  const { stats, isFollowing, isFollowLoading, onFollow, onUnfollow } =
+    followState;
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     listType: "followers" | "following" | null;

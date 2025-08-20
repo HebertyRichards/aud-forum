@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { FollowerInfo } from "@/types/profile";
+import { UserPreview, FollowerListProps } from "@/types/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 
-interface FollowerListProps {
-  userId: string;
-  type: "followers" | "following";
-}
-
 export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
-  const [list, setList] = useState<FollowerInfo[]>([]);
+  const [list, setList] = useState<UserPreview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchList = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        const response = await fetch(`/profiles/${userId}/${type}`);
+        const response = await fetch(`${API_URL}/profile/${userId}/${type}`);
+        if (!response.ok) {
+          throw new Error("Não foi possível carregar a lista.");
+        }
         const data = await response.json();
         setList(data);
       } catch (error: unknown) {
-        throw new Error(
-          `Erro ao carregar a lista de ${type}: ${
-            error instanceof Error ? error.message : "Erro desconhecido"
-          }`
-        );
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("Ocorreu um erro desconhecido.");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -34,7 +35,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
     if (userId) {
       fetchList();
     }
-  }, [userId, type]);
+  }, [userId, type, API_URL]);
 
   if (isLoading) {
     return (
@@ -44,9 +45,20 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-24 text-red-500">
+        <AlertTriangle className="h-5 w-5 mb-1" />
+        <p className="text-sm">{error}</p>
+      </div>
+    );
+  }
+
   if (list.length === 0) {
     return (
-      <p className="text-sm text-gray-400">Nenhum usuário para mostrar.</p>
+      <p className="text-center text-sm text-gray-400 py-4">
+        Nenhum usuário para mostrar.
+      </p>
     );
   }
 

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
-import { UserProfile, FollowStats, FollowerInfo } from "@/types/profile";
+import { UserProfile, FollowStats, UserPreview } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 export default function OtherProfile() {
   const auth = useAuth();
@@ -44,7 +44,7 @@ export default function OtherProfile() {
           }
 
           if (followersRes.ok) {
-            const followersData: FollowerInfo[] = await followersRes.json();
+            const followersData: UserPreview[] = await followersRes.json();
             const userIsFollower = followersData.some(
               (follower) => follower.id === user.id
             );
@@ -134,6 +134,14 @@ export default function OtherProfile() {
     );
   }
 
+  const followState = {
+    stats,
+    isFollowing,
+    isFollowLoading,
+    onFollow: handleFollow,
+    onUnfollow: handleUnfollow,
+  };
+
   return (
     <div className="min-h-screen font-sans">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
@@ -143,11 +151,7 @@ export default function OtherProfile() {
           error={error}
           isOwnProfile={false}
           onSuccessUpdate={() => fetchProfile(username as string)}
-          stats={stats}
-          isFollowing={isFollowing}
-          isFollowLoading={isFollowLoading}
-          onFollow={handleFollow}
-          onUnfollow={handleUnfollow}
+          followState={followState}
         />
       </main>
     </div>

@@ -15,11 +15,8 @@ export function FollowButton({
   isFollowing: initialIsFollowing,
   followersCount: initialFollowersCount,
 }: FollowButtonProps) {
-  const { isFollowing, isLoading, handleFollow, handleUnfollow } = useFollow(
-    profileId,
-    initialIsFollowing,
-    initialFollowersCount
-  );
+  const { isFollowing, isLoading, error, handleFollow, handleUnfollow } =
+    useFollow(profileId, initialIsFollowing, initialFollowersCount);
 
   const handleClick = () => {
     if (isFollowing) {
@@ -30,26 +27,31 @@ export function FollowButton({
   };
 
   return (
-    <Button
-      onClick={handleClick}
-      disabled={isLoading}
-      className={`w-full transition-colors ${
-        isFollowing
-          ? "bg-gray-600 hover:bg-gray-700"
-          : "bg-blue-600 hover:bg-blue-700"
-      }`}
-    >
-      {isLoading ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
-      ) : isFollowing ? (
-        <>
-          <UserMinus className="mr-2 h-4 w-4" /> Deixar de Seguir
-        </>
-      ) : (
-        <>
-          <UserPlus className="mr-2 h-4 w-4" /> Seguir
-        </>
+    <>
+      <Button
+        onClick={handleClick}
+        disabled={isLoading}
+        className={`w-full transition-colors ${
+          isFollowing
+            ? "bg-gray-600 hover:bg-gray-700"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+      >
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : isFollowing ? (
+          <>
+            <UserMinus className="mr-2 h-4 w-4" /> Deixar de Seguir
+          </>
+        ) : (
+          <>
+            <UserPlus className="mr-2 h-4 w-4" /> Seguir
+          </>
+        )}
+      </Button>
+      {error && (
+        <p className="text-red-500 text-sm text-center mt-2">{error}</p>
       )}
-    </Button>
+    </>
   );
 }

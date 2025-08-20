@@ -20,19 +20,23 @@ export const useFollow = (
     setFollowersCount((prev) => prev + 1);
 
     try {
-      const response = await fetch(`${API_URL}/profiles/${profileId}/follow`, {
+      const res = await fetch(`${API_URL}/profiles/${profileId}/follow`, {
         method: 'POST',
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        throw new Error('Falha ao seguir o usuário.');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ message: 'Falha ao seguir o usuário.' }));
+        throw new Error(errorData.message);
       }
-
     } catch (error: unknown) {
       setIsFollowing(false);
       setFollowersCount((prev) => prev - 1);
-      setError('Ocorreu um erro ao tentar seguir o usuário.');
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Ocorreu um erro ao tentar seguir o usuário.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -51,13 +55,18 @@ export const useFollow = (
       });
       
       if (!response.ok) {
-        throw new Error('Falha ao deixar de seguir o usuário.');
-      }
+        const errorData = await response.json().catch(() => ({ message: 'Falha ao deixar de seguir o usuário.' }));
+        throw new Error(errorData.message);
+      } 
 
     } catch (error: unknown) {
       setIsFollowing(true);
       setFollowersCount((prev) => prev + 1);
-      setError('Ocorreu um erro ao deixar de seguir o usuário.');
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Ocorreu um erro ao deixar de seguir o usuário.');
+      }
     } finally {
       setIsLoading(false);
     }

@@ -56,7 +56,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (auth.loading) {
-      return; 
+      return;
     }
     if (!user) {
       router.push("/login");
@@ -88,6 +88,10 @@ export default function Profile() {
     );
   }
 
+  const followState = {
+    stats,
+  };
+
   return (
     <div className="min-h-screen font-sans">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
@@ -98,7 +102,7 @@ export default function Profile() {
           error={error}
           isOwnProfile={true}
           onSuccessUpdate={handleSuccessUpdate}
-          stats={stats}
+          followState={followState}
         />
       </main>
     </div>
