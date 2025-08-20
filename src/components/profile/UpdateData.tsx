@@ -20,13 +20,14 @@ import {
 import { useAuth } from "@/services/auth";
 import { Loader2 } from "lucide-react";
 import { UpdateDataProps } from "@/types/profile";
+import { formatDateForInput } from "@/utils/dateUtils";
 
 export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   const { user } = useAuth()!;
   const [form, setForm] = useState({
     username: profile.username || "",
     gender: profile.gender || "",
-    birthdate: profile.birthdate || "",
+    birthdate: formatDateForInput(profile.birthdate),
     location: profile.location || "",
   });
 
@@ -36,17 +37,13 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  function handleChange(
-    e:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | { name: string; value: string }
-  ) {
-    if ("target" in e) {
-      const { name, value } = e.target;
-      setForm((prev) => ({ ...prev, [name]: value }));
-    } else {
-      setForm((prev) => ({ ...prev, [e.name]: e.value }));
-    }
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleSelectChange(value: string) {
+    setForm((prev) => ({ ...prev, gender: value }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -100,10 +97,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
             onChange={handleChange}
           />
           <Label htmlFor="gender">Gênero</Label>
-          <Select
-            value={form.gender || ""}
-            onValueChange={(value) => handleChange({ name: "gender", value })}
-          >
+          <Select value={form.gender} onValueChange={handleSelectChange}>
             <SelectTrigger
               id="gender"
               className="flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs"

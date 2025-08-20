@@ -41,7 +41,7 @@ export function UserProfileLayout({
     isOpen: boolean;
     listType: "followers" | "following" | null;
   }>({ isOpen: false, listType: null });
-
+  
   const openModal = (listType: "followers" | "following") => {
     if (profile?.id) {
       setModalState({ isOpen: true, listType });
