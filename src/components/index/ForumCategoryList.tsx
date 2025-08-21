@@ -23,7 +23,10 @@ export function ForumCategoryList({ categories }: ForumCategoryListProps) {
             value={category.id}
             className="border-none rounded-md overflow-hidden shadow-md"
           >
-            <AccordionTrigger className="bg-blue-600 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full">
+            <AccordionTrigger
+              className="bg-blue-700 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full dark:bg-blue-550"
+              aria-label={category.title || "Título da categoria"}
+            >
               {category.title}
             </AccordionTrigger>
             <AccordionContent className="p-0 divide-y bg-white dark:bg-gray-800">

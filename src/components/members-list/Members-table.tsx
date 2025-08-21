@@ -59,7 +59,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                     <Avatar>
                       <AvatarImage
                         src={member.avatar_url || undefined}
-                        alt={member.username}
+                        alt={`Avatar de ${member.username}`}
                       />
                       <AvatarFallback>
                         {member.username.charAt(0)}
