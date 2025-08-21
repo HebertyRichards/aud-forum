@@ -1,9 +1,8 @@
 "use client";
-
-import { ForumCategoryList } from "@/components/ForumCategoryList";
-import { RecentPosts } from "@/components/RecentPosts";
-import { ForumStats } from "@/components/ForumStats";
-import { OnlineUsers } from "@/components/OnlineUsers";
+import { ForumCategoryList } from "@/components/index/ForumCategoryList";
+import { RecentPosts } from "@/components/index/RecentPosts";
+import { ForumStats } from "@/components/index/ForumStats";
+import { OnlineUsers } from "@/components/index/OnlineUsers";
 import {
   forumData as mockForumData,
   recentPosts,
