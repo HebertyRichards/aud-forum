@@ -43,6 +43,7 @@ export function MembersFilters({
               <SelectTrigger
                 id="sort-by"
                 className="w-full sm:w-[180px] bg-white"
+                aria-label="Ordenar por"
               >
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>

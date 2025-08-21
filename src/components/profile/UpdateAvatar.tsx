@@ -5,6 +5,7 @@ import { useAuth } from "@/services/auth";
 import imageCompression from "browser-image-compression";
 import { Loader2, Camera, Trash2 } from "lucide-react";
 import { UpdateAvatarProps } from "@/types/profile";
+import { toast } from "sonner";
 
 export function UpdateAvatar({
   onSuccess,
@@ -24,6 +25,7 @@ export function UpdateAvatar({
     if (!file) return;
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Atualizando avatar...");
     try {
       const options = {
         maxSizeMB: 0.5,
@@ -45,14 +47,14 @@ export function UpdateAvatar({
       if (!res.ok) {
         throw new Error(result.error || "Falha ao atualizar o avatar.");
       }
+      toast.success("Avatar atualizado com sucesso!", { id: toastId });
       updateUserAvatar(result.avatar_url);
       onSuccess();
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu um erro inesperado.");
-      }
+      const errorMessage =
+        error instanceof Error ? error.message : "Ocorreu um erro inesperado";
+      setError(errorMessage);
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -61,6 +63,7 @@ export function UpdateAvatar({
   const handleRemoveAvatar = async () => {
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Removendo avatar...");
     try {
       const res = await fetch(`${API_URL}/profile/user/avatar`, {
         method: "DELETE",
@@ -72,14 +75,14 @@ export function UpdateAvatar({
         throw new Error(result.error || "Falha ao remover o avatar.");
       }
 
+      toast.success("Avatar removido com sucesso!", { id: toastId });
       updateUserAvatar(result.avatar_url);
       onSuccess();
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu um erro inesperado ao remover o avatar.");
-      }
+      const errorMessage =
+        error instanceof Error ? error.message : "Ocorreu um erro inesperado";
+      setError(errorMessage);
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setLoading(false);
     }

@@ -21,6 +21,7 @@ import { useAuth } from "@/services/auth";
 import { Loader2 } from "lucide-react";
 import { UpdateDataProps } from "@/types/profile";
 import { formatDateForInput } from "@/utils/dateUtils";
+import { toast } from "sonner";
 
 export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
   const { user } = useAuth()!;
@@ -50,6 +51,7 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Salvando alterações...");
 
     try {
       const res = await fetch(`${API_URL}/profile/update`, {
@@ -67,14 +69,15 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
         throw new Error(errorData?.error || "Erro ao atualizar perfil");
       }
 
+      await res.json();
+      toast.success("Perfil atualizado com sucesso!", { id: toastId });
       if (onSuccess) onSuccess();
       setOpen(false);
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu uma falha inesperada.");
-      }
+      const errorMessage =
+        error instanceof Error ? error.message : "Ocorreu um erro inesperado";
+      setError(errorMessage);
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -89,13 +92,6 @@ export function UpdateData({ profile, onSuccess }: UpdateDataProps) {
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-white dark:bg-gray-800">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Label htmlFor="username">Nick do usuário</Label>
-          <Input
-            id="username"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-          />
           <Label htmlFor="gender">Gênero</Label>
           <Select value={form.gender} onValueChange={handleSelectChange}>
             <SelectTrigger

@@ -13,6 +13,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { UpdateContactsProps } from "@/types/profile";
+import { toast } from "sonner";
 
 export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
   const { user } = useAuth()!;
@@ -47,6 +48,7 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Salvando contatos...");
 
     try {
       const res = await fetch(`${API_URL}/profile/update`, {
@@ -61,11 +63,15 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
         throw new Error(errorData?.error || "Erro ao atualizar contatos");
       }
 
+      await res.json();
+      toast.success("Contatos atualizados com sucesso!", { id: toastId });
       if (onSuccess) onSuccess();
       setOpen(false);
     } catch (error: unknown) {
-      if (error instanceof Error) setError(error.message);
-      else setError("Ocorreu uma falha inesperada.");
+      const errorMessage =
+        error instanceof Error ? error.message : "Ocorreu um erro inesperado";
+      setError(errorMessage);
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -87,7 +93,6 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
             value={form.website}
             onChange={handleChange}
           />
-
           <Label htmlFor="facebook">Facebook</Label>
           <Input
             id="facebook"
@@ -95,7 +100,6 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
             value={form.facebook}
             onChange={handleChange}
           />
-
           <Label htmlFor="instagram">Instagram</Label>
           <Input
             id="instagram"
@@ -103,7 +107,6 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
             value={form.instagram}
             onChange={handleChange}
           />
-
           <Label htmlFor="discord">Discord</Label>
           <Input
             id="discord"
@@ -111,7 +114,6 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
             value={form.discord}
             onChange={handleChange}
           />
-
           <Label htmlFor="steam">Steam</Label>
           <Input
             id="steam"
