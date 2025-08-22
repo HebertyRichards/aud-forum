@@ -54,7 +54,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card>
+      <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
           <CardTitle>Alterar Perfil</CardTitle>
           <CardDescription>
@@ -63,7 +63,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-6">
             <Label htmlFor="username">Nome de Usuário</Label>
             <Input
               id="username"

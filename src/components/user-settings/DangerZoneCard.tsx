@@ -76,7 +76,7 @@ export function DangerZoneCard() {
   };
 
   return (
-    <Card className="border-red-500/50">
+    <Card className="border-red-500/50 bg-white dark:bg-gray-800">
       <CardHeader>
         <CardTitle className="text-red-700 dark:text-red-500">
           Zona de Perigo
@@ -90,7 +90,7 @@ export function DangerZoneCard() {
           <AlertDialogTrigger asChild>
             <Button variant="destructive">Deletar Conta</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-white dark:bg-gray-800">
             <AlertDialogHeader>
               <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -99,7 +99,6 @@ export function DangerZoneCard() {
                 servidores.
               </AlertDialogDescription>
             </AlertDialogHeader>
-
             {step === "confirmPassword" && (
               <div className="my-4 space-y-2">
                 <Label htmlFor="password-confirm">

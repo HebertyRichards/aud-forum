@@ -57,7 +57,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card>
+      <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
           <CardTitle>Alterar Senha</CardTitle>
           <CardDescription>
@@ -65,7 +65,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-6">
             <Label htmlFor="new-password">Nova Senha</Label>
             <Input
               id="new-password"
