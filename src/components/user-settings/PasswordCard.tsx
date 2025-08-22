@@ -33,19 +33,23 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
     }
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/reset-password`, {
+      const response = await fetch(`${API_URL}/auth/update-password`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newPassword }),
-        credentials: 'include',
+        credentials: "include",
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
 
       toast.success("Senha alterada com sucesso!");
-      onClose();
-    } catch (error: any) {
-      toast.error(error.message || "Falha ao alterar a senha.");
+      setTimeout(() => {
+        onClose();
+      }, 1500);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Falha ao alterar a senha.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -62,26 +66,22 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="new-password">Nova Senha</Label>
-              <Input
-                id="new-password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="max-w-sm"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="max-w-sm"
-              />
-            </div>
+            <Label htmlFor="new-password">Nova Senha</Label>
+            <Input
+              id="new-password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="max-w-sm"
+            />
+            <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="max-w-sm"
+            />
           </CardContent>
           <CardFooter className="gap-2">
             <Button type="submit" disabled={isLoading}>

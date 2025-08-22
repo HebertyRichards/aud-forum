@@ -65,9 +65,12 @@ export function DangerZoneCard() {
       setTimeout(() => {
         window.location.href = "/login";
       }, 2000);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Ocorreu uma falha desconhecida.";
+      toast.error(errorMessage);
       setIsLoading(false);
     }
   };
@@ -111,7 +114,6 @@ export function DangerZoneCard() {
                 />
               </div>
             )}
-
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               {step === "initial" ? (

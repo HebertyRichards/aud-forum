@@ -30,7 +30,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/update-profile`, {
+      const response = await fetch(`${API_URL}/auth/update-user`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, newEmail: email }),
@@ -40,10 +40,14 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
       if (!response.ok) throw new Error(result.error);
 
       toast.success("Perfil atualizado com sucesso!");
-      window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Falha ao atualizar o perfil.");
-    } finally {
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Falha ao atualizar o perfil.";
+      toast.error(errorMessage);
       setIsLoading(false);
     }
   };
@@ -60,25 +64,21 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Nome de Usuário</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="max-w-sm"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="max-w-sm"
-              />
-            </div>
+            <Label htmlFor="username">Nome de Usuário</Label>
+            <Input
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="max-w-sm"
+            />
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="max-w-sm"
+            />
           </CardContent>
           <CardFooter className="gap-2">
             <Button type="submit" disabled={isLoading}>
