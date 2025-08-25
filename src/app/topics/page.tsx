@@ -12,49 +12,90 @@ import {
   Users,
   PenSquare,
   Megaphone,
+  HelpCircle,
 } from "lucide-react";
+import { ReactElement } from "react";
 
-const forumCategories = [
-  {
-    href: "/topics/downloads",
-    title: "Downloads",
+interface ApiCategory {
+  slug: string;
+  name: string;
+}
+
+interface UiCategory {
+  href: string;
+  title: string;
+  description: string;
+  icon: ReactElement;
+}
+
+const categoryDetailsMap: Record<
+  string,
+  { description: string; icon: ReactElement }
+> = {
+  downloads: {
     description: "Encontre e compartilhe mods, scripts e ferramentas.",
     icon: <Download className="h-8 w-8 text-blue-500" />,
   },
-  {
-    href: "/topics/manuais",
-    title: "Manuais",
+  manuals: {
     description: "Guias, tutoriais e documentação oficial da equipe.",
     icon: <Book className="h-8 w-8 text-yellow-500" />,
   },
-  {
-    href: "/topics/discussoes-gerais",
-    title: "Discussões Gerais",
+  "general-discussions": {
     description:
       "Converse sobre assuntos diversos e interaja com a comunidade.",
     icon: <MessagesSquare className="h-8 w-8 text-purple-500" />,
   },
-  {
-    href: "/topics/membros",
-    title: "Área dos Membros",
+  members: {
     description: "Tópicos e discussões exclusivas para membros da equipe.",
     icon: <Users className="h-8 w-8 text-teal-500" />,
   },
-  {
-    href: "/topics/inscricoes",
-    title: "Inscrições",
+  subscribes: {
     description: "Formulários e informações para se tornar um membro.",
     icon: <PenSquare className="h-8 w-8 text-orange-500" />,
   },
-  {
-    href: "/topics/atualizacoes",
-    title: "Atualizações",
+  updates: {
     description: "Acompanhe as entradas e saídas de membros da equipe.",
     icon: <Megaphone className="h-8 w-8 text-green-500" />,
   },
-];
+};
 
-export default function TopicsIndexPage() {
+async function getCategories(): Promise<ApiCategory[]> {
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/categories`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error("Falha ao buscar categorias:", response.statusText);
+      return [];
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Erro de conexão ao buscar categorias:", error);
+    return [];
+  }
+}
+
+export default async function TopicsIndexPage() {
+  const apiCategories = await getCategories();
+
+  const categories: UiCategory[] = apiCategories.map((category) => {
+    const details = categoryDetailsMap[category.slug] || {
+      description: "Uma nova categoria para explorar.",
+      icon: <HelpCircle className="h-8 w-8 text-gray-500" />,
+    };
+
+    return {
+      href: `/topics/${category.slug}`,
+      title: category.name,
+      description: details.description,
+      icon: details.icon,
+    };
+  });
+
   return (
     <div className="min-h-screen text-gray-300 font-sans p-8">
       <div className="max-w-7xl mx-auto">
@@ -65,25 +106,33 @@ export default function TopicsIndexPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {forumCategories.map((category) => (
-            <Link href={category.href} key={category.href} className="group">
-              <Card className="border border-gray-700 bg-gray-800/50 hover:border-blue-500 hover:bg-gray-800 transition-all duration-300 h-full">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <div>{category.icon}</div>
-                  <div>
-                    <CardTitle className="text-white group-hover:text-blue-400 transition-colors">
-                      {category.title}
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      {category.description}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {categories.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <Link href={category.href} key={category.href} className="group">
+                <Card className="border border-gray-700 bg-gray-800/50 hover:border-blue-500 hover:bg-gray-800 transition-all duration-300 h-full">
+                  <CardHeader className="flex flex-row items-center gap-4">
+                    <div>{category.icon}</div>
+                    <div>
+                      <CardTitle className="text-white group-hover:text-blue-400 transition-colors">
+                        {category.title}
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {category.description}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-10">
+            <p className="text-gray-400">
+              Nenhuma categoria encontrada no momento.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
