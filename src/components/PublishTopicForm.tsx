@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Card,
   CardContent,
@@ -31,45 +32,103 @@ import {
   Smile,
   Paperclip,
 } from "lucide-react";
-import * as React from "react";
-import { PublishTopicFormProps } from "@/types/post";
 
-export function PublishTopicForm({
-  forums,
+interface TopicFormData {
+  title: string;
+  content: string;
+  category: string;
+}
+
+interface CommentFormData {
+  content: string;
+}
+
+export interface PublishFormProps<T extends "topic" | "comment"> {
+  type: T;
+  onSubmit: (data: T extends "topic" ? TopicFormData : CommentFormData) => void;
+  isSubmitting?: boolean;
+  className?: string
+}
+
+const ToolbarButton = ({
+  icon,
+  tooltip,
+}: {
+  icon: React.ReactNode;
+  tooltip: string;
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        aria-label={tooltip}
+        type="button"
+      >
+        {icon}
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>{tooltip}</p>
+    </TooltipContent>
+  </Tooltip>
+);
+
+export function PublishForm<T extends "topic" | "comment">({
+  type,
   onSubmit,
   isSubmitting = false,
-}: PublishTopicFormProps) {
+}: PublishFormProps<T>) {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      icon: "default",
-      title,
-      content,
-      forumId: forums[0]?.id || "",
-    });
+    if (type === "topic") {
+      (onSubmit as (data: TopicFormData) => void)({
+        title,
+        content,
+        category: "",
+      });
+    } else {
+      (onSubmit as (data: CommentFormData) => void)({
+        content,
+      });
+    }
   };
 
+  const handleSmileyClick = (smiley: string) => {
+    setContent((prevContent) => prevContent + smiley);
+  };
+
+  const formId = `publish-${type}-form`;
+
   return (
-    <div className="flex w-full max-w-6xl mx-auto gap-6 p-4">
+    <div className="flex w-full gap-6">
       <Card className="flex-1 bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle>Publique um novo tópico</CardTitle>
+          <CardTitle>
+            {type === "topic"
+              ? "Publique um novo tópico"
+              : "Adicionar um comentário"}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <form id="publish-topic-form" onSubmit={handleSubmit}>
+          <form id={formId} onSubmit={handleSubmit}>
             <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="topic-title">Título do tópico</Label>
-                <Input
-                  id="topic-title"
-                  placeholder="Nenhuma"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
+              {type === "topic" && (
+                <div className="space-y-2">
+                  <Label htmlFor="topic-title">Título do tópico</Label>
+                  <Input
+                    id="topic-title"
+                    placeholder="Digite o título do seu tópico aqui..."
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
               <div className="space-y-2">
                 <TooltipProvider delayDuration={100}>
                   <div className="border rounded-t-md p-2 flex items-center gap-1 flex-wrap">
@@ -121,25 +180,23 @@ export function PublishTopicForm({
                   className="rounded-t-none min-h-[250px] resize-y"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
+                  required
                 />
               </div>
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-between items-center">
-          <div>
-            <Button
-              type="submit"
-              form="publish-topic-form"
-              disabled={isSubmitting}
-              className="ml-2"
-            >
-              {isSubmitting ? "Enviando..." : "Enviar"}
-            </Button>
-          </div>
+        <CardFooter>
+          <Button type="submit" form={formId} disabled={isSubmitting}>
+            {isSubmitting
+              ? "Enviando..."
+              : type === "topic"
+              ? "Publicar Tópico"
+              : "Enviar Comentário"}
+          </Button>
         </CardFooter>
       </Card>
-      <div className="w-1/4 max-w-xs">
+      <div className="w-1/4 max-w-xs hidden md:block">
         <Card className="bg-white dark:bg-gray-800">
           <CardHeader className="p-4">
             <h3 className="font-semibold text-sm">Smileys</h3>
@@ -149,6 +206,7 @@ export function PublishTopicForm({
               <span
                 key={index}
                 className="cursor-pointer hover:bg-accent rounded-md text-center"
+                onClick={() => handleSmileyClick(smiley)}
               >
                 {smiley}
               </span>
@@ -162,27 +220,3 @@ export function PublishTopicForm({
     </div>
   );
 }
-
-const ToolbarButton = ({
-  icon,
-  tooltip,
-}: {
-  icon: React.ReactNode;
-  tooltip: string;
-}) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        aria-label={tooltip}
-      >
-        {icon}
-      </Button>
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>{tooltip}</p>
-    </TooltipContent>
-  </Tooltip>
-);
