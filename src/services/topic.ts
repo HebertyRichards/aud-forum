@@ -24,7 +24,7 @@ export async function getTopicsByCategory(category: string) {
 }
 
 export async function getTopicBySlug(slug: string) {
-  const response = await fetch(`${API_URL}/topics/slug/${slug}`);
+  const response = await fetch(`${API_URL}/posts/topics/slug/${slug}`);
   if (!response.ok) {
     throw new Error('Falha ao buscar o tópico.');
   }
@@ -48,7 +48,7 @@ export async function createTopic(data: NewTopicData) {
 }
 
 export async function updateTopic(topicId: number, data: UpdateTopicData) {
-  const response = await fetch(`${API_URL}/topics/${topicId}`, {
+  const response = await fetch(`${API_URL}/posts/topics/${topicId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export async function updateTopic(topicId: number, data: UpdateTopicData) {
 }
 
 export async function deleteTopic(topicId: number) {
-    const response = await fetch(`${API_URL}/topics/${topicId}`, {
+    const response = await fetch(`${API_URL}/posts/topics/${topicId}`, {
       method: 'DELETE',
       credentials: 'include',
     });
@@ -76,7 +76,7 @@ export async function deleteTopic(topicId: number) {
   }
   
 export async function createComment(data: NewCommentData) {
-  const response = await fetch(`${API_URL}/topics/${data.topicId}/comments`, {
+  const response = await fetch(`${API_URL}/posts/topics/${data.topicId}/comments`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

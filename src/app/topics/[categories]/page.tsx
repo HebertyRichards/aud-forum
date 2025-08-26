@@ -29,15 +29,6 @@ interface TopicSummary {
   comentarios: [{ count: number }];
 }
 
-const categoryTitles: { [key: string]: string } = {
-  downloads: "Downloads",
-  manuais: "Manuais",
-  "discussoes-gerais": "Discussões Gerais",
-  membros: "Área dos Membros",
-  inscricoes: "Inscrições",
-  atualizacoes: "Atualizações",
-};
-
 export default function CategoryTopicPage() {
   const params = useParams();
   const router = useRouter();
@@ -47,8 +38,6 @@ export default function CategoryTopicPage() {
   const [topics, setTopics] = React.useState<TopicSummary[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
-
-  console.log("PARAMS RECEBIDOS PELA PÁGINA:", params);
 
   React.useEffect(() => {
     if (view !== "list" || !category) {
@@ -84,11 +73,8 @@ export default function CategoryTopicPage() {
         category: category,
       };
 
-      // Usa a função de criar tópico do seu arquivo topic.ts
-      // A autenticação é tratada automaticamente pelo cookie (credentials: 'include')
       const newTopic = await createTopic(topicData);
 
-      // Redireciona para o novo tópico após a criação bem-sucedida
       router.push(`/topics/${category}/${newTopic.slug}`);
     } catch (error) {
       console.error("Erro ao criar tópico:", error);
@@ -154,13 +140,10 @@ export default function CategoryTopicPage() {
     );
   };
 
-  const pageTitle = categoryTitles[category] || "Tópicos";
-
   return (
     <div className="min-h-screen text-gray-300 font-sans p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-white">{pageTitle}</h1>
           <div className="flex gap-2">
             {view === "create" ? (
               <Button variant="outline" onClick={() => setView("list")}>
@@ -168,7 +151,6 @@ export default function CategoryTopicPage() {
                 Voltar
               </Button>
             ) : (
-              // Mostra o botão de Novo Tópico apenas se o usuário estiver logado
               user && (
                 <Button
                   onClick={() => setView("create")}
