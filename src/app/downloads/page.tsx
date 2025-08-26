@@ -28,7 +28,7 @@ const MOCK_TOPICS = [
 
 export default function Downloads() {
   const [view, setView] = React.useState<"list" | "create" | "empty">("list");
-  const [topics, setTopics] = React.useState(MOCK_TOPICS);
+  const [topics] = React.useState(MOCK_TOPICS);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
