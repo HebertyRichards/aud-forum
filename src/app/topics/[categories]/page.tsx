@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -11,35 +11,29 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatLastLogin } from "@/utils/dateUtils";
 import { useAuth } from "@/services/auth";
-import {
-  getTopicsByCategory,
-  createTopic,
-  NewTopicData,
-} from "@/services/topic";
-
-interface TopicSummary {
-  id: number;
-  title: string;
-  slug: string;
-  created_in: string;
-  profiles: {
-    username: string;
-    avatar_url: string;
-  };
-  comentarios: [{ count: number }];
-}
+import { getTopicsByCategory, createTopic } from "@/services/topic";
+import { NewTopicData, TopicSummary } from "@/types/post";
 
 export default function CategoryTopicPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
-  const [view, setView] = React.useState<"list" | "create">("list");
-  const [topics, setTopics] = React.useState<TopicSummary[]>([]);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [view, setView] = useState<"list" | "create">("list");
+  const [topics, setTopics] = useState<TopicSummary[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  const categoryTitles: { [key: string]: string } = {
+    downloads: "Downloads",
+    manuals: "Manuais",
+    "general-discussions": "Discussões Gerais",
+    members: "Área dos Membros",
+    subscribe: "Inscrições",
+    updates: "Atualizações",
+  };
+  useEffect(() => {
     if (view !== "list" || !category) {
       setIsLoading(false);
       return;
@@ -50,8 +44,7 @@ export default function CategoryTopicPage() {
       try {
         const data = await getTopicsByCategory(category);
         setTopics(data);
-      } catch (error) {
-        console.error(error);
+      } catch {
         setTopics([]);
       } finally {
         setIsLoading(false);
@@ -66,6 +59,7 @@ export default function CategoryTopicPage() {
     content: string;
   }) => {
     setIsSubmitting(true);
+    setError(null);
     try {
       const topicData: NewTopicData = {
         title: data.title,
@@ -76,9 +70,12 @@ export default function CategoryTopicPage() {
       const newTopic = await createTopic(topicData);
 
       router.push(`/topics/${category}/${newTopic.slug}`);
-    } catch (error) {
-      console.error("Erro ao criar tópico:", error);
-      alert((error as Error).message);
+    } catch (error: unknown) {
+      let errorMessage = "Falha ao criar o tópico. Tente novamente.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
       setIsSubmitting(false);
     }
   };
@@ -93,6 +90,7 @@ export default function CategoryTopicPage() {
         <CreateTopicView
           onSubmit={handleCreateTopicSubmit}
           isSubmitting={isSubmitting}
+          error={error}
         />
       );
     }
@@ -140,10 +138,12 @@ export default function CategoryTopicPage() {
     );
   };
 
+  const pageTitle = categoryTitles[category] || "Tópicos";
   return (
     <div className="min-h-screen text-gray-300 font-sans p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-white">{pageTitle}</h1>
           <div className="flex gap-2">
             {view === "create" ? (
               <Button variant="outline" onClick={() => setView("list")}>

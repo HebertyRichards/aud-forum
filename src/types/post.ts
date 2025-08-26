@@ -1,6 +1,7 @@
 import {
   type LucideIcon,
 } from "lucide-react";
+import { ReactElement } from "react";
 
 export type DownloadCardProps = {
     icon: React.ReactNode;
@@ -75,4 +76,96 @@ export type DownloadCardProps = {
 
   export interface ForumCategoryListProps {
     categories: Category[];
+  }
+
+  export interface TopicFormData {
+    title: string;
+    content: string;
+    category: string;
+  }
+  
+  export interface CommentFormData {
+    content: string;
+  }
+  
+  export interface PublishFormProps<T extends "topic" | "comment"> {
+    type: T;
+    onSubmit: (data: T extends "topic" ? TopicFormData : CommentFormData) => void;
+    isSubmitting?: boolean;
+    className?: string;
+    error?: string | null;
+  }
+
+  export interface CreateTopicViewProps {
+    onSubmit: PublishFormProps<"topic">["onSubmit"];
+    isSubmitting: boolean;
+    error: string | null; 
+  }
+
+ export interface EmptyStateProps {
+    onNewTopicClick: () => void;
+  }
+  
+  export interface NewTopicData {
+    title: string;
+    content: string;
+    category: string;
+  }
+  
+  export interface UpdateTopicData {
+    title?: string;
+    content?: string;
+  }
+  
+  export interface NewCommentData {
+    content: string;
+    topicId: number;
+  }
+
+  export interface TopicSummary {
+    id: number;
+    title: string;
+    slug: string;
+    created_in: string;
+    profiles: {
+      username: string;
+      avatar_url: string;
+    };
+    comentarios: [{ count: number }];
+  }
+
+  export interface Comment {
+    id: number;
+    content: string;
+    created: string;
+    profiles: {
+      username: string;
+      avatar_url: string | null;
+      role: string;
+    };
+  }
+  
+ export interface TopicDetails {
+    id: number;
+    title: string;
+    content: string;
+    created: string;
+    profiles: {
+      username: string;
+      avatar_url: string | null;
+      role: string;
+    };
+    comentarios: Comment[];
+  }
+
+  export interface ApiCategory {
+    slug: string;
+    name: string;
+  }
+  
+ export interface UiCategory {
+    href: string;
+    title: string;
+    description: string;
+    icon: ReactElement;
   }

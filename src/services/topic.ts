@@ -1,18 +1,4 @@
-export interface NewTopicData {
-  title: string;
-  content: string;
-  category: string;
-}
-
-export interface UpdateTopicData {
-  title?: string;
-  content?: string;
-}
-
-export interface NewCommentData {
-  content: string;
-  topicId: number;
-}
+import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function getTopicsByCategory(category: string) {

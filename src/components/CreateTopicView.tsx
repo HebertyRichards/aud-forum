@@ -1,12 +1,10 @@
-import { PublishForm, PublishFormProps } from "./PublishTopicForm";
-interface CreateTopicViewProps {
-  onSubmit: PublishFormProps<"topic">["onSubmit"];
-  isSubmitting: boolean;
-}
+import { PublishForm } from "./PublishTopicForm";
+import { CreateTopicViewProps } from "@/types/post";
 
 export function CreateTopicView({
   onSubmit,
   isSubmitting,
+  error, 
 }: CreateTopicViewProps) {
   return (
     <div className="flex w-full max-w-6xl mx-auto gap-6 p-4">
@@ -18,6 +16,7 @@ export function CreateTopicView({
           type="topic"
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
+          error={error}
           className="bg-white dark:bg-gray-800"
         />
       </div>

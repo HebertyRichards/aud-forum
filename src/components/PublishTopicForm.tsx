@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -32,23 +32,8 @@ import {
   Smile,
   Paperclip,
 } from "lucide-react";
+import { TopicFormData, CommentFormData, PublishFormProps } from "@/types/post";
 
-interface TopicFormData {
-  title: string;
-  content: string;
-  category: string;
-}
-
-interface CommentFormData {
-  content: string;
-}
-
-export interface PublishFormProps<T extends "topic" | "comment"> {
-  type: T;
-  onSubmit: (data: T extends "topic" ? TopicFormData : CommentFormData) => void;
-  isSubmitting?: boolean;
-  className?: string
-}
 
 const ToolbarButton = ({
   icon,
@@ -80,8 +65,8 @@ export function PublishForm<T extends "topic" | "comment">({
   onSubmit,
   isSubmitting = false,
 }: PublishFormProps<T>) {
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

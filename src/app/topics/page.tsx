@@ -15,18 +15,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ReactElement } from "react";
-
-interface ApiCategory {
-  slug: string;
-  name: string;
-}
-
-interface UiCategory {
-  href: string;
-  title: string;
-  description: string;
-  icon: ReactElement;
-}
+import { ApiCategory, UiCategory } from "@/types/post";
 
 const categoryDetailsMap: Record<
   string,
@@ -73,8 +62,7 @@ async function getCategories(): Promise<ApiCategory[]> {
     }
 
     return response.json();
-  } catch (error) {
-    console.error("Erro de conexão ao buscar categorias:", error);
+  } catch {
     return [];
   }
 }

@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle } from "lucide-react";
-
-interface EmptyStateProps {
-  onNewTopicClick: () => void;
-}
+import { EmptyStateProps } from "@/types/post";
 
 export function EmptyState({ onNewTopicClick }: EmptyStateProps) {
   return (

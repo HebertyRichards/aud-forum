@@ -1,54 +1,28 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/services/auth";
-import {
-  getTopicBySlug,
-  createComment,
-  NewCommentData,
-} from "@/services/topic";
+import { getTopicBySlug, createComment } from "@/services/topic";
+import { NewCommentData } from "@/types/post";
 import { PublishForm } from "@/components/PublishTopicForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatLastLogin } from "@/utils/dateUtils";
-
-interface Comment {
-  id: number;
-  content: string;
-  created: string;
-  profiles: {
-    username: string;
-    avatar_url: string | null;
-    role: string;
-  };
-}
-
-interface TopicDetails {
-  id: number;
-  title: string;
-  content: string;
-  created: string;
-  profiles: {
-    username: string;
-    avatar_url: string | null;
-    role: string;
-  };
-  comentarios: Comment[];
-}
+import { Comment, TopicDetails } from "@/types/post";
 
 export default function TopicPage() {
   const params = useParams();
   const { user } = useAuth();
   const slug = params.slug as string;
 
-  const [topic, setTopic] = React.useState<TopicDetails | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
-  const [isSubmittingComment, setIsSubmittingComment] = React.useState(false);
+  const [topic, setTopic] = useState<TopicDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!slug) return;
 
     const fetchTopic = async () => {
@@ -57,11 +31,10 @@ export default function TopicPage() {
       try {
         const data = await getTopicBySlug(slug);
         setTopic(data);
-      } catch (err) {
+      } catch (error: unknown) {
         setError(
           "Não foi possível carregar o tópico. Tente novamente mais tarde."
         );
-        console.error(err);
       } finally {
         setIsLoading(false);
       }
@@ -98,9 +71,8 @@ export default function TopicPage() {
           comentarios: [...prevTopic.comentarios, commentForState],
         };
       });
-    } catch (err) {
-      console.error("Erro ao enviar comentário:", err);
-      alert((err as Error).message);
+    } catch (error: unknown) {
+      alert((error as Error).message);
     } finally {
       setIsSubmittingComment(false);
     }
@@ -125,7 +97,6 @@ export default function TopicPage() {
   return (
     <div className="min-h-screen text-gray-300 font-sans p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Card do Tópico Principal */}
         <Card className="bg-gray-800/50 border border-gray-700">
           <CardContent className="p-6">
             <h1 className="text-3xl font-bold text-white mb-4">
@@ -143,7 +114,6 @@ export default function TopicPage() {
                   {topic.profiles.username}
                 </p>
                 <p className="text-xs text-gray-400">
-                  {/* ALTERADO: Usando sua função formatLastLogin */}
                   Postado {formatLastLogin(topic.created).toLowerCase()}
                 </p>
               </div>
@@ -153,10 +123,7 @@ export default function TopicPage() {
             </div>
           </CardContent>
         </Card>
-
         <Separator className="bg-gray-700" />
-
-        {/* Lista de Comentários */}
         <div className="space-y-4">
           {topic.comentarios.map((comment) => (
             <Card
@@ -176,7 +143,6 @@ export default function TopicPage() {
                       {comment.profiles.username}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {/* ALTERADO: Usando sua função formatLastLogin */}
                       {formatLastLogin(comment.created)}
                     </p>
                   </div>
@@ -186,8 +152,6 @@ export default function TopicPage() {
             </Card>
           ))}
         </div>
-
-        {/* Formulário para Adicionar Comentário */}
         {user ? (
           <div>
             <PublishForm
