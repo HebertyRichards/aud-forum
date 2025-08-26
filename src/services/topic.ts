@@ -14,9 +14,9 @@ export interface NewCommentData {
   topicId: number;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/topic';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function getTopicsByCategory(category: string) {
-  const response = await fetch(`${API_URL}/topics/category/${category}`);
+  const response = await fetch(`${API_URL}/posts/topics/category/${category}`);
   if (!response.ok) {
     throw new Error('Falha ao buscar tópicos da categoria.');
   }
@@ -32,7 +32,7 @@ export async function getTopicBySlug(slug: string) {
 }
 
 export async function createTopic(data: NewTopicData) {
-  const response = await fetch(`${API_URL}/topics`, {
+  const response = await fetch(`${API_URL}/posts/topics`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,11 +1,33 @@
 "use client";
 
 import * as React from "react";
-import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/NoTopic"; 
-import { CreateTopicView } from "@/components/CreateTopicView"; 
-import { PlusCircle, ArrowLeft } from "lucide-react";
+import { EmptyState } from "@/components/NoTopic";
+import { CreateTopicView } from "@/components/CreateTopicView";
+import { PlusCircle, ArrowLeft, MessageSquare } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatLastLogin } from "@/utils/dateUtils";
+import { useAuth } from "@/services/auth";
+import {
+  getTopicsByCategory,
+  createTopic,
+  NewTopicData,
+} from "@/services/topic";
+
+interface TopicSummary {
+  id: number;
+  title: string;
+  slug: string;
+  created_in: string;
+  profiles: {
+    username: string;
+    avatar_url: string;
+  };
+  comentarios: [{ count: number }];
+}
 
 const categoryTitles: { [key: string]: string } = {
   downloads: "Downloads",
@@ -18,41 +40,66 @@ const categoryTitles: { [key: string]: string } = {
 
 export default function CategoryTopicPage() {
   const params = useParams();
-  const category = (params.category as string) || "";
-
+  const router = useRouter();
+  const { user } = useAuth();
+  const category = (params.categories as string) || "";
   const [view, setView] = React.useState<"list" | "create">("list");
-  const [topics, setTopics] = React.useState([]);
+  const [topics, setTopics] = React.useState<TopicSummary[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  const handleCreateTopicSubmit = (data: {
+  console.log("PARAMS RECEBIDOS PELA PÁGINA:", params);
+
+  React.useEffect(() => {
+    if (view !== "list" || !category) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchTopics = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getTopicsByCategory(category);
+        setTopics(data);
+      } catch (error) {
+        console.error(error);
+        setTopics([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopics();
+  }, [category, view]);
+
+  const handleCreateTopicSubmit = async (data: {
     title: string;
     content: string;
   }) => {
-    console.log("Novo tópico submetido na categoria:", category, data);
     setIsSubmitting(true);
+    try {
+      const topicData: NewTopicData = {
+        title: data.title,
+        content: data.content,
+        category: category,
+      };
 
-    setTimeout(() => {
-      alert(
-        `Seu tópico "${data.title}" seria criado na categoria "${category}"`
-      );
+      // Usa a função de criar tópico do seu arquivo topic.ts
+      // A autenticação é tratada automaticamente pelo cookie (credentials: 'include')
+      const newTopic = await createTopic(topicData);
+
+      // Redireciona para o novo tópico após a criação bem-sucedida
+      router.push(`/topics/${category}/${newTopic.slug}`);
+    } catch (error) {
+      console.error("Erro ao criar tópico:", error);
+      alert((error as Error).message);
       setIsSubmitting(false);
-      setView("list");
-    }, 1500);
+    }
   };
 
   const renderMainContent = () => {
-    if (category === "atualizacoes" && view === "list") {
-      return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-700 rounded-lg p-8 text-center">
-          <h2 className="text-xl font-semibold mb-4 text-white">
-            Selecione uma opção de atualização
-          </h2>
-          <div className="flex justify-center gap-4">
-            <Button>Entrada de Membros</Button>
-            <Button variant="destructive">Retirada de Membros</Button>
-          </div>
-        </div>
-      );
+    if (isLoading) {
+      return <div className="text-center p-10">Carregando tópicos...</div>;
     }
 
     if (view === "create") {
@@ -65,11 +112,44 @@ export default function CategoryTopicPage() {
     }
 
     if (topics.length === 0) {
-      return <EmptyState onNewTopicClick={() => setView("create")} />; //
+      return <EmptyState onNewTopicClick={() => setView("create")} />;
     }
 
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {topics.map((topic) => (
+          <Link
+            href={`/topics/${category}/${topic.slug}`}
+            key={topic.id}
+            className="block"
+          >
+            <Card className="p-4 border border-gray-700 bg-gray-800/50 hover:border-blue-500 transition-colors duration-300">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Avatar>
+                    <AvatarImage src={topic.profiles.avatar_url} />
+                    <AvatarFallback>
+                      {topic.profiles.username.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="font-semibold text-white text-lg">
+                      {topic.title}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      por {topic.profiles.username} •{" "}
+                      {formatLastLogin(topic.created_in)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-400">
+                  <MessageSquare className="h-4 w-4" />
+                  <span>{topic.comentarios[0]?.count ?? 0}</span>
+                </div>
+              </div>
+            </Card>
+          </Link>
+        ))}
       </div>
     );
   };
@@ -88,17 +168,19 @@ export default function CategoryTopicPage() {
                 Voltar
               </Button>
             ) : (
-              <Button
-                onClick={() => setView("create")}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Novo Tópico
-              </Button>
+              // Mostra o botão de Novo Tópico apenas se o usuário estiver logado
+              user && (
+                <Button
+                  onClick={() => setView("create")}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Novo Tópico
+                </Button>
+              )
             )}
           </div>
         </div>
-
         {renderMainContent()}
       </div>
     </div>
