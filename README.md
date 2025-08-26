@@ -4,12 +4,17 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 
 ## 🚀 Funcionalidades Atuais
 
-- **Autenticação de usuários** com JWT
-- **Visualização de perfis** (acesso ao perfil próprio e de outros membros do fórum.)  
-- **Atualização de perfil** com proteção por middleware  
-- **Exibição de usuários online em tempo real**  
-- **Alteração de senha** de forma segura  
-- **Middleware de autenticação** para rotas sensíveis  
+- **Autenticação de usuários com JWT**
+- **Visualização de perfis acesso ao perfil próprio e de outros membros do fórum**
+- **Atualização de perfil com proteção por middleware**
+- **Exibição de usuários online em tempo real**
+- **Seguir e parar de seguir outros usuários**
+- **Alteração de senha em caso "esqueci minha senha"**
+- **Alteração de senha em caso de usuário autenticado**
+- **Alteração de E-mail em caso do usuário autenticado**
+- **Middleware de autenticação para rotas sensíveis**
+- **Algumas rotas somente podem ser acessadas com ranks específicos**
+- **Algumas rotas é necessário autenticação para acessa-la**
 
 ## 🛠️ Tecnologias Utilizadas
 
