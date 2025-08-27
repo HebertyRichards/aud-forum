@@ -23,7 +23,8 @@ export interface TopicSummary {
 export interface Comment {
   id: number;
   content: string;
-  created: string;
+  created_in: string;
+  updated_at?: string | null;
   author_id: string; 
   profiles: {
     username: string;
@@ -36,7 +37,8 @@ export interface TopicDetails {
   id: number;
   title: string;
   content: string;
-  created: string;
+  created_in: string;
+  updated_in?: string | null; 
   author_id: string;
   profiles: {
     username: string;
@@ -81,10 +83,13 @@ export interface CommentFormData {
 
 export interface PublishFormProps<T extends "topic" | "comment"> {
   type: T;
-  onSubmit: (data: T extends "topic" ? TopicFormData : CommentFormData) => void;
+  onSubmit: () => void;
   isSubmitting?: boolean;
   className?: string;
-  error?: string | null; 
+  content: string;
+  setContent: (value: string) => void;
+  title?: string;
+  setTitle?: (value: string) => void;
 }
 
 export interface CreateTopicViewProps {
@@ -142,3 +147,13 @@ export type Topic = {
   postCount: number;
   hasInfoIcon?: boolean;
 };
+
+export interface CommentHandlers {
+  handleDeleteComment: (commentId: number) => void;
+  handleUpdateComment: (commentId: number, content: string) => void;
+}
+
+export interface TopicHandlers {
+  handleDeleteTopic: () => void;
+  handleUpdateTopic: (editData: UpdateTopicData) => void;
+}

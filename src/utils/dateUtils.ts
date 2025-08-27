@@ -45,6 +45,36 @@ export function formatLastLogin(dateString: string | null): string {
   }
 }
 
+export function formatPostTimestamp(dateString: string | null): string {
+  if (!dateString) return "Data inválida";
+  
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return "Data inválida";
+  }
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+  
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+  
+  const time = date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) {
+    return `Hoje às ${time}`;
+  } else if (isYesterday) {
+    return `Ontem às ${time}`;
+  } else {
+    return `${date.toLocaleDateString("pt-BR")} às ${time}`;
+  }
+}
+
 export function formatDate(dateString?: string | null): string {
   if (!dateString) return "--"; 
 

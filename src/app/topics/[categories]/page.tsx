@@ -2,28 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/NoTopic";
 import { CreateTopicView } from "@/components/CreateTopicView";
 import { PlusCircle, ArrowLeft, MessageSquare } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatLastLogin } from "@/utils/dateUtils";
+import { formatPostTimestamp } from "@/utils/dateUtils";
 import { useAuth } from "@/services/auth";
-import { getTopicsByCategory, createTopic } from "@/services/topic";
-import { NewTopicData, TopicSummary } from "@/types/post";
+import { getTopicsByCategory } from "@/services/topic";
+import { TopicSummary } from "@/types/post";
 
 export default function CategoryTopicPage() {
   const params = useParams();
-  const router = useRouter();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
   const [view, setView] = useState<"list" | "create">("list");
   const [topics, setTopics] = useState<TopicSummary[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const categoryTitles: { [key: string]: string } = {
     downloads: "Downloads",
@@ -54,45 +51,13 @@ export default function CategoryTopicPage() {
     fetchTopics();
   }, [category, view]);
 
-  const handleCreateTopicSubmit = async (data: {
-    title: string;
-    content: string;
-  }) => {
-    setIsSubmitting(true);
-    setError(null);
-    try {
-      const topicData: NewTopicData = {
-        title: data.title,
-        content: data.content,
-        category: category,
-      };
-
-      const newTopic = await createTopic(topicData);
-
-      router.push(`/topics/${category}/${newTopic.slug}`);
-    } catch (error: unknown) {
-      let errorMessage = "Falha ao criar o tópico. Tente novamente.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      setIsSubmitting(false);
-    }
-  };
-
   const renderMainContent = () => {
     if (isLoading) {
       return <div className="text-center p-10">Carregando tópicos...</div>;
     }
 
     if (view === "create") {
-      return (
-        <CreateTopicView
-          onSubmit={handleCreateTopicSubmit}
-          isSubmitting={isSubmitting}
-          error={error}
-        />
-      );
+      return <CreateTopicView category={category} />;
     }
 
     if (topics.length === 0) {
@@ -120,7 +85,7 @@ export default function CategoryTopicPage() {
                     <h3 className="font-semibold text-lg">{topic.title}</h3>
                     <p className="text-xs text-gray-700 dark:text-gray-500">
                       por {topic.profiles.username} •{" "}
-                      {formatLastLogin(topic.created_in)}
+                      {formatPostTimestamp(topic.created_in)}
                     </p>
                   </div>
                 </div>

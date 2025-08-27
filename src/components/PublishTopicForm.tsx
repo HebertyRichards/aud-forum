@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -32,8 +31,7 @@ import {
   Smile,
   Paperclip,
 } from "lucide-react";
-import { TopicFormData, CommentFormData, PublishFormProps } from "@/types/post";
-
+import { PublishFormProps } from "@/types/post";
 
 const ToolbarButton = ({
   icon,
@@ -64,26 +62,18 @@ export function PublishForm<T extends "topic" | "comment">({
   type,
   onSubmit,
   isSubmitting = false,
+  content,
+  setContent,
+  title,
+  setTitle,
 }: PublishFormProps<T>) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (type === "topic") {
-      (onSubmit as (data: TopicFormData) => void)({
-        title,
-        content,
-      });
-    } else {
-      (onSubmit as (data: CommentFormData) => void)({
-        content,
-      });
-    }
+    onSubmit();
   };
 
   const handleSmileyClick = (smiley: string) => {
-    setContent((prevContent) => prevContent + smiley);
+    setContent(content + smiley);
   };
 
   const formId = `publish-${type}-form`;
@@ -108,7 +98,7 @@ export function PublishForm<T extends "topic" | "comment">({
                     id="topic-title"
                     placeholder="Digite o título do seu tópico aqui..."
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setTitle?.(e.target.value)}
                     required
                   />
                 </div>

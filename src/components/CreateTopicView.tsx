@@ -1,22 +1,32 @@
-import { PublishForm } from "./PublishTopicForm";
-import { CreateTopicViewProps } from "@/types/post";
+"use client";
 
-export function CreateTopicView({
-  onSubmit,
-  isSubmitting,
-  error, 
-}: CreateTopicViewProps) {
+import { PublishForm } from "./PublishTopicForm";
+import { useCreateTopic } from "@/hooks/useCreateTopic";
+
+export function CreateTopicView({ category }: { category: string }) {
+  const {
+    title,
+    setTitle,
+    content,
+    setContent,
+    isSubmitting,
+    error,
+    handleTopicSubmit,
+  } = useCreateTopic(category);
+
   return (
     <div className="flex w-full max-w-6xl mx-auto gap-6 p-4">
       <div className="flex-1">
-        <h1 className="text-3xl font-bold mb-4">
-          Criar Novo Tópico
-        </h1>
+        <h1 className="text-3xl font-bold mb-4">Criar Novo Tópico</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <PublishForm
           type="topic"
-          onSubmit={onSubmit}
+          onSubmit={handleTopicSubmit}
           isSubmitting={isSubmitting}
-          error={error}
+          title={title}
+          setTitle={setTitle}
+          content={content}
+          setContent={setContent}
           className="bg-white dark:bg-gray-800"
         />
       </div>
