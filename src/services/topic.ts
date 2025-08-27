@@ -61,7 +61,7 @@ export async function deleteTopic(topicId: number) {
     return;
   }
   
-  export async function deleteComent(commentId: number) {
+  export async function deleteComment(commentId: number) {
     const response = await fetch(`${API_URL}/posts/comments/${commentId}`, {
       method: 'DELETE',
       credentials: 'include',
@@ -72,7 +72,7 @@ export async function deleteTopic(topicId: number) {
     }
     return;
   }
-  
+
 export async function createComment(data: NewCommentData) {
   const response = await fetch(`${API_URL}/posts/topics/${data.topicId}/comments`, {
     method: 'POST',

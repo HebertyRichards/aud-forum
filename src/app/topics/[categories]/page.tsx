@@ -111,7 +111,7 @@ export default function CategoryTopicPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Avatar>
-                    <AvatarImage src={topic.profiles.avatar_url} />
+                    <AvatarImage src={topic.profiles.avatar_url || undefined} />
                     <AvatarFallback>
                       {topic.profiles.username.charAt(0)}
                     </AvatarFallback>

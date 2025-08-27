@@ -8,7 +8,7 @@ import {
   createComment,
   deleteTopic,
   updateTopic,
-  deleteComent,
+  deleteComment,
 } from "@/services/topic";
 import { NewCommentData } from "@/types/post";
 import { PublishForm } from "@/components/PublishTopicForm";
@@ -16,17 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatLastLogin } from "@/utils/dateUtils";
-import { Comment, TopicDetails } from "@/types/post";
+import { Comment, TopicDetails, UpdateTopicData } from "@/types/post";
 import { Toaster, toast } from "sonner";
-
-interface TopicDetailsWithAuthor extends TopicDetails {
-  author_id: string;
-}
-
-interface UpdateTopicData {
-  title?: string;
-  content?: string;
-}
 
 export default function TopicPage() {
   const params = useParams();
@@ -34,7 +25,7 @@ export default function TopicPage() {
   const { user } = useAuth();
   const slug = params.slug as string;
 
-  const [topic, setTopic] = useState<TopicDetailsWithAuthor | null>(null);
+  const [topic, setTopic] = useState<TopicDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
@@ -55,7 +46,7 @@ export default function TopicPage() {
       try {
         const data = await getTopicBySlug(slug);
         setTopic(data);
-      } catch (error: unknown) {
+      } catch {
         setError(
           "Não foi possível carregar o tópico. Tente novamente mais tarde."
         );
@@ -95,6 +86,7 @@ export default function TopicPage() {
           comentarios: [...prevTopic.comentarios, commentForState],
         };
       });
+      toast.success("Comentário publicado com sucesso!");
     } catch (error: unknown) {
       toast.error((error as Error).message);
     } finally {
@@ -114,8 +106,8 @@ export default function TopicPage() {
         await deleteTopic(topic.id);
         toast.success("Tópico deletado com sucesso!");
         router.push("/");
-      } catch (error) {
-        setError("Falha ao deletar o tópico. Por favor, tente novamente.");
+      } catch {
+        toast.error("Falha ao deletar o tópico. Por favor, tente novamente.");
       } finally {
         setIsDeleting(false);
       }
@@ -130,7 +122,7 @@ export default function TopicPage() {
       return;
     }
     try {
-      await deleteComent(commentId);
+      await deleteComment(commentId);
       setTopic((prevTopic) => {
         if (!prevTopic) return null;
         return {
@@ -142,7 +134,7 @@ export default function TopicPage() {
       });
 
       toast.success("Comentário deletado com sucesso!");
-    } catch (error) {
+    } catch {
       toast.error(
         "Falha ao deletar o comentário. Você pode não ter permissão."
       );
@@ -172,8 +164,8 @@ export default function TopicPage() {
       });
       setIsEditing(false);
       toast.success("Tópico atualizado com sucesso!");
-    } catch (error) {
-      setError("Falha ao atualizar o tópico. Tente novamente.");
+    } catch {
+      toast.error("Falha ao atualizar o tópico. Tente novamente.");
     } finally {
       setIsUpdating(false);
     }

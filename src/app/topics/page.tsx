@@ -57,7 +57,6 @@ async function getCategories(): Promise<ApiCategory[]> {
     });
 
     if (!response.ok) {
-      console.error("Falha ao buscar categorias:", response.statusText);
       return [];
     }
 

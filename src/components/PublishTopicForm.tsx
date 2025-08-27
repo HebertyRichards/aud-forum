@@ -74,7 +74,6 @@ export function PublishForm<T extends "topic" | "comment">({
       (onSubmit as (data: TopicFormData) => void)({
         title,
         content,
-        category: "",
       });
     } else {
       (onSubmit as (data: CommentFormData) => void)({
