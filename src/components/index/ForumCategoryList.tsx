@@ -23,7 +23,7 @@ export function ForumCategoryList() {
           <AccordionItem
             key={category.id}
             value={category.id}
-            className="border-none rounded-md overflow-hidden shadow-md bg-gray-800/50"
+            className="border-none rounded-md overflow-hidden shadow-md bg-white dark:bg-gray-800"
           >
             <AccordionTrigger className="bg-blue-700 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full">
               {category.title}
@@ -36,8 +36,8 @@ export function ForumCategoryList() {
                     key={item.title}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/50 transition-colors"
                   >
-                    <item.icon className="h-5 w-5 text-gray-400" />
-                    <span className="text-sm font-semibold text-white">
+                    <item.icon className="h-5 w-5" />
+                    <span className="text-sm font-semibold">
                       {item.title}
                     </span>
                   </Link>

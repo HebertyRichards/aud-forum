@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatLastLogin } from "@/utils/dateUtils";
 import { Comment, TopicDetails, UpdateTopicData } from "@/types/post";
+import { getRoleColor } from "@/utils/colors";
 import { Toaster, toast } from "sonner";
 
 export default function TopicPage() {
@@ -192,14 +193,14 @@ export default function TopicPage() {
       <Toaster position="bottom-right" richColors />
       <div className="min-h-screen text-gray-300 font-sans p-4 md:p-8">
         <div className="max-w-5xl mx-auto space-y-6">
-          <Card className="bg-gray-800/50 border border-gray-700">
+          <Card className="bg-white border-gray-100/50 dark:bg-gray-800 border-gray400/50">
             {isEditing ? (
               <form onSubmit={handleUpdateSubmit} className="p-6">
                 <div className="space-y-4">
                   <div>
                     <label
                       htmlFor="title"
-                      className="block text-sm font-medium text-gray-300 mb-1"
+                      className="block text-sm font-medium mb-1"
                     >
                       Título
                     </label>
@@ -210,14 +211,14 @@ export default function TopicPage() {
                       onChange={(e) =>
                         setEditData({ ...editData, title: e.target.value })
                       }
-                      className="w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-white focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="content"
-                      className="block text-sm font-medium text-gray-300 mb-1"
+                      className="block text-sm font-medium mb-1"
                     >
                       Conteúdo
                     </label>
@@ -228,23 +229,19 @@ export default function TopicPage() {
                       onChange={(e) =>
                         setEditData({ ...editData, content: e.target.value })
                       }
-                      className="w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-white focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
                   </div>
                 </div>
                 <div className="mt-6 flex items-center justify-end gap-4">
-                  <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                    className="text-gray-300 hover:text-white"
-                  >
+                  <button type="button" onClick={handleCancelEdit}>
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={isUpdating}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-green-500/50 disabled:cursor-not-allowed"
+                    className="bg-green-600 hover:bg-green-700 font-bold py-2 px-4 rounded-lg disabled:bg-green-500/50 disabled:cursor-not-allowed dark:bg-green-500"
                   >
                     {isUpdating ? "Salvando..." : "Salvar Alterações"}
                   </button>
@@ -258,14 +255,14 @@ export default function TopicPage() {
                     <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                       <button
                         onClick={handleStartEdit}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm"
+                        className="bg-blue-600 hover:bg-blue-700 font-bold py-2 px-3 rounded-lg text-sm"
                       >
                         Editar
                       </button>
                       <button
                         onClick={handleDeleteTopic}
                         disabled={isDeleting}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm disabled:bg-gray-500"
+                        className="bg-red-600 hover:bg-red-700 font-bold py-2 px-3 rounded-lg text-sm disabled:bg-gray-500"
                       >
                         {isDeleting ? "..." : "Deletar"}
                       </button>
@@ -280,15 +277,19 @@ export default function TopicPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold text-white">
+                    <p
+                      className={`font-semibold ${getRoleColor(
+                        topic.profiles.role
+                      )}`}
+                    >
                       {topic.profiles.username}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-700 dark:text-gray-500">
                       Postado {formatLastLogin(topic.created).toLowerCase()}
                     </p>
                   </div>
                 </div>
-                <div className="prose prose-invert max-w-none text-gray-300">
+                <div className="prose prose-invert max-w-none">
                   <p>{topic.content}</p>
                 </div>
               </CardContent>
@@ -299,7 +300,7 @@ export default function TopicPage() {
             {topic.comentarios.map((comment) => (
               <Card
                 key={comment.id}
-                className="bg-gray-800/30 border border-gray-700/50"
+                className="bg-white border-gray-100/50 dark:bg-gray-800 border-gray400/50"
               >
                 <CardContent className="p-5 flex gap-4">
                   <Avatar>
@@ -312,17 +313,19 @@ export default function TopicPage() {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
-                      <p className="font-semibold text-white">
+                    <p className={`font-semibold ${getRoleColor(
+                        comment.profiles.role
+                      )}`}>
                         {comment.profiles.username}
                       </p>
                       <div className="flex items-center gap-4">
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-700 dark:text-gray-500">
                           {formatLastLogin(comment.created)}
                         </p>
                         {user && user.id === comment.author_id && (
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
-                            className="w-6 h-6 flex items-center justify-center rounded-md border border-red-500 bg-red-500 text-white hover:bg-red-400 text-xs font-bold"
+                            className="w-6 h-6 flex items-center justify-center rounded-md border border-red-500 bg-red-500 hover:bg-red-400 text-xs font-bold"
                             title="Deletar comentário"
                           >
                             X
@@ -330,7 +333,7 @@ export default function TopicPage() {
                         )}
                       </div>
                     </div>
-                    <p className="mt-2 text-gray-300">{comment.content}</p>
+                    <p className="mt-2">{comment.content}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -346,9 +349,7 @@ export default function TopicPage() {
             </div>
           ) : (
             <Card className="text-center p-6 bg-gray-800/50 border border-gray-700">
-              <p className="text-gray-400">
-                Você precisa estar logado para comentar.
-              </p>
+              <p>Você precisa estar logado para comentar.</p>
             </Card>
           )}
         </div>

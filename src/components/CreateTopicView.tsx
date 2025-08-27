@@ -9,7 +9,7 @@ export function CreateTopicView({
   return (
     <div className="flex w-full max-w-6xl mx-auto gap-6 p-4">
       <div className="flex-1">
-        <h1 className="text-3xl font-bold text-white mb-4">
+        <h1 className="text-3xl font-bold mb-4">
           Criar Novo Tópico
         </h1>
         <PublishForm

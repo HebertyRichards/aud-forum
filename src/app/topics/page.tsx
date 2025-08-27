@@ -72,7 +72,7 @@ export default async function TopicsIndexPage() {
   const categories: UiCategory[] = apiCategories.map((category) => {
     const details = categoryDetailsMap[category.slug] || {
       description: "Uma nova categoria para explorar.",
-      icon: <HelpCircle className="h-8 w-8 text-gray-500" />,
+      icon: <HelpCircle className="h-8 w-8" />,
     };
 
     return {
@@ -84,11 +84,11 @@ export default async function TopicsIndexPage() {
   });
 
   return (
-    <div className="min-h-screen text-gray-300 font-sans p-8">
+    <div className="min-h-screen font-sans p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-2">Fóruns</h1>
-          <p className="text-lg text-gray-400">
+          <h1 className="text-4xl font-bold mb-2">Fóruns</h1>
+          <p className="text-lg">
             Navegue pelas categorias para encontrar o que procura.
           </p>
         </div>
@@ -97,11 +97,11 @@ export default async function TopicsIndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (
               <Link href={category.href} key={category.href} className="group">
-                <Card className="border border-gray-700 bg-gray-800/50 hover:border-blue-500 hover:bg-gray-800 transition-all duration-300 h-full">
+                <Card className="border border-gray-700 bg-white hover:border-blue-500 transition-all duration-300 h-full dark:bg-gray-800">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div>{category.icon}</div>
                     <div>
-                      <CardTitle className="text-white group-hover:text-blue-400 transition-colors">
+                      <CardTitle className="group-hover:text-blue-400 transition-colors">
                         {category.title}
                       </CardTitle>
                       <CardDescription className="mt-1">
@@ -115,7 +115,7 @@ export default async function TopicsIndexPage() {
           </div>
         ) : (
           <div className="text-center py-10">
-            <p className="text-gray-400">
+            <p className="text-gray-700 dark:text-gray-500">
               Nenhuma categoria encontrada no momento.
             </p>
           </div>

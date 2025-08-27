@@ -96,16 +96,22 @@ export function HeaderDesktop() {
               Membros
             </Link>
             <Link
-              href="/subscribe"
+              href="/topics/subscribe"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
             >
               Inscreva-se
             </Link>
             <Link
-              href="/downloads"
+              href="/topics/downloads"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
             >
               Downloads
+            </Link>
+            <Link
+              href="/topics"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+            >
+              Categorias
             </Link>
             {canViewRules && (
               <Link

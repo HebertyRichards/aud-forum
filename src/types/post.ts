@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
-
+import {
+  type LucideIcon,
+} from "lucide-react";
 
 export interface ApiCategory {
   slug: string;
@@ -94,3 +96,49 @@ export interface CreateTopicViewProps {
 export interface EmptyStateProps {
   onNewTopicClick: () => void;
 }
+
+export interface ForumTopicRowProps {
+  id: number; 
+  icon: LucideIcon;
+  title: string;
+  route: string;
+  lastPostInfo: string;
+  author: string;
+  authorColorClass: string;
+  postCount: number;
+}
+
+export type RecentPost = {
+  id: number;
+  title:string;
+  author: string;
+  category: string;
+  replies: number;
+  views: number;
+  time: string;
+  avatar: string;
+  isPinned?: boolean;
+  isHot?: boolean;
+};
+
+export interface RecentPostsProps {
+  posts: RecentPost[];
+}
+
+export type Category = {
+  id: string;
+  title: string;
+  topics: Topic[];
+};
+
+export type Topic = {
+  id: number;
+  icon: LucideIcon;
+  title: string;
+  route: string;
+  lastPostInfo: string;
+  author: string;
+  authorColorClass: string;
+  postCount: number;
+  hasInfoIcon?: boolean;
+};

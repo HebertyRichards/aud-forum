@@ -107,7 +107,7 @@ export default function CategoryTopicPage() {
             key={topic.id}
             className="block"
           >
-            <Card className="p-4 border border-gray-700 bg-gray-800/50 hover:border-blue-500 transition-colors duration-300">
+            <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Avatar>
@@ -117,16 +117,14 @@ export default function CategoryTopicPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white text-lg">
-                      {topic.title}
-                    </h3>
-                    <p className="text-sm text-gray-400">
+                    <h3 className="font-semibold text-lg">{topic.title}</h3>
+                    <p className="text-xs text-gray-700 dark:text-gray-500">
                       por {topic.profiles.username} •{" "}
                       {formatLastLogin(topic.created_in)}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-gray-400">
+                <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
                   <MessageSquare className="h-4 w-4" />
                   <span>{topic.comentarios[0]?.count ?? 0}</span>
                 </div>
@@ -140,10 +138,10 @@ export default function CategoryTopicPage() {
 
   const pageTitle = categoryTitles[category] || "Tópicos";
   return (
-    <div className="min-h-screen text-gray-300 font-sans p-8">
+    <div className="min-h-scree font-sans p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-white">{pageTitle}</h1>
+          <h1 className="text-3xl font-bold">{pageTitle}</h1>
           <div className="flex gap-2">
             {view === "create" ? (
               <Button variant="outline" onClick={() => setView("list")}>
