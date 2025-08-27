@@ -51,15 +51,15 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/topics"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
-                  Regras do fórum
+                  Categorias
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/subscribe"
+                  href="/topics/subscribe"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Recrutamento
@@ -72,7 +72,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="/topics/downloads"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Downloads
@@ -80,7 +80,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="general-discussions"
+                  href="/topics/general-discussions"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Discussões Gerais
@@ -96,7 +96,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/manuals"
+                  href="/topics/manuals"
                   className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
                 >
                   Manuais
