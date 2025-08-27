@@ -61,6 +61,18 @@ export async function deleteTopic(topicId: number) {
     return;
   }
   
+  export async function deleteComent(commentId: number) {
+    const response = await fetch(`${API_URL}/posts/comments/${commentId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Falha ao deletar o comentário.');
+    }
+    return;
+  }
+  
 export async function createComment(data: NewCommentData) {
   const response = await fetch(`${API_URL}/posts/topics/${data.topicId}/comments`, {
     method: 'POST',

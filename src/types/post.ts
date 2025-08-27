@@ -143,6 +143,7 @@ export type DownloadCardProps = {
       avatar_url: string | null;
       role: string;
     };
+    author_id: string;
   }
   
  export interface TopicDetails {
