@@ -35,11 +35,8 @@ export interface MembersFiltersProps {
   setSortOrder: (value: string) => void;
 }
 
-export interface ForumStatsProps {
-  stats: {
-    activeMembers: number;
-    totalPosts: string;
-    totalTopics: number;
-    newestMember: string;
-  };
+export interface MainStats {
+  activeMembers: number;
+  totalPosts: number;
+  totalTopics: number;
 }

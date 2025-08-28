@@ -2,7 +2,7 @@ import { ForumCategoryList } from "@/components/index/ForumCategoryList";
 import { RecentPosts } from "@/components/index/RecentPosts";
 import { ForumStats } from "@/components/index/ForumStats";
 import { OnlineUsers } from "@/components/index/OnlineUsers";
-import { recentPosts, forumStats } from "@/utils/forum-data";
+import { recentPosts } from "@/utils/forum-data";
 
 export default function ForumPage() {
   return (
@@ -13,7 +13,7 @@ export default function ForumPage() {
           <ForumCategoryList />
         </main>
         <aside className="space-y-6">
-          <ForumStats stats={forumStats} />
+          <ForumStats />
           <OnlineUsers />
         </aside>
       </div>
