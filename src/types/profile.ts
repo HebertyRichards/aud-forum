@@ -62,9 +62,9 @@ export interface UpdateAvatarProps {
 }
 
 export interface FollowButtonProps {
-  profileId: string;
-  initialIsFollowing: boolean;
-  initialFollowersCount: number;
+  profileUsername: string;
+  isFollowing: boolean;
+  followersCount: number;
 }
 
 export interface FollowerListProps {

@@ -113,41 +113,6 @@ export interface ForumTopicRowProps {
   postCount: number;
 }
 
-export type RecentPost = {
-  id: number;
-  title:string;
-  author: string;
-  category: string;
-  replies: number;
-  views: number;
-  time: string;
-  avatar: string;
-  isPinned?: boolean;
-  isHot?: boolean;
-};
-
-export interface RecentPostsProps {
-  posts: RecentPost[];
-}
-
-export type Category = {
-  id: string;
-  title: string;
-  topics: Topic[];
-};
-
-export type Topic = {
-  id: number;
-  icon: LucideIcon;
-  title: string;
-  route: string;
-  lastPostInfo: string;
-  author: string;
-  authorColorClass: string;
-  postCount: number;
-  hasInfoIcon?: boolean;
-};
-
 export interface CommentHandlers {
   handleDeleteComment: (commentId: number) => void;
   handleUpdateComment: (commentId: number, content: string) => void;
@@ -156,4 +121,16 @@ export interface CommentHandlers {
 export interface TopicHandlers {
   handleDeleteTopic: () => void;
   handleUpdateTopic: (editData: UpdateTopicData) => void;
+}
+
+export interface RecentPost {
+  id: number;
+  title: string;
+  topic_slug: string;
+  created_in: string;
+  category_name: string;
+  category_slug: string;
+  author_username: string;
+  author_avatar: string | null;
+  comment_count: number;
 }
