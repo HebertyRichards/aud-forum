@@ -15,6 +15,9 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 - **Middleware de autenticação para rotas sensíveis**
 - **Algumas rotas somente podem ser acessadas com ranks específicos**
 - **Algumas rotas é necessário autenticação para acessa-la**
+- **Criação de tópicos**
+- **Comentar em tópicos**
+- **Conteúdo dinâmico com tópicos recentes, quantidade de posts, quantidade de membros ativos e último membro registrado**
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -37,7 +40,8 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 
 ## 📅 Próximos Passos
 
-- Criar tabelas para **postagens** e **mensagens públicas**
+- Melhoria para **criar tópicos e comentar**
+- Criar **restrições nas categorias** para **criação de tópicos**
 - Implementar **mensagens privadas** entre usuários
 - Melhorar recursos de interação da comunidade
 
