@@ -4,26 +4,56 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { UserProfile } from "@/types/profile";
-import Link from "next/link";
-import { ForumStatsProps } from "@/types/users";
+import { MainStats } from "@/types/users";
 import { getRoleColor } from "@/utils/colors";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
-export function ForumStats({ stats }: ForumStatsProps) {
+export function ForumStats() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const [stats, setStats] = useState<MainStats | null>(null);
   const [newestMember, setNewestMember] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLastRegisteredUser = async () => {
+    const fetchAllData = async () => {
+      setLoading(true);
       try {
-        const res = await fetch(`${API_URL}/user/last-registration`);
-        if (!res.ok) throw new Error("Erro ao buscar último usuário");
-        const data: UserProfile = await res.json();
-        setNewestMember(data);
-      } catch {}
+        const [statsRes, newestMemberRes] = await Promise.all([
+          fetch(`${API_URL}/profile/forum/stats`),
+          fetch(`${API_URL}/user/last-registration`),
+        ]);
+
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
+        }
+
+        if (newestMemberRes.ok) {
+          const newestMemberData = await newestMemberRes.json();
+          setNewestMember(newestMemberData);
+        }
+      } catch {
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchLastRegisteredUser();
+    fetchAllData();
   }, [API_URL]);
+
+  if (loading) {
+    return (
+      <Card className="bg-white dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle className="text-lg">Estatísticas</CardTitle>
+        </CardHeader>
+        <CardContent className="flex justify-center items-center h-40">
+          <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-white dark:bg-gray-800">
@@ -32,16 +62,16 @@ export function ForumStats({ stats }: ForumStatsProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Membros Ativos</span>
-          <span className="font-semibold">{stats.activeMembers}</span>
+          <span className="text-sm text-gray-600">Membros</span>
+          <span className="font-semibold">{stats?.activeMembers ?? "..."}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Posts Totais</span>
-          <span className="font-semibold">{stats.totalPosts}</span>
+          <span className="font-semibold">{stats?.totalPosts ?? "..."}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Tópicos Totais</span>
-          <span className="font-semibold">{stats.totalTopics}</span>
+          <span className="font-semibold">{stats?.totalTopics ?? "..."}</span>
         </div>
         <Separator />
         <div className="flex justify-between items-center">
@@ -57,7 +87,7 @@ export function ForumStats({ stats }: ForumStatsProps) {
               </span>
             </Link>
           ) : (
-            <span className="font-semibold">{stats.newestMember}</span>
+            <span className="font-semibold">Nenhum</span>
           )}
         </div>
       </CardContent>

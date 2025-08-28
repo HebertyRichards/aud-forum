@@ -66,13 +66,30 @@ export async function deleteTopic(topicId: number) {
       method: 'DELETE',
       credentials: 'include',
     });
-
+  
     if (!response.ok) {
       throw new Error('Falha ao deletar o comentário.');
     }
     return;
   }
 
+  export async function updateComment(commentId: number, content: string) {
+    const response = await fetch(`${API_URL}/posts/comments/${commentId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ content }),
+    });
+  
+    if (!response.ok) {
+      throw new Error('Falha ao atualizar o comentário.');
+    }
+    
+    return await response.json();
+  }
+  
 export async function createComment(data: NewCommentData) {
   const response = await fetch(`${API_URL}/posts/topics/${data.topicId}/comments`, {
     method: 'POST',

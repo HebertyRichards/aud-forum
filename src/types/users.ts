@@ -8,7 +8,7 @@ export type OnlineUser = Pick<UserProfile, "username" | "role" | "avatar_url">;
 
 export type Member = Pick<
   UserProfile,
-  "id" | "username" | "role" | "avatar_url" | "joined_at" | "last_login"
+  "id" | "username" | "role" | "avatar_url" | "joined_at" | "last_login" | "mensagens_count"
 > & {
   messages: number; 
   rowNumber: number;
@@ -17,7 +17,7 @@ export type Member = Pick<
 
 export type ApiMember = Pick<
   UserProfile,
-  "id" | "username" | "role" | "joined_at" | "last_login" | "avatar_url"
+  "id" | "username" | "role" | "joined_at" | "last_login" | "avatar_url" | "mensagens_count"
 >;
 
 export type MembersTableProps = {
@@ -35,11 +35,8 @@ export interface MembersFiltersProps {
   setSortOrder: (value: string) => void;
 }
 
-export interface ForumStatsProps {
-  stats: {
-    activeMembers: number;
-    totalPosts: string;
-    totalTopics: number;
-    newestMember: string;
-  };
+export interface MainStats {
+  activeMembers: number;
+  totalPosts: number;
+  totalTopics: number;
 }

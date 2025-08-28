@@ -23,7 +23,8 @@ export interface TopicSummary {
 export interface Comment {
   id: number;
   content: string;
-  created: string;
+  created_in: string;
+  updated_at?: string | null;
   author_id: string; 
   profiles: {
     username: string;
@@ -36,7 +37,8 @@ export interface TopicDetails {
   id: number;
   title: string;
   content: string;
-  created: string;
+  created_in: string;
+  updated_in?: string | null; 
   author_id: string;
   profiles: {
     username: string;
@@ -81,10 +83,13 @@ export interface CommentFormData {
 
 export interface PublishFormProps<T extends "topic" | "comment"> {
   type: T;
-  onSubmit: (data: T extends "topic" ? TopicFormData : CommentFormData) => void;
+  onSubmit: () => void;
   isSubmitting?: boolean;
   className?: string;
-  error?: string | null; 
+  content: string;
+  setContent: (value: string) => void;
+  title?: string;
+  setTitle?: (value: string) => void;
 }
 
 export interface CreateTopicViewProps {
@@ -108,37 +113,24 @@ export interface ForumTopicRowProps {
   postCount: number;
 }
 
-export type RecentPost = {
-  id: number;
-  title:string;
-  author: string;
-  category: string;
-  replies: number;
-  views: number;
-  time: string;
-  avatar: string;
-  isPinned?: boolean;
-  isHot?: boolean;
-};
-
-export interface RecentPostsProps {
-  posts: RecentPost[];
+export interface CommentHandlers {
+  handleDeleteComment: (commentId: number) => void;
+  handleUpdateComment: (commentId: number, content: string) => void;
 }
 
-export type Category = {
-  id: string;
-  title: string;
-  topics: Topic[];
-};
+export interface TopicHandlers {
+  handleDeleteTopic: () => void;
+  handleUpdateTopic: (editData: UpdateTopicData) => void;
+}
 
-export type Topic = {
+export interface RecentPost {
   id: number;
-  icon: LucideIcon;
   title: string;
-  route: string;
-  lastPostInfo: string;
-  author: string;
-  authorColorClass: string;
-  postCount: number;
-  hasInfoIcon?: boolean;
-};
+  topic_slug: string;
+  created_in: string;
+  category_name: string;
+  category_slug: string;
+  author_username: string;
+  author_avatar: string | null;
+  comment_count: number;
+}

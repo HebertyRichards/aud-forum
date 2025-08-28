@@ -20,8 +20,7 @@ export async function getAllMembers(page: number): Promise<{ members: Member[], 
       role: apiMember.role as Member['role'],
       joined_at: apiMember.joined_at,
       last_login: apiMember.last_login,
-      messages: 0, 
-
+      messages: apiMember.mensagens_count ?? 0, 
     }));
 
     return { members: transformedData, totalCount }

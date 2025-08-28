@@ -3,20 +3,15 @@
 import { useFollow } from "@/hooks/useFollow";
 import { Button } from "@/components/ui/button";
 import { Loader2, UserPlus, UserMinus } from "lucide-react";
-
-interface FollowButtonProps {
-  profileId: string;
-  isFollowing: boolean;
-  followersCount: number;
-}
+import { FollowButtonProps } from "@/types/profile";
 
 export function FollowButton({
-  profileId,
+  profileUsername,
   isFollowing: initialIsFollowing,
   followersCount: initialFollowersCount,
 }: FollowButtonProps) {
   const { isFollowing, isLoading, error, handleFollow, handleUnfollow } =
-    useFollow(profileId, initialIsFollowing, initialFollowersCount);
+    useFollow(profileUsername, initialIsFollowing, initialFollowersCount);
 
   const handleClick = () => {
     if (isFollowing) {

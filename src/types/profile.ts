@@ -14,6 +14,7 @@ export interface UserProfile {
   joined_at: string;
   last_login: string;
   total_posts?: number;
+  mensagens_count?: number
 }
 
 export interface UserPreview {
@@ -61,9 +62,9 @@ export interface UpdateAvatarProps {
 }
 
 export interface FollowButtonProps {
-  profileId: string;
-  initialIsFollowing: boolean;
-  initialFollowersCount: number;
+  profileUsername: string;
+  isFollowing: boolean;
+  followersCount: number;
 }
 
 export interface FollowerListProps {
@@ -72,7 +73,7 @@ export interface FollowerListProps {
 }
 
 export interface FollowListModalProps {
-  userId: string;
+  username: string;
   listType: "followers" | "following";
   onClose: () => void;
 }
