@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
-import { UserProfile, FollowStats, UserPreview } from "@/types/profile";
+import { UserProfile, FollowStats } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 export default function OtherProfile() {
   const auth = useAuth();
@@ -26,30 +26,33 @@ export default function OtherProfile() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/user/${profileUsername}`);
-        if (!res.ok) {
+        const fetchOptions = { credentials: "include" as RequestCredentials };
+        const [profileRes, statsRes, isFollowingRes] = await Promise.all([
+          fetch(`${API_URL}/profile/user/${profileUsername}`),
+          fetch(`${API_URL}/profile/${profileUsername}/stats`),
+          fetch(
+            `${API_URL}/profile/${profileUsername}/is-following`,
+            fetchOptions
+          ),
+        ]);
+        if (!profileRes.ok) {
           throw new Error("Erro ao carregar perfil.");
         }
-        const data: UserProfile = await res.json();
-        setProfile(data);
+        const profileData: UserProfile = await profileRes.json();
+        setProfile(profileData);
 
-        if (data && data.id && user?.id) {
-          const [statsRes, followersRes] = await Promise.all([
-            fetch(`${API_URL}/profile/${data.id}/stats`),
-            fetch(`${API_URL}/profile/${data.id}/followers`),
-          ]);
-          if (statsRes.ok) {
-            const statsData: FollowStats = await statsRes.json();
-            setStats(statsData);
-          }
+        if (statsRes.ok) {
+          const statsData: FollowStats = await statsRes.json();
+          setStats(statsData);
+        } else {
+          setStats({ followers_count: 0, following_count: 0 });
+        }
 
-          if (followersRes.ok) {
-            const followersData: UserPreview[] = await followersRes.json();
-            const userIsFollower = followersData.some(
-              (follower) => follower.id === user.id
-            );
-            setIsFollowing(userIsFollower);
-          }
+        if (isFollowingRes.ok) {
+          const isFollowingData = await isFollowingRes.json();
+          setIsFollowing(isFollowingData.isFollowing);
+        } else {
+          setIsFollowing(false);
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -61,7 +64,7 @@ export default function OtherProfile() {
         setLoading(false);
       }
     },
-    [API_URL, user?.id]
+    [API_URL]
   );
 
   useEffect(() => {
@@ -85,18 +88,21 @@ export default function OtherProfile() {
   }, [user, auth.loading, router, fetchProfile, username]);
 
   const handleApiAction = async (method: "POST" | "DELETE") => {
-    if (!profile?.id) {
-      alert("Ação não disponível: ID do usuário não encontrado.");
+    if (!profile?.username) {
+      alert("Ação não disponível: nome de usuário não encontrado.");
       return;
     }
     setIsFollowLoading(true);
     try {
-      const res = await fetch(`${API_URL}/profile/${profile.id}/follow`, {
+      const res = await fetch(`${API_URL}/profile/${profile.username}/follow`, {
         method,
         credentials: "include",
       });
       if (!res.ok) {
-        throw new Error("Ação falhou.");
+        const errorData = await res
+          .json()
+          .catch(() => ({ message: "Ação falhou." }));
+        throw new Error(errorData.message);
       }
       if (method === "POST") {
         setIsFollowing(true);
@@ -113,7 +119,10 @@ export default function OtherProfile() {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+        alert(
+          error.message ||
+            "Não foi possível realizar essa ação, tente novamente"
+        );
       } else {
         alert("Ocorreu uma falha inesperada.");
       }

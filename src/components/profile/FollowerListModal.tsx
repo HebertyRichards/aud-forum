@@ -8,7 +8,7 @@ import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
 
 export function FollowListModal({
-  userId,
+  username,
   listType,
   onClose,
 }: FollowListModalProps) {
@@ -22,7 +22,7 @@ export function FollowListModal({
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/${userId}/${listType}`);
+        const res = await fetch(`${API_URL}/profile/${username}/${listType}`);
         if (!res.ok) {
           throw new Error("Falha ao carregar a lista de usuários.");
         }
@@ -39,7 +39,7 @@ export function FollowListModal({
       }
     };
     fetchUsers();
-  }, [userId, listType, API_URL]);
+  }, [username, listType, API_URL]);
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
@@ -68,7 +68,7 @@ export function FollowListModal({
           ) : users.length > 0 ? (
             <ul className="space-y-4">
               {users.map((user) => (
-                <li key={user.id}>
+                <li key={user.username}>
                   <Link
                     href={`/profile/${user.username}`}
                     onClick={onClose}

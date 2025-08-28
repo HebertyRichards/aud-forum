@@ -21,7 +21,7 @@ export default function Profile() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchProfile = useCallback(
-    async (userId: string) => {
+    async (userId: string, username: string) => {
       if (!updating) {
         setLoading(true);
       }
@@ -29,7 +29,7 @@ export default function Profile() {
       try {
         const [res, statsRes] = await Promise.all([
           fetch(`${API_URL}/profile/${userId}`),
-          fetch(`${API_URL}/profile/${userId}/stats`),
+          fetch(`${API_URL}/profile/${username}/stats`),
         ]);
         if (!res.ok) {
           throw new Error("Erro ao carregar o perfil.");
@@ -62,8 +62,8 @@ export default function Profile() {
       router.push("/login");
       return;
     }
-    if (user.id) {
-      fetchProfile(user.id);
+    if (user.id && user.username) {
+      fetchProfile(user.id, user.username);
     } else {
       setLoading(false);
       setError("Não foi possível identificar o usuário.");
@@ -71,9 +71,9 @@ export default function Profile() {
   }, [user, auth.loading, router, fetchProfile]);
 
   const handleSuccessUpdate = () => {
-    if (user?.id) {
+    if (user?.id && user.username) {
       setUpdating(true);
-      fetchProfile(user.id).finally(() => setUpdating(false));
+      fetchProfile(user.id, user.username).finally(() => setUpdating(false));
     }
   };
 

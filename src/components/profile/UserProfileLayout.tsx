@@ -43,7 +43,7 @@ export function UserProfileLayout({
   }>({ isOpen: false, listType: null });
 
   const openModal = (listType: "followers" | "following") => {
-    if (profile?.id) {
+    if (profile?.username) {
       setModalState({ isOpen: true, listType });
     }
   };
@@ -72,9 +72,9 @@ export function UserProfileLayout({
 
   return (
     <>
-      {modalState.isOpen && profile?.id && (
+      {modalState.isOpen && profile?.username && (
         <FollowListModal
-          userId={profile.id}
+          username={profile.username}
           listType={modalState.listType!}
           onClose={closeModal}
         />

@@ -15,13 +15,13 @@ import { UserWithProfile } from "@/types/autentication";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 const CommentItem = ({
   comment,
@@ -94,11 +94,7 @@ const CommentItem = ({
           </div>
           {isEditing ? (
             <div className="mt-2 space-y-2">
-              <Textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={3}
-              />
+              <RichTextEditor content={content} setContent={setContent} />
               <div className="flex items-center gap-2">
                 <Button size="sm" onClick={handleSave} disabled={isSubmitting}>
                   {isSubmitting ? "Salvando..." : "Salvar"}
@@ -114,7 +110,10 @@ const CommentItem = ({
             </div>
           ) : (
             <>
-              <p className="mt-2 whitespace-pre-wrap">{comment.content}</p>
+              <div
+                className="mt-2 prose prose-sm prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: comment.content }}
+              />
               {comment.updated_at &&
                 new Date(comment.updated_at) > new Date(comment.created_in) && (
                   <p className="text-xs text-gray-400 italic mt-1">
@@ -194,14 +193,11 @@ const TopicView = ({
             </div>
             <div className="grid w-full gap-1.5">
               <Label htmlFor="content">Conteúdo</Label>
-              <Textarea
-                id="content"
-                rows={8}
-                value={editData.content}
-                onChange={(e) =>
-                  setEditData({ ...editData, content: e.target.value })
+              <RichTextEditor
+                content={editData.content}
+                setContent={(newContent) =>
+                  setEditData({ ...editData, content: newContent })
                 }
-                required
               />
             </div>
           </div>
@@ -269,9 +265,10 @@ const TopicView = ({
                 )}
             </div>
           </div>
-          <div className="prose prose-invert max-w-none">
-            <p className="whitespace-pre-wrap">{topic.content}</p>
-          </div>
+          <div
+            className="prose prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: topic.content }}
+          />
         </CardContent>
       )}
     </Card>
@@ -347,7 +344,7 @@ export default function TopicPage() {
           {user && (
             <PublishForm
               type="comment"
-              onSubmit={() => handlers.handleCommentSubmit()}
+              onSubmit={handlers.handleCommentSubmit}
               isSubmitting={isSubmitting}
               content={newCommentContent}
               setContent={setNewCommentContent}

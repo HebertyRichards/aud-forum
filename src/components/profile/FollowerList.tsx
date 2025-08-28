@@ -65,7 +65,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
   return (
     <ul className="space-y-4">
       {list.map((user) => (
-        <li key={user.id} className="flex items-center space-x-3">
+        <li key={user.username} className="flex items-center space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarImage
               src={user.avatar_url || undefined}

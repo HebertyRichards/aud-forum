@@ -4,7 +4,7 @@ import { useState } from 'react';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const useFollow = (
-  profileId: string,
+  profileUsername: string,
   initialIsFollowing: boolean,
   initialFollowersCount: number
 ) => {
@@ -20,7 +20,7 @@ export const useFollow = (
     setFollowersCount((prev) => prev + 1);
 
     try {
-      const res = await fetch(`${API_URL}/profiles/${profileId}/follow`, {
+      const res = await fetch(`${API_URL}/profile/${profileUsername}/follow`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -49,7 +49,7 @@ export const useFollow = (
     setFollowersCount((prev) => prev - 1);
 
     try {
-      const response = await fetch(`${API_URL}/profiles/${profileId}/follow`, {
+      const response = await fetch(`${API_URL}/profile/${profileUsername}/follow`, {
         method: 'DELETE',
         credentials: 'include',
       });
