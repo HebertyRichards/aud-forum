@@ -108,15 +108,20 @@ export function RecentPosts() {
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700 mt-1 dark:text-gray-500">
                   <span>
                     por{" "}
-                    <span className="font-medium text-gray-500 dark:text-gray-300">
-                      {post.author_username}
-                    </span>
+                    <Link href={`/profile/${post.author_username}`}>
+                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                        {" "}
+                        {post.author_username}
+                      </span>
+                    </Link>
                   </span>
                   <span>
                     em{" "}
-                    <span className="font-medium text-gray-500 dark:text-gray-300">
-                      {post.category_name}
-                    </span>
+                    <Link href={`/topics/${post.category_slug}`}>
+                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                        {post.category_name}
+                      </span>
+                    </Link>
                   </span>
                   <div className="flex items-center space-x-1">
                     <MessageSquare className="w-4 h-4" />

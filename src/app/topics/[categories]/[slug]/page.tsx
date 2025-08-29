@@ -325,22 +325,17 @@ export default function TopicPage() {
               </Link>
             </Button>
           </div>
-
           <TopicView
             topic={topic}
             user={user}
             handlers={handlers}
             isSubmitting={isSubmitting}
           />
-
           <Separator className="bg-gray-700" />
-
           <h2 className="text-2xl font-semibold">
             Comentários ({topic.comentarios.length})
           </h2>
-
           <CommentList topic={topic} user={user} handlers={handlers} />
-
           {user && (
             <PublishForm
               type="comment"

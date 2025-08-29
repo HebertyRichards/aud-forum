@@ -188,36 +188,43 @@ export function HeaderMobile() {
           <div className="px-2 pt-2 pb-4 space-y-2">
             <Link
               href="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >
               Início
             </Link>
             <Link
               href="/members-list"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >
               Membros
             </Link>
             <Link
-              href="/subscribe"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300"
+              href="/topics/subscribe"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >
               Inscreva-se
             </Link>
             <Link
-              href="/downloads"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300"
+              href="/topics/downloads"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >
               Downloads
             </Link>
+            <Link
+              href="/topics"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              onClick={closeNav}
+            >
+              Categorias
+            </Link>
             {canViewRules && (
               <Link
                 href="/rules"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
                 onClick={closeNav}
               >
                 Regras

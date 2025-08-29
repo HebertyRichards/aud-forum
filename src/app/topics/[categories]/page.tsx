@@ -103,8 +103,17 @@ export default function CategoryTopicPage() {
 
   const pageTitle = categoryTitles[category] || "Tópicos";
   return (
-    <div className="min-h-scree font-sans p-8">
+    <div className="min-h-screen font-sans p-8">
       <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <Button variant="outline" asChild>
+            <Link href="/topics">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar para Fóruns
+            </Link>
+          </Button>
+        </div>
+
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">{pageTitle}</h1>
           <div className="flex gap-2">

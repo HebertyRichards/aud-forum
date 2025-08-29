@@ -85,38 +85,38 @@ export function HeaderDesktop() {
           <nav className="hidden md:flex space-x-6 items-center">
             <Link
               href="/"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+              className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Início
             </Link>
             <Link
               href="/members-list"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+              className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Membros
             </Link>
             <Link
               href="/topics/subscribe"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+              className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Inscreva-se
             </Link>
             <Link
               href="/topics/downloads"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+              className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Downloads
             </Link>
             <Link
               href="/topics"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+              className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Categorias
             </Link>
             {canViewRules && (
               <Link
                 href="/rules"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors text-xs lg:text-sm"
+                className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
               >
                 Regras
               </Link>

@@ -36,15 +36,15 @@ export default function Footer() {
               <li>
                 <Link
                   href="/"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Página Inicial
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/member-list"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  href="/members-list"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Lista de Membros
                 </Link>
@@ -52,7 +52,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/topics"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Categorias
                 </Link>
@@ -60,7 +60,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/topics/subscribe"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Recrutamento
                 </Link>
@@ -73,7 +73,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/topics/downloads"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Downloads
                 </Link>
@@ -81,7 +81,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/topics/general-discussions"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Discussões Gerais
                 </Link>
@@ -89,7 +89,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/about"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   História da Família
                 </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/topics/manuals"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors text-sm"
+                  className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-500 transition-colors text-sm"
                 >
                   Manuais
                 </Link>
@@ -113,7 +113,9 @@ export default function Footer() {
           <div className="flex items-center space-x-6 text-sm text-gray-500">
             <span>
               Desenvolvido por{" "}
-              <span className="font-medium text-blue-600">HebertyRichards</span>
+              <span className="font-bold text-blue-700 dark:text-blue-500">
+                HebertyRichards
+              </span>
             </span>
           </div>
         </div>
