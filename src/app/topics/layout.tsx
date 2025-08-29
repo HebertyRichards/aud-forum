@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Recuperar Senha",
-  robots: {
-    index: false,
-    follow: false,
-  }
+  title: "Fóruns",
+  description: "Navegue e participe das discussões da comunidade Auditore.",
 };
 
-export default function RecoveryPassowordRoot({
+export default function TopicsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   return <>{children}</>;
 }

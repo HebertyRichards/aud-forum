@@ -3,15 +3,14 @@ import { generateMetadata } from "./metadata";
 
 export { generateMetadata };
 
-export default async function Layout({
+export default async function CategoryLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: Promise<{ username: string }>;
+  params: Promise<{ categories: string }>;
 }) {
-  const resolvedParams = await params;
-  void resolvedParams.username;
+  await params;
 
   return <>{children}</>;
 }

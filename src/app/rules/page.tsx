@@ -48,7 +48,7 @@ export default function Rules() {
     };
 
     checkPermission();
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, allowedRoles]);
 
   if (authLoading || isCheckingPermission) {
     return (
