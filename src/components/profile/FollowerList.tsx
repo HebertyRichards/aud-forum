@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserPreview, FollowerListProps } from "@/types/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
@@ -15,7 +15,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_URL}/profile/${userId}/${type}`);
+        const response = await fetch(`${API_URL}/follow/${userId}/${type}`);
         if (!response.ok) {
           throw new Error("Não foi possível carregar a lista.");
         }

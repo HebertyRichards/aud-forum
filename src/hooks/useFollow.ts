@@ -20,7 +20,7 @@ export const useFollow = (
     setFollowersCount((prev) => prev + 1);
 
     try {
-      const res = await fetch(`${API_URL}/profile/${profileUsername}/follow`, {
+      const res = await fetch(`${API_URL}/follow/${profileUsername}/follow`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -49,7 +49,7 @@ export const useFollow = (
     setFollowersCount((prev) => prev - 1);
 
     try {
-      const response = await fetch(`${API_URL}/profile/${profileUsername}/follow`, {
+      const response = await fetch(`${API_URL}/follow/${profileUsername}/follow`, {
         method: 'DELETE',
         credentials: 'include',
       });

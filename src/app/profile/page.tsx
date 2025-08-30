@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { UserProfile, FollowStats } from "@/types/profile";
@@ -29,7 +29,7 @@ export default function Profile() {
       try {
         const [res, statsRes] = await Promise.all([
           fetch(`${API_URL}/profile/${userId}`),
-          fetch(`${API_URL}/profile/${username}/stats`),
+          fetch(`${API_URL}/follow/${username}/stats`),
         ]);
         if (!res.ok) {
           throw new Error("Erro ao carregar o perfil.");

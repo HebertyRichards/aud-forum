@@ -113,7 +113,6 @@ export default function CategoryTopicPage() {
             </Link>
           </Button>
         </div>
-
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">{pageTitle}</h1>
           <div className="flex gap-2">

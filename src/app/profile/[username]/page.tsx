@@ -29,7 +29,7 @@ export default function OtherProfile() {
         const fetchOptions = { credentials: "include" as RequestCredentials };
         const [profileRes, statsRes, isFollowingRes] = await Promise.all([
           fetch(`${API_URL}/profile/user/${profileUsername}`),
-          fetch(`${API_URL}/profile/${profileUsername}/stats`),
+          fetch(`${API_URL}/follow/${profileUsername}/stats`),
           fetch(
             `${API_URL}/profile/${profileUsername}/is-following`,
             fetchOptions

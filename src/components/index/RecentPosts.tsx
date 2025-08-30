@@ -28,7 +28,7 @@ export function RecentPosts() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/posts/recent`);
+        const res = await fetch(`${API_URL}/forum/posts/recent`);
         if (!res.ok) {
           throw new Error("Falha na resposta da API");
         }
@@ -107,7 +107,7 @@ export function RecentPosts() {
                 </Link>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700 mt-1 dark:text-gray-500">
                   <span>
-                    por{" "}
+                    por:{" "}
                     <Link href={`/profile/${post.author_username}`}>
                       <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
                         {" "}
@@ -116,7 +116,7 @@ export function RecentPosts() {
                     </Link>
                   </span>
                   <span>
-                    em{" "}
+                    em:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
                       <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
                         {post.category_name}

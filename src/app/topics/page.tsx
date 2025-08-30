@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { ReactElement } from "react";
 import { ApiCategory, UiCategory } from "@/types/post";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const categoryDetailsMap: Record<
   string,
@@ -92,7 +94,14 @@ export default async function TopicsIndexPage() {
             Navegue pelas categorias para encontrar o que procura.
           </p>
         </div>
-
+        <div className="mb-6">
+          <Button variant="outline" asChild>
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar para o Início
+            </Link>
+          </Button>
+        </div>
         {categories.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (

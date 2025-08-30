@@ -4,7 +4,7 @@ export async function getAllMembers(page: number): Promise<{ members: Member[], 
   const limit = 20;
   
   try {
-    const res = await fetch(`${API_URL}/profile/user/all?page=${page}&limit=${limit}`);
+    const res = await fetch(`${API_URL}/user/user/all?page=${page}&limit=${limit}`);
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.message || "Falha ao buscar os membros.");

@@ -2,7 +2,7 @@ import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function getTopicsByCategory(category: string) {
-  const response = await fetch(`${API_URL}/posts/topics/category/${category}`);
+  const response = await fetch(`${API_URL}/category/topics/category/${category}`);
   if (!response.ok) {
     throw new Error('Falha ao buscar tópicos da categoria.');
   }

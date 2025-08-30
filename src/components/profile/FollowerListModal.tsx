@@ -22,7 +22,7 @@ export function FollowListModal({
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/${username}/${listType}`);
+        const res = await fetch(`${API_URL}/follow/${username}/${listType}`);
         if (!res.ok) {
           throw new Error("Falha ao carregar a lista de usuários.");
         }

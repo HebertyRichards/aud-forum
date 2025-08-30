@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UpdateContactsProps } from "@/types/profile";
+import { ProfileUpdateFormProps } from "@/types/profile";
 import { toast } from "sonner";
 
-export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
+export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;
   const [form, setForm] = useState({
     website: profile.website || "",
