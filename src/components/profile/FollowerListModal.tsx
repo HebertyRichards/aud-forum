@@ -50,7 +50,7 @@ export function FollowListModal({
           </CardTitle>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-white transition-opacity"
+            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-opacity"
           >
             <X size={24} />
           </button>
@@ -72,7 +72,7 @@ export function FollowListModal({
                   <Link
                     href={`/profile/${user.username}`}
                     onClick={onClose}
-                    className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
                   >
                     <Avatar>
                       <AvatarImage

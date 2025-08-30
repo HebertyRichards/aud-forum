@@ -77,3 +77,17 @@ export interface FollowListModalProps {
   listType: "followers" | "following";
   onClose: () => void;
 }
+
+export interface UserStats {
+  topicsCount: number;
+  topicsPerDay: string;
+  topicsPercentage: string;
+  lastTopicDate: string | null;
+  messagesCount: number;
+  messagesPerDay: string;
+  messagesPercentage: string;
+  lastPostDate: string | null;
+  followersCount: number;
+  memberSince: string;
+  lastLogin: string | null;
+}

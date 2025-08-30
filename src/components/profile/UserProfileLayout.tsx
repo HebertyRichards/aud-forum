@@ -25,6 +25,9 @@ import { UpdateAvatar } from "./UpdateAvatar";
 import { getRoleColor } from "@/utils/colors";
 import { formatDate } from "@/utils/dateUtils";
 import { FollowListModal } from "./FollowerListModal";
+import { StatisticsTab } from "./StatisticsTab";
+import { TopicsTab } from "./TopicsTab";
+import { FollowerList } from "./FollowerList";
 
 export function UserProfileLayout({
   profile,
@@ -89,6 +92,7 @@ export function UserProfileLayout({
               <TabsTrigger value="perfil">Perfil</TabsTrigger>
               <TabsTrigger value="estatisticas">Estatísticas</TabsTrigger>
               <TabsTrigger value="amigos">Amigos</TabsTrigger>
+              <TabsTrigger value="publicacoes">Tópicos Criados</TabsTrigger>
               <TabsTrigger value="contato">Contato</TabsTrigger>
             </TabsList>
             <TabsContent value="perfil" className="mt-4">
@@ -137,6 +141,26 @@ export function UserProfileLayout({
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+            <TabsContent value="estatisticas" className="mt-4">
+              {profile?.username && (
+                <StatisticsTab username={profile.username} />
+              )}
+            </TabsContent>
+            <TabsContent value="amigos" className="mt-4">
+              <Card className="border-gray-700 bg-white dark:bg-gray-800">
+                <CardHeader>
+                  <CardTitle>Seguidores</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {profile?.username && (
+                    <FollowerList userId={profile.username} type="followers" />
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="publicacoes" className="mt-4">
+              {profile?.username && <TopicsTab username={profile.username} />}
             </TabsContent>
             <TabsContent value="contato" className="mt-4">
               <Card className="border-gray-700 bg-white dark:bg-gray-800">
@@ -237,7 +261,11 @@ export function UserProfileLayout({
         <aside className="space-y-6">
           <Card className="border-gray-700 text-center bg-white dark:bg-gray-800">
             <CardContent className="p-6 flex flex-col items-center">
-              <h2 className="text-xl font-bold text-blue-400 hover:underline cursor-pointer mb-4">
+              <h2
+                className={`${getRoleColor(
+                  profile?.role
+                )} text-xl font-bold hover:underline cursor-pointer mb-4`}
+              >
                 {profile?.username}
               </h2>
               <div className="relative group mb-4">
@@ -304,7 +332,7 @@ export function UserProfileLayout({
             <CardContent className="flex justify-around text-center">
               <button
                 onClick={() => openModal("followers")}
-                className="p-2 rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-md hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-700"
               >
                 <p className="font-bold text-xl">
                   {stats?.followers_count ?? 0}
@@ -313,7 +341,7 @@ export function UserProfileLayout({
               </button>
               <button
                 onClick={() => openModal("following")}
-                className="p-2 rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-md hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-700"
               >
                 <p className="font-bold text-xl">
                   {stats?.following_count ?? 0}
