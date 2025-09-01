@@ -6,6 +6,7 @@ import { useAuth } from "@/services/auth";
 import { UserProfile, FollowStats } from "@/types/profile";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
+import axios from "axios";
 
 export default function Profile() {
   const auth = useAuth();
@@ -28,21 +29,21 @@ export default function Profile() {
       setError(null);
       try {
         const [res, statsRes] = await Promise.all([
-          fetch(`${API_URL}/profile/${userId}`),
-          fetch(`${API_URL}/follow/${username}/stats`),
+          axios.get(`${API_URL}/profile/${userId}`),
+          axios.get(`${API_URL}/follow/${username}/stats`).catch(() => null),
         ]);
-        if (!res.ok) {
-          throw new Error("Erro ao carregar o perfil.");
-        }
-        const data: UserProfile = await res.json();
+        const data: UserProfile = res.data;
         setProfile(data);
-
-        if (statsRes.ok) {
-          const statsData: FollowStats = await statsRes.json();
+        if (statsRes) {
+          const statsData: FollowStats = statsRes.data;
           setStats(statsData);
         }
       } catch (error: unknown) {
-        if (error instanceof Error) {
+        if (axios.isAxiosError(error)) {
+          setError(
+            error.response?.data?.message || "Erro ao carregar o perfil."
+          );
+        } else if (error instanceof Error) {
           setError(error.message);
         } else {
           setError("Ocorreu uma falha inesperada ao carregar o perfil.");

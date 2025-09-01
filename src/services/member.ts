@@ -1,16 +1,15 @@
 import { Member, ApiMember } from "@/types/users";
+import axios from "axios";
 export async function getAllMembers(page: number): Promise<{ members: Member[], totalCount: number }> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const limit = 20;
   
   try {
-    const res = await fetch(`${API_URL}/user/user/all?page=${page}&limit=${limit}`);
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || "Falha ao buscar os membros.");
-    }
+    const res = await axios.get(`${API_URL}/user/user/all`, {
+      params: { page, limit }
+    });
 
-    const { data, totalCount }: { data: ApiMember[], totalCount: number } = await res.json();
+    const { data, totalCount }: { data: ApiMember[], totalCount: number } = res.data;
 
     const transformedData: Member[] = data.map((apiMember, index) => ({
       id: apiMember.id,

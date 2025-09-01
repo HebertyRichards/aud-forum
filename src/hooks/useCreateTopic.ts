@@ -33,8 +33,8 @@ export function useCreateTopic(category: string) {
       
       toast.success("Tópico criado com sucesso!");
       router.push(`/topics/${category}/${newTopic.slug}`); 
-    } catch (err: unknown) {
-      const errorMessage = (err as Error).message || "Ocorreu um erro desconhecido.";
+    } catch (error: unknown) {
+      const errorMessage = (error as Error).message || "Ocorreu um erro desconhecido.";
       setError(errorMessage);
       toast.error(`Falha ao criar o tópico: ${errorMessage}`);
     } finally {

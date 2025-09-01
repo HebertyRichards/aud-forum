@@ -6,6 +6,7 @@ import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
 import { UserProfile, FollowStats } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
+import axios from "axios";
 export default function OtherProfile() {
   const auth = useAuth();
   const user = auth?.user;
@@ -26,36 +27,38 @@ export default function OtherProfile() {
       setLoading(true);
       setError(null);
       try {
-        const fetchOptions = { credentials: "include" as RequestCredentials };
+        const axiosOptions = { withCredentials: true };
         const [profileRes, statsRes, isFollowingRes] = await Promise.all([
-          fetch(`${API_URL}/profile/user/${profileUsername}`),
-          fetch(`${API_URL}/follow/${profileUsername}/stats`),
-          fetch(
-            `${API_URL}/profile/${profileUsername}/is-following`,
-            fetchOptions
-          ),
+          axios.get(`${API_URL}/profile/user/${profileUsername}`),
+          axios
+            .get(`${API_URL}/follow/${profileUsername}/stats`)
+            .catch(() => null),
+          axios
+            .get(
+              `${API_URL}/profile/${profileUsername}/is-following`,
+              axiosOptions
+            )
+            .catch(() => null),
         ]);
-        if (!profileRes.ok) {
-          throw new Error("Erro ao carregar perfil.");
-        }
-        const profileData: UserProfile = await profileRes.json();
+        const profileData: UserProfile = profileRes.data;
         setProfile(profileData);
-
-        if (statsRes.ok) {
-          const statsData: FollowStats = await statsRes.json();
+        if (statsRes) {
+          const statsData: FollowStats = statsRes.data;
           setStats(statsData);
         } else {
           setStats({ followers_count: 0, following_count: 0 });
         }
 
-        if (isFollowingRes.ok) {
-          const isFollowingData = await isFollowingRes.json();
+        if (isFollowingRes) {
+          const isFollowingData = isFollowingRes.data;
           setIsFollowing(isFollowingData.isFollowing);
         } else {
           setIsFollowing(false);
         }
       } catch (error: unknown) {
-        if (error instanceof Error) {
+        if (axios.isAxiosError(error)) {
+          setError(error.response?.data?.message || "Erro ao carregar perfil.");
+        } else if (error instanceof Error) {
           setError(error.message);
         } else {
           setError("Ocorreu uma falha inesperada.");
@@ -94,38 +97,31 @@ export default function OtherProfile() {
     }
     setIsFollowLoading(true);
     try {
-      const res = await fetch(`${API_URL}/profile/${profile.username}/follow`, {
-        method,
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const errorData = await res
-          .json()
-          .catch(() => ({ message: "Ação falhou." }));
-        throw new Error(errorData.message);
-      }
+      const url = `${API_URL}/profile/${profile.username}/follow`;
+      const config = { withCredentials: true };
+  
       if (method === "POST") {
-        setIsFollowing(true);
-        setStats((prev) => ({
-          followers_count: (prev?.followers_count ?? 0) + 1,
-          following_count: prev?.following_count ?? 0,
-        }));
+        await axios.post(url, {}, config);
       } else {
-        setIsFollowing(false);
-        setStats((prev) => ({
-          followers_count: Math.max(0, (prev?.followers_count ?? 0) - 1),
-          following_count: prev?.following_count ?? 0,
-        }));
+        await axios.delete(url, config);
       }
+      setIsFollowing(method === "POST");
+      setStats((prev) => {
+        const currentFollowers = prev?.followers_count ?? 0;
+        const change = method === "POST" ? 1 : -1;
+        return {
+          followers_count: Math.max(0, currentFollowers + change),
+          following_count: prev?.following_count ?? 0,
+        };
+      });
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(
-          error.message ||
-            "Não foi possível realizar essa ação, tente novamente"
-        );
-      } else {
-        alert("Ocorreu uma falha inesperada.");
+      let errorMessage = "Não foi possível realizar essa ação, tente novamente";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
+      alert(errorMessage);
     } finally {
       setIsFollowLoading(false);
     }

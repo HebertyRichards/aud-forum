@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
+import axios from "axios";
 
 export function FollowListModal({
   username,
@@ -22,15 +23,17 @@ export function FollowListModal({
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/follow/${username}/${listType}`);
-        if (!res.ok) {
-          throw new Error("Falha ao carregar a lista de usuários.");
-        }
-        const data: UserPreview[] = await res.json();
+        const res = await axios.get(
+          `${API_URL}/follow/${username}/${listType}`
+        );
+        const data: UserPreview[] = res.data;
         setUsers(data);
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
+        if (axios.isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+              "Falha ao carregar a lista de usuários."
+          );
         } else {
           setError("Ocorreu um erro desconhecido.");
         }

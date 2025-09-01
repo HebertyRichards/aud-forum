@@ -1,5 +1,6 @@
 "use client"
 import { useState } from 'react';
+import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,20 +21,16 @@ export const useFollow = (
     setFollowersCount((prev) => prev + 1);
 
     try {
-      const res = await fetch(`${API_URL}/follow/${profileUsername}/follow`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: 'Falha ao seguir o usuário.' }));
-        throw new Error(errorData.message);
-      }
+      await axios.post(
+        `${API_URL}/follow/${profileUsername}/follow`,
+        {},
+        { withCredentials: true }
+      );
     } catch (error: unknown) {
       setIsFollowing(false);
       setFollowersCount((prev) => prev - 1);
-      if (error instanceof Error) {
-        setError(error.message);
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || 'Falha ao seguir o usuário.');
       } else {
         setError('Ocorreu um erro ao tentar seguir o usuário.');
       }
@@ -49,21 +46,14 @@ export const useFollow = (
     setFollowersCount((prev) => prev - 1);
 
     try {
-      const response = await fetch(`${API_URL}/follow/${profileUsername}/follow`, {
-        method: 'DELETE',
-        credentials: 'include',
+      await axios.delete(`${API_URL}/follow/${profileUsername}/follow`, {
+        withCredentials: true,
       });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Falha ao deixar de seguir o usuário.' }));
-        throw new Error(errorData.message);
-      } 
-
     } catch (error: unknown) {
       setIsFollowing(true);
       setFollowersCount((prev) => prev + 1);
-      if (error instanceof Error) {
-        setError(error.message);
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || 'Falha ao deixar de seguir o usuário.');
       } else {
         setError('Ocorreu um erro ao deixar de seguir o usuário.');
       }

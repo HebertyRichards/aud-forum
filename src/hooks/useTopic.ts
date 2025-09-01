@@ -97,10 +97,6 @@ export function useTopicPage() {
       },
 
       handleUpdateComment: async (commentId: number, content: string) => {
-        console.log(
-          `Tentando atualizar comentário ID ${commentId} com conteúdo:`,
-          content
-        );
         try {
           const updatedComment = await updateComment(commentId, content);
           setTopic((prev) => {
