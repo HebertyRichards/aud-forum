@@ -25,7 +25,7 @@ export function TopicsTab({ username }: TopicsTabProps) {
       <CardHeader>
         <CardTitle>Tópicos Recentes</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         {topics.length > 0 ? (
           <ul className="space-y-4">
             {topics.map((topic) => (
@@ -34,7 +34,7 @@ export function TopicsTab({ username }: TopicsTabProps) {
                 className="border-b border-gray-700 pb-3 last:border-b-0"
               >
                 <Link
-                  href={`/topic/${topic.slug}`}
+                  href={`/topics/${topic.category}/${topic.slug}`}
                   className="hover:text-blue-500"
                 >
                   <h3 className="font-semibold">{topic.title}</h3>

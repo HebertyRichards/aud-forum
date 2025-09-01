@@ -21,7 +21,7 @@ export function ProfileInfoTab({
             <UpdateData profile={profile} onSuccess={onSuccessUpdate} />
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           {isUpdating && (
             <div className="text-sm text-blue-500 flex items-center gap-2 mb-2">
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -35,7 +35,7 @@ export function ProfileInfoTab({
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">Mensagens:</span>
-            <span>{profile?.total_posts ?? "--"}</span>
+            <span>{profile?.mensagens_count ?? "--"}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">

@@ -4,7 +4,7 @@ import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function getTopicsByCategory(category: string) {
   try {
-    const response = await axios.get(`${API_URL}/category/topics/category/${category}`);
+    const response = await axios.get(`${API_URL}/categories/topics/category/${category}`);
     return response.data;
   } catch (error: unknown) {
     throw new Error('Falha ao buscar tópicos da categoria.');

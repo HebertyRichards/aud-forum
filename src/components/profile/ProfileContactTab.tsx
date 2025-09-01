@@ -21,7 +21,7 @@ export function ProfileContactTab({
             <UpdateContacts profile={profile} onSuccess={onSuccessUpdate} />
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex justify-between py-3 items-center">
             <span className="font-semibold">Website:</span>
             {profile?.website ? (

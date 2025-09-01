@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/NoTopic";
 import { CreateTopicView } from "@/components/CreateTopicView";
@@ -16,6 +16,7 @@ import { TopicSummary } from "@/types/post";
 
 export default function CategoryTopicPage() {
   const params = useParams();
+  const router = useRouter();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
   const [view, setView] = useState<"list" | "create">("list");
@@ -30,8 +31,19 @@ export default function CategoryTopicPage() {
     subscribe: "Inscrições",
     updates: "Atualizações",
   };
+
   useEffect(() => {
-    if (view !== "list" || !category) {
+    if (category && !Object.keys(categoryTitles).includes(category)) {
+      router.replace("/not-found");
+    }
+  }, [category, router]);
+
+  useEffect(() => {
+    if (
+      view !== "list" ||
+      !category ||
+      !Object.keys(categoryTitles).includes(category)
+    ) {
       setIsLoading(false);
       return;
     }
@@ -54,6 +66,9 @@ export default function CategoryTopicPage() {
   const renderMainContent = () => {
     if (isLoading) {
       return <div className="text-center p-10">Carregando tópicos...</div>;
+    }
+    if (!Object.keys(categoryTitles).includes(category)) {
+      return null;
     }
 
     if (view === "create") {

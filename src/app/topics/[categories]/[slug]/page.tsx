@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTopicPage } from "@/hooks/useTopic";
 import {
   Comment,
@@ -53,19 +54,25 @@ const CommentItem = ({
   return (
     <Card key={comment.id} className="dark:bg-gray-800 border-gray-400/50">
       <CardContent className="p-5 flex gap-4">
-        <Avatar>
-          <AvatarImage src={comment.profiles.avatar_url || undefined} />
-          <AvatarFallback>
-            {comment.profiles.username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <Link href={`/profile/${comment.profiles.username}`}>
+          <Avatar>
+            <AvatarImage src={comment.profiles.avatar_url || undefined} />
+            <AvatarFallback>
+              {comment.profiles.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="flex-1">
           <div className="flex justify-between items-center">
-            <p
-              className={`font-semibold ${getRoleColor(comment.profiles.role)}`}
-            >
-              {comment.profiles.username}
-            </p>
+            <Link href={`/profile/${comment.profiles.username}`}>
+              <p
+                className={`font-semibold ${getRoleColor(
+                  comment.profiles.role
+                )} hover:underline`}
+              >
+                {comment.profiles.username}
+              </p>
+            </Link>
             <div className="flex items-center gap-2">
               <p className="text-xs text-gray-700 dark:text-gray-500">
                 {formatPostTimestamp(comment.created_in)}
@@ -241,18 +248,24 @@ const TopicView = ({
             )}
           </div>
           <div className="flex items-center gap-3 mb-6">
-            <Avatar>
-              <AvatarImage src={topic.profiles.avatar_url || undefined} />
-              <AvatarFallback>
-                {topic.profiles.username.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <Link href={`/profile/${topic.profiles.username}`}>
+              <Avatar>
+                <AvatarImage src={topic.profiles.avatar_url || undefined} />
+                <AvatarFallback>
+                  {topic.profiles.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
-              <p
-                className={`font-semibold ${getRoleColor(topic.profiles.role)}`}
-              >
-                {topic.profiles.username}
-              </p>
+              <Link href={`/profile/${topic.profiles.username}`}>
+                <p
+                  className={`font-semibold ${getRoleColor(
+                    topic.profiles.role
+                  )} hover:underline`}
+                >
+                  {topic.profiles.username}
+                </p>
+              </Link>
               <p className="text-xs text-gray-700 dark:text-gray-500">
                 Postado {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
@@ -276,6 +289,7 @@ const TopicView = ({
 };
 
 export default function TopicPage() {
+  const router = useRouter();
   const {
     topic,
     isLoading,
@@ -287,6 +301,12 @@ export default function TopicPage() {
     isSubmitting,
     handlers,
   } = useTopicPage();
+
+  useEffect(() => {
+    if (topic && category && topic.category !== category) {
+      router.replace("/not-found");
+    }
+  }, [topic, category, router]);
 
   const categoryTitles: { [key: string]: string } = {
     downloads: "Downloads",
@@ -309,6 +329,9 @@ export default function TopicPage() {
     return (
       <div className="text-center p-10 text-white">Tópico não encontrado.</div>
     );
+  }
+  if (!topic || (category && topic.category !== category)) {
+    return null;
   }
 
   return (

@@ -4,7 +4,7 @@ export function getRoleColor(role?: string) {
       return "text-green-700 dark:text-green-400";
     case "partner":
       return "text-yellow-700 dark:text-yellow-400";
-    case "membro":
+    case "auditore":
       return "text-blue-700 dark:text-blue-400";
     case "leader":
       return "text-pink-700 dark:text-pink-400";

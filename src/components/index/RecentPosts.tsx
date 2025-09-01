@@ -88,10 +88,12 @@ export function RecentPosts() {
         <div className="divide-y divide-gray-700">
           {posts.slice(0, visiblePosts).map((post) => (
             <div key={post.id} className="p-4 flex items-start space-x-4">
-              <Avatar className="w-10 h-10 mt-1">
-                <AvatarImage src={post.author_avatar || undefined} />
-                <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
-              </Avatar>
+              <Link href={`/profile/${post.author_username}`}>
+                <Avatar className="w-10 h-10 mt-1">
+                  <AvatarImage src={post.author_avatar || undefined} />
+                  <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
+                </Avatar>
+              </Link>
               <div className="flex-1 min-w-0">
                 <Link
                   href={
