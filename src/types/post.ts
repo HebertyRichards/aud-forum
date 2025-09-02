@@ -25,7 +25,7 @@ export interface Comment {
   id: number;
   content: string;
   created_in: string;
-  updated_at?: string | null;
+  updated_in?: string | null;
   author_id: string; 
   profiles: {
     username: string;

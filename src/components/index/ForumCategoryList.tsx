@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
+import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,13 +27,8 @@ export function ForumCategoryList() {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await fetch(`${API_URL}/profile/${userId}`);
-        if (res.ok) {
-          const profileData = await res.json();
-          setUserRole(profileData.role);
-        } else {
-          setUserRole(null);
-        }
+        const { data } = await axios.get(`${API_URL}/profile/${userId}`);
+        setUserRole(data.role ?? null);
       } catch {
         setUserRole(null);
       }
@@ -41,7 +37,12 @@ export function ForumCategoryList() {
     fetchUserProfile();
   }, [auth.user?.id]);
 
-  const allowedRolesForHiddenArea = ["Membro", "Desenvolvedor", "Fundador"];
+  const allowedRolesForHiddenArea = [
+    "Leader",
+    "Desenvolvedor",
+    "Fundador",
+    "Auditore",
+  ];
 
   const filteredForumStructure = forumStructure.filter((category) => {
     if (category.id !== "area-oculta") {

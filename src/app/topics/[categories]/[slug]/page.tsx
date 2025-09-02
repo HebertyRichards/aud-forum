@@ -126,14 +126,14 @@ const CommentItem = ({
           ) : (
             <>
               <div
-                className="mt-2 prose prose-sm prose-invert max-w-none"
+                className="mt-2 prose dark:prose-invert prose-sm max-w-none prose-ol:list-decimal prose-ul:list-disc"
                 dangerouslySetInnerHTML={{ __html: comment.content }}
               />
-              {comment.updated_at &&
-                new Date(comment.updated_at) > new Date(comment.created_in) && (
+              {comment.updated_in &&
+                new Date(comment.updated_in) > new Date(comment.created_in) && (
                   <p className="text-xs text-gray-400 italic mt-1">
                     Editado{" "}
-                    {formatPostTimestamp(comment.updated_at).toLowerCase()}
+                    {formatPostTimestamp(comment.updated_in).toLowerCase()}
                   </p>
                 )}
             </>
@@ -287,7 +287,7 @@ const TopicView = ({
             </div>
           </div>
           <div
-            className="prose prose-invert max-w-none"
+            className="prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc"
             dangerouslySetInnerHTML={{ __html: topic.content }}
           />
         </CardContent>
@@ -319,6 +319,43 @@ export default function TopicPage() {
     }
   }, [topic, category, router]);
 
+  useEffect(() => {
+    if (!topic) return;
+
+    const setupSpoilers = () => {
+      const spoilerBlocks = document.querySelectorAll(
+        ".prose blockquote:not(.spoiler-initialized)"
+      );
+
+      spoilerBlocks.forEach((spoiler) => {
+        spoiler.classList.add("spoiler-initialized");
+
+        const originalContent = spoiler.innerHTML;
+
+        spoiler.innerHTML = "";
+
+        const header = document.createElement("div");
+        header.className = "spoiler-header";
+        header.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Spoiler (clique para mostrar/esconder)</span>
+        `;
+
+        const content = document.createElement("div");
+        content.className = "spoiler-content";
+        content.innerHTML = originalContent;
+
+        spoiler.appendChild(header);
+        spoiler.appendChild(content);
+
+        header.addEventListener("click", () => {
+          spoiler.classList.toggle("spoiler-open");
+        });
+      });
+    };
+
+    setupSpoilers();
+  }, [topic]);
   const categoryTitles: { [key: string]: string } = {
     downloads: "Downloads",
     manuals: "Manuais",

@@ -19,6 +19,12 @@ import {
   Smile,
   UnderlineIcon,
   ImageIcon,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  ChevronDown,
+  Palette,
+  EyeOff,
 } from "lucide-react";
 import {
   Tooltip,
@@ -33,6 +39,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import FontSize from "@tiptap/extension-font-size";
+import imageCompression from "browser-image-compression";
 import { smilies } from "@/utils/smiles";
 
 const ToolbarButton = ({
@@ -83,6 +93,9 @@ export function RichTextEditor({
       TiptapLink.configure({ openOnClick: false }),
       TiptapImage,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextStyle,
+      Color,
+      FontSize,
     ],
     content: content,
     immediatelyRender: false,
@@ -92,7 +105,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "rounded-b-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm min-h-[250px] w-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          "prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc rounded-b-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm min-h-[250px] w-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
       },
       handlePaste: (view: EditorView, event: ClipboardEvent): boolean => {
         let imageUrl: string | undefined;
@@ -154,15 +167,32 @@ export function RichTextEditor({
     imageInputRef.current?.click();
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !editor) {
       return;
     }
-    onImageAdd?.(file);
 
-    const url = URL.createObjectURL(file);
-    editor.chain().focus().setImage({ src: url }).run();
+    const options = {
+      maxSizeMB: 2,
+      initialQuality: 0.9,
+      useWebWorker: true,
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      onImageAdd?.(compressedFile);
+
+      const url = URL.createObjectURL(compressedFile);
+      editor.chain().focus().setImage({ src: url }).run();
+    } catch {
+      onImageAdd?.(file);
+
+      const url = URL.createObjectURL(file);
+      editor.chain().focus().setImage({ src: url }).run();
+    }
 
     if (event.target) {
       event.target.value = "";
@@ -204,7 +234,84 @@ export function RichTextEditor({
             isActive={editor.isActive("strike")}
             icon={<Strikethrough size={16} />}
           />
+          <ToolbarButton
+            tooltip="Alinhar à Esquerda"
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            isActive={editor.isActive({ textAlign: "left" })}
+            icon={<AlignLeft size={16} />}
+          />
+          <ToolbarButton
+            tooltip="Centralizar"
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            isActive={editor.isActive({ textAlign: "center" })}
+            icon={<AlignCenter size={16} />}
+          />
+          <ToolbarButton
+            tooltip="Alinhar à Direita"
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            isActive={editor.isActive({ textAlign: "right" })}
+            icon={<AlignRight size={16} />}
+          />
           <Separator orientation="vertical" className="h-6 mx-1" />
+          <div className="flex items-center border rounded-md p-1 ml-1 relative h-8 w-8">
+            <Palette
+              size={16}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            />
+            <input
+              type="color"
+              onInput={(event: React.ChangeEvent<HTMLInputElement>) =>
+                editor.chain().focus().setColor(event.target.value).run()
+              }
+              className="w-full h-full opacity-0 cursor-pointer"
+            />
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="h-8 w-auto px-2">
+                <span>Tamanho da Fonte</span>
+                <ChevronDown size={16} className="ml-1" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-2 max-h-72 overflow-y-auto">
+              <div className="grid grid-cols-4 gap-1">
+                {[
+                  8, 10, 12, 14, 16, 20, 24, 26, 30, 32, 36, 40, 48, 60, 72, 80,
+                  90, 96,
+                ].map((size) => (
+                  <Button
+                    key={size}
+                    variant={
+                      editor.isActive("textStyle", { fontSize: `${size}px` })
+                        ? "secondary"
+                        : "ghost"
+                    }
+                    onClick={() => {
+                      editor.chain().focus().setFontSize(`${size}px`).run();
+                    }}
+                    className="w-full justify-center"
+                  >
+                    {size}
+                  </Button>
+                ))}
+              </div>
+              <Separator className="my-2" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => editor.chain().focus().setFontSize("16px").run()}
+              >
+                Resetar tamanho
+              </Button>
+            </PopoverContent>
+          </Popover>
+          <ToolbarButton
+            tooltip="Spoiler"
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            isActive={editor.isActive("blockquote")}
+            icon={<EyeOff size={16} />}
+          />
           <Popover open={isSmileyPanelOpen} onOpenChange={setIsSmileyPanelOpen}>
             <PopoverTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
