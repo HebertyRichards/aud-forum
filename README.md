@@ -17,6 +17,10 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 - **Algumas rotas é necessário autenticação para acessa-la**
 - **Criação de tópicos**
 - **Comentar em tópicos**
+- **Adicionar imagens em tópicos**
+- **Adicionar imagens em comentários**
+- **Restrições nas categorias (cargos específicos podem postar tópicos em categorias especificas)**
+- **Restrições nos tópicos (cargos específicos podem postas comentários em categorias específicas)**
 - **Conteúdo dinâmico com tópicos recentes, quantidade de posts, quantidade de membros ativos e último membro registrado**
 
 ## 🛠️ Tecnologias Utilizadas
@@ -41,7 +45,6 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 ## 📅 Próximos Passos
 
 - Melhoria para **criar tópicos e comentar**
-- Criar **restrições nas categorias** para **criação de tópicos**
 - Implementar **mensagens privadas** entre usuários
 - Melhorar recursos de interação da comunidade
 
