@@ -21,7 +21,7 @@ export function CreateTopicView({ category }: { category: string }) {
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <PublishForm
           type="topic"
-          onSubmit={handleTopicSubmit}
+          onSubmit={() => handleTopicSubmit(true)}
           isSubmitting={isSubmitting}
           title={title}
           setTitle={setTitle}

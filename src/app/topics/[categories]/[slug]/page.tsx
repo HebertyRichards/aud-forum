@@ -24,6 +24,14 @@ import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
+const DisabledCommentForm = ({ message }: { message: string }) => (
+  <Card className="dark:bg-gray-800 border-gray-400/50">
+    <CardContent className="p-5 text-center text-gray-500 dark:text-gray-400">
+      <p>{message}</p>
+    </CardContent>
+  </Card>
+);
+
 const CommentItem = ({
   comment,
   user,
@@ -300,6 +308,8 @@ export default function TopicPage() {
     setNewCommentContent,
     isSubmitting,
     handlers,
+    canCreateComment,
+    isCheckingComment,
   } = useTopicPage();
 
   useEffect(() => {
@@ -334,6 +344,36 @@ export default function TopicPage() {
     return null;
   }
 
+  const renderCommentBox = () => {
+    if (!user) {
+      return (
+        <DisabledCommentForm message="É necessário estar logado para comentar." />
+      );
+    }
+    if (isCheckingComment) {
+      return (
+        <DisabledCommentForm message="Verificando permissão para comentar..." />
+      );
+    }
+    if (canCreateComment === false) {
+      return (
+        <DisabledCommentForm message="Você não pode comentar nesta seção." />
+      );
+    }
+    if (canCreateComment === true) {
+      return (
+        <PublishForm
+          type="comment"
+          onSubmit={handlers.handleCommentSubmit}
+          isSubmitting={isSubmitting}
+          content={newCommentContent}
+          setContent={setNewCommentContent}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <Toaster position="bottom-right" richColors />
@@ -359,15 +399,7 @@ export default function TopicPage() {
             Comentários ({topic.comentarios.length})
           </h2>
           <CommentList topic={topic} user={user} handlers={handlers} />
-          {user && (
-            <PublishForm
-              type="comment"
-              onSubmit={handlers.handleCommentSubmit}
-              isSubmitting={isSubmitting}
-              content={newCommentContent}
-              setContent={setNewCommentContent}
-            />
-          )}
+          {renderCommentBox()}
         </div>
       </div>
     </>

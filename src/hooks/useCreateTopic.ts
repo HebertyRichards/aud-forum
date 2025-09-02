@@ -13,7 +13,12 @@ export function useCreateTopic(category: string) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTopicSubmit = async () => {
+  const handleTopicSubmit = async (hasPermission: boolean | null) => {
+    if (!hasPermission) {
+      toast.error("Você não tem permissão para criar um tópico aqui.");
+      return;
+    }
+
     if (!title.trim() || !content.trim()) {
       toast.error("O título e o conteúdo não podem estar vazios.");
       return;

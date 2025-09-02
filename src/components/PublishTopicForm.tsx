@@ -61,7 +61,10 @@ export function PublishForm<T extends "topic" | "comment">({
           </form>
         </CardContent>
         <CardFooter>
-          <Button type="submit" form={formId} disabled={isSubmitting}>
+          <Button
+            type="submit"
+            form={formId}
+          >
             {isSubmitting
               ? "Enviando..."
               : type === "topic"

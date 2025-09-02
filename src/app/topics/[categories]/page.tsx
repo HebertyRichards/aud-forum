@@ -6,13 +6,30 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/NoTopic";
 import { CreateTopicView } from "@/components/CreateTopicView";
-import { PlusCircle, ArrowLeft, MessageSquare } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import {
+  PlusCircle,
+  ArrowLeft,
+  MessageSquare,
+  AlertTriangle,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatPostTimestamp } from "@/utils/dateUtils";
 import { useAuth } from "@/services/auth";
 import { getTopicsByCategory } from "@/services/topic";
 import { TopicSummary } from "@/types/post";
+import { usePermissions } from "@/hooks/usePermissions";
+
+const MessageCard = ({ message }: { message: string }) => (
+  <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-gray-800">
+    <CardContent className="p-6 flex items-center gap-4">
+      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+      <p className="text-yellow-700 dark:text-yellow-300 font-medium">
+        {message}
+      </p>
+    </CardContent>
+  </Card>
+);
 
 export default function CategoryTopicPage() {
   const params = useParams();
@@ -22,7 +39,9 @@ export default function CategoryTopicPage() {
   const [view, setView] = useState<"list" | "create">("list");
   const [topics, setTopics] = useState<TopicSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
+    usePermissions();
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
   const categoryTitles: { [key: string]: string } = {
     downloads: "Downloads",
     manuals: "Manuais",
@@ -31,6 +50,12 @@ export default function CategoryTopicPage() {
     subscribe: "Inscrições",
     updates: "Atualizações",
   };
+
+  useEffect(() => {
+    if (user && category) {
+      checkTopicPermission(category);
+    }
+  }, [user, category, checkTopicPermission]);
 
   useEffect(() => {
     if (category && !Object.keys(categoryTitles).includes(category)) {
@@ -63,7 +88,29 @@ export default function CategoryTopicPage() {
     fetchTopics();
   }, [category, view]);
 
+  const handleNewTopicClick = () => {
+    setAuthMessage(null);
+
+    if (!user) {
+      setAuthMessage("É necessário estar logado para criar um tópico.");
+      return;
+    }
+    if (canCreateTopic === false) {
+      setAuthMessage(
+        "Você não tem permissão para criar um tópico nesta seção."
+      );
+      return;
+    }
+    if (canCreateTopic === true) {
+      setView("create");
+    }
+  };
+
   const renderMainContent = () => {
+    if (authMessage) {
+      return <MessageCard message={authMessage} />;
+    }
+
     if (isLoading) {
       return <div className="text-center p-10">Carregando tópicos...</div>;
     }
@@ -76,7 +123,7 @@ export default function CategoryTopicPage() {
     }
 
     if (topics.length === 0) {
-      return <EmptyState onNewTopicClick={() => setView("create")} />;
+      return <EmptyState onNewTopicClick={handleNewTopicClick} />;
     }
 
     return (
@@ -132,20 +179,25 @@ export default function CategoryTopicPage() {
           <h1 className="text-3xl font-bold">{pageTitle}</h1>
           <div className="flex gap-2">
             {view === "create" ? (
-              <Button variant="outline" onClick={() => setView("list")}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setView("list");
+                  setAuthMessage(null);
+                }}
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Voltar
               </Button>
             ) : (
-              user && (
-                <Button
-                  onClick={() => setView("create")}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <PlusCircle className="h-4 w-4 mr-2" />
-                  Novo Tópico
-                </Button>
-              )
+              <Button
+                onClick={handleNewTopicClick}
+                className="bg-blue-600 hover:bg-blue-700"
+                disabled={isCheckingTopic}
+              >
+                <PlusCircle className="h-4 w-4 mr-2" />
+                {isCheckingTopic ? "Verificando..." : "Novo Tópico"}
+              </Button>
             )}
           </div>
         </div>

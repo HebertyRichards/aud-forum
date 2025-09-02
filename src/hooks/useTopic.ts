@@ -13,11 +13,13 @@ import {
 } from "@/services/topic";
 import { NewCommentData, TopicDetails, UpdateTopicData } from "@/types/post";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export function useTopicPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
+  const { canCreateComment, isCheckingComment, checkCommentPermission } = usePermissions(); 
 
   const slug = params.slug as string;
   const category = params.categories as string;
@@ -37,6 +39,9 @@ export function useTopicPage() {
       try {
         const data = await getTopicBySlug(slug);
         setTopic(data);
+        if (user) { 
+          checkCommentPermission(data.id);
+        }
       } catch {
         setError(
           "Não foi possível carregar o tópico. Tente novamente mais tarde."
@@ -46,11 +51,15 @@ export function useTopicPage() {
       }
     };
     fetchTopic();
-  }, [slug]);
+  }, [slug, user, checkCommentPermission]);
 
   const handlers = useMemo(
     () => ({
       handleCommentSubmit: async () => {
+        if (!canCreateComment) {
+          toast.error("Você não tem permissão para comentar.");
+          return;
+        }
         if (!topic || !newCommentContent.trim()) return;
         setIsSubmitting(true);
         try {
@@ -144,7 +153,7 @@ export function useTopicPage() {
         }
       },
     }),
-    [topic, newCommentContent, router, category]
+    [topic, newCommentContent, router, category, canCreateComment]
   );
 
   return {
@@ -156,6 +165,8 @@ export function useTopicPage() {
     newCommentContent,
     setNewCommentContent,
     isSubmitting,
+    canCreateComment,
+    isCheckingComment,
     handlers,
   };
 }

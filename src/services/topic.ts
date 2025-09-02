@@ -2,12 +2,22 @@ import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const getErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error) && error.response?.data?.message) {
+    return error.response.data.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Ocorreu um erro desconhecido.";
+};
+
 export async function getTopicsByCategory(category: string) {
   try {
     const response = await axios.get(`${API_URL}/categories/topics/category/${category}`);
     return response.data;
   } catch (error: unknown) {
-    throw new Error('Falha ao buscar tópicos da categoria.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -16,7 +26,7 @@ export async function getTopicBySlug(slug: string) {
     const response = await axios.get(`${API_URL}/posts/topics/slug/${slug}`);
     return response.data;
   } catch (error) {
-    throw new Error('Falha ao buscar o tópico.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -27,7 +37,7 @@ export async function createTopic(data: NewTopicData) {
     });
     return response.data;
   } catch (error: unknown) {
-    throw new Error('Falha ao criar o tópico. Verifique se você está logado.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -38,7 +48,7 @@ export async function updateTopic(topicId: number, data: UpdateTopicData) {
     });
     return response.data;
   } catch (error) {
-    throw new Error('Falha ao atualizar o tópico.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -48,7 +58,7 @@ export async function deleteTopic(topicId: number) {
       withCredentials: true,
     });
   } catch (error: unknown) {
-    throw new Error('Falha ao deletar o tópico.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -58,7 +68,7 @@ export async function deleteComment(commentId: number) {
       withCredentials: true,
     });
   } catch (error: unknown) {
-    throw new Error('Falha ao deletar o comentário.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -69,7 +79,7 @@ export async function updateComment(commentId: number, content: string) {
     });
     return response.data;
   } catch (error: unknown) {
-    throw new Error('Falha ao atualizar o comentário.');
+    throw new Error(getErrorMessage(error));  
   }
 }
 
@@ -82,6 +92,29 @@ export async function createComment(data: NewCommentData) {
     );
     return response.data;
   } catch (error: unknown) {
-    throw new Error('Falha ao criar o comentário.');
+    throw new Error(getErrorMessage(error));  
+  }
+}
+
+export async function checkTopicCreationPermission(category: string): Promise<boolean> {
+  try {
+    const response = await axios.post(`${API_URL}/permission/topics/check-permission`, 
+      { category }, 
+      { withCredentials: true }
+    );
+    return response.data.allowed;
+  } catch {
+    return false;
+  }
+}
+
+export async function checkCommentCreationPermission(topicId: number): Promise<boolean> {
+  try {
+    const response = await axios.get(`${API_URL}/permission/comments/${topicId}/check-permission`, {
+      withCredentials: true,
+    });
+    return response.data.allowed;
+  } catch {
+    return false;
   }
 }
