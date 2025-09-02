@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTopicPage } from "@/hooks/useTopic";
 import {
   Comment,
@@ -22,6 +23,14 @@ import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
 import { RichTextEditor } from "@/components/RichTextEditor";
+
+const DisabledCommentForm = ({ message }: { message: string }) => (
+  <Card className="dark:bg-gray-800 border-gray-400/50">
+    <CardContent className="p-5 text-center text-gray-500 dark:text-gray-400">
+      <p>{message}</p>
+    </CardContent>
+  </Card>
+);
 
 const CommentItem = ({
   comment,
@@ -53,19 +62,25 @@ const CommentItem = ({
   return (
     <Card key={comment.id} className="dark:bg-gray-800 border-gray-400/50">
       <CardContent className="p-5 flex gap-4">
-        <Avatar>
-          <AvatarImage src={comment.profiles.avatar_url || undefined} />
-          <AvatarFallback>
-            {comment.profiles.username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <Link href={`/profile/${comment.profiles.username}`}>
+          <Avatar>
+            <AvatarImage src={comment.profiles.avatar_url || undefined} />
+            <AvatarFallback>
+              {comment.profiles.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="flex-1">
           <div className="flex justify-between items-center">
-            <p
-              className={`font-semibold ${getRoleColor(comment.profiles.role)}`}
-            >
-              {comment.profiles.username}
-            </p>
+            <Link href={`/profile/${comment.profiles.username}`}>
+              <p
+                className={`font-semibold ${getRoleColor(
+                  comment.profiles.role
+                )} hover:underline`}
+              >
+                {comment.profiles.username}
+              </p>
+            </Link>
             <div className="flex items-center gap-2">
               <p className="text-xs text-gray-700 dark:text-gray-500">
                 {formatPostTimestamp(comment.created_in)}
@@ -111,14 +126,14 @@ const CommentItem = ({
           ) : (
             <>
               <div
-                className="mt-2 prose prose-sm prose-invert max-w-none"
+                className="mt-2 prose dark:prose-invert prose-sm max-w-none prose-ol:list-decimal prose-ul:list-disc"
                 dangerouslySetInnerHTML={{ __html: comment.content }}
               />
-              {comment.updated_at &&
-                new Date(comment.updated_at) > new Date(comment.created_in) && (
+              {comment.updated_in &&
+                new Date(comment.updated_in) > new Date(comment.created_in) && (
                   <p className="text-xs text-gray-400 italic mt-1">
                     Editado{" "}
-                    {formatPostTimestamp(comment.updated_at).toLowerCase()}
+                    {formatPostTimestamp(comment.updated_in).toLowerCase()}
                   </p>
                 )}
             </>
@@ -241,18 +256,24 @@ const TopicView = ({
             )}
           </div>
           <div className="flex items-center gap-3 mb-6">
-            <Avatar>
-              <AvatarImage src={topic.profiles.avatar_url || undefined} />
-              <AvatarFallback>
-                {topic.profiles.username.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <Link href={`/profile/${topic.profiles.username}`}>
+              <Avatar>
+                <AvatarImage src={topic.profiles.avatar_url || undefined} />
+                <AvatarFallback>
+                  {topic.profiles.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
-              <p
-                className={`font-semibold ${getRoleColor(topic.profiles.role)}`}
-              >
-                {topic.profiles.username}
-              </p>
+              <Link href={`/profile/${topic.profiles.username}`}>
+                <p
+                  className={`font-semibold ${getRoleColor(
+                    topic.profiles.role
+                  )} hover:underline`}
+                >
+                  {topic.profiles.username}
+                </p>
+              </Link>
               <p className="text-xs text-gray-700 dark:text-gray-500">
                 Postado {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
@@ -266,7 +287,7 @@ const TopicView = ({
             </div>
           </div>
           <div
-            className="prose prose-invert max-w-none"
+            className="prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc"
             dangerouslySetInnerHTML={{ __html: topic.content }}
           />
         </CardContent>
@@ -276,6 +297,7 @@ const TopicView = ({
 };
 
 export default function TopicPage() {
+  const router = useRouter();
   const {
     topic,
     isLoading,
@@ -286,8 +308,54 @@ export default function TopicPage() {
     setNewCommentContent,
     isSubmitting,
     handlers,
+    canCreateComment,
+    isCheckingComment,
+    addCommentImage,
   } = useTopicPage();
 
+  useEffect(() => {
+    if (topic && category && topic.category !== category) {
+      router.replace("/not-found");
+    }
+  }, [topic, category, router]);
+
+  useEffect(() => {
+    if (!topic) return;
+
+    const setupSpoilers = () => {
+      const spoilerBlocks = document.querySelectorAll(
+        ".prose blockquote:not(.spoiler-initialized)"
+      );
+
+      spoilerBlocks.forEach((spoiler) => {
+        spoiler.classList.add("spoiler-initialized");
+
+        const originalContent = spoiler.innerHTML;
+
+        spoiler.innerHTML = "";
+
+        const header = document.createElement("div");
+        header.className = "spoiler-header";
+        header.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Spoiler (clique para mostrar/esconder)</span>
+        `;
+
+        const content = document.createElement("div");
+        content.className = "spoiler-content";
+        content.innerHTML = originalContent;
+
+        spoiler.appendChild(header);
+        spoiler.appendChild(content);
+
+        header.addEventListener("click", () => {
+          spoiler.classList.toggle("spoiler-open");
+        });
+      });
+    };
+
+    setupSpoilers();
+  }, [topic]);
   const categoryTitles: { [key: string]: string } = {
     downloads: "Downloads",
     manuals: "Manuais",
@@ -310,6 +378,40 @@ export default function TopicPage() {
       <div className="text-center p-10 text-white">Tópico não encontrado.</div>
     );
   }
+  if (!topic || (category && topic.category !== category)) {
+    return null;
+  }
+
+  const renderCommentBox = () => {
+    if (!user) {
+      return (
+        <DisabledCommentForm message="É necessário estar logado para comentar." />
+      );
+    }
+    if (isCheckingComment) {
+      return (
+        <DisabledCommentForm message="Verificando permissão para comentar..." />
+      );
+    }
+    if (canCreateComment === false) {
+      return (
+        <DisabledCommentForm message="Você não pode comentar nesta seção." />
+      );
+    }
+    if (canCreateComment === true) {
+      return (
+        <PublishForm
+          type="comment"
+          onSubmit={handlers.handleCommentSubmit}
+          isSubmitting={isSubmitting}
+          content={newCommentContent}
+          setContent={setNewCommentContent}
+          onImageAdd={addCommentImage}
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <>
@@ -325,31 +427,18 @@ export default function TopicPage() {
               </Link>
             </Button>
           </div>
-
           <TopicView
             topic={topic}
             user={user}
             handlers={handlers}
             isSubmitting={isSubmitting}
           />
-
           <Separator className="bg-gray-700" />
-
           <h2 className="text-2xl font-semibold">
             Comentários ({topic.comentarios.length})
           </h2>
-
           <CommentList topic={topic} user={user} handlers={handlers} />
-
-          {user && (
-            <PublishForm
-              type="comment"
-              onSubmit={handlers.handleCommentSubmit}
-              isSubmitting={isSubmitting}
-              content={newCommentContent}
-              setContent={setNewCommentContent}
-            />
-          )}
+          {renderCommentBox()}
         </div>
       </div>
     </>

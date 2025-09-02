@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import type { UserWithProfile } from "@/types/autentication";
+import axios from "axios";
 
 interface ProfileCardProps {
   user: UserWithProfile;
@@ -30,24 +31,26 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/update-user`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, newEmail: email }),
-        credentials: "include",
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      await axios.patch(
+        `${API_URL}/auth/update-user`,
+        { username, newEmail: email },
+        { withCredentials: true }
+      );
 
       toast.success("Perfil atualizado com sucesso!");
-
+      
       setTimeout(() => {
         window.location.reload();
       }, 1500);
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Falha ao atualizar o perfil.";
+      let errorMessage = "Falha ao atualizar o perfil.";
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       toast.error(errorMessage);
+    } finally {
       setIsLoading(false);
     }
   };

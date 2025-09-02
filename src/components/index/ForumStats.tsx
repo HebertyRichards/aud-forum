@@ -20,7 +20,7 @@ export function ForumStats() {
       setLoading(true);
       try {
         const [statsRes, newestMemberRes] = await Promise.all([
-          fetch(`${API_URL}/profile/forum/stats`),
+          fetch(`${API_URL}/forum/stats`),
           fetch(`${API_URL}/user/last-registration`),
         ]);
 

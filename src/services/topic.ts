@@ -1,107 +1,142 @@
 import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
+import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-export async function getTopicsByCategory(category: string) {
-  const response = await fetch(`${API_URL}/posts/topics/category/${category}`);
-  if (!response.ok) {
-    throw new Error('Falha ao buscar tópicos da categoria.');
+const getErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error) && error.response?.data?.message) {
+    return error.response.data.message;
   }
-  return response.json();
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Ocorreu um erro desconhecido.";
+};
+
+export async function getTopicsByCategory(category: string) {
+  try {
+    const response = await axios.get(`${API_URL}/categories/topics/category/${category}`);
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));  
+  }
 }
 
 export async function getTopicBySlug(slug: string) {
-  const response = await fetch(`${API_URL}/posts/topics/slug/${slug}`);
-  if (!response.ok) {
-    throw new Error('Falha ao buscar o tópico.');
+  try {
+    const response = await axios.get(`${API_URL}/posts/topics/slug/${slug}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));  
   }
-  return response.json();
 }
 
-export async function createTopic(data: NewTopicData) {
-  const response = await fetch(`${API_URL}/posts/topics`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
+export async function createTopic(data: NewTopicData, images: File[]) {
+  try {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("category", data.category);
+    images.forEach((image) => {
+      formData.append("files", image);
+    });
 
-  if (!response.ok) {
-    throw new Error('Falha ao criar o tópico. Verifique se você está logado.');
+    const response = await axios.post(`${API_URL}/posts/topics`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));
   }
-  return response.json();
 }
 
 export async function updateTopic(topicId: number, data: UpdateTopicData) {
-  const response = await fetch(`${API_URL}/posts/topics/${topicId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('Falha ao atualizar o tópico.');
+  try {
+    const response = await axios.patch(`${API_URL}/posts/topics/${topicId}`, data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));  
   }
-  return response.json();
 }
 
 export async function deleteTopic(topicId: number) {
-    const response = await fetch(`${API_URL}/posts/topics/${topicId}`, {
-      method: 'DELETE',
-      credentials: 'include',
+  try {
+    await axios.delete(`${API_URL}/posts/topics/${topicId}`, {
+      withCredentials: true,
     });
-  
-    if (!response.ok) {
-      throw new Error('Falha ao deletar o tópico.');
-    }
-    return;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));  
   }
-  
-  export async function deleteComment(commentId: number) {
-    const response = await fetch(`${API_URL}/posts/comments/${commentId}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-  
-    if (!response.ok) {
-      throw new Error('Falha ao deletar o comentário.');
-    }
-    return;
-  }
+}
 
-  export async function updateComment(commentId: number, content: string) {
-    const response = await fetch(`${API_URL}/posts/comments/${commentId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ content }),
+export async function deleteComment(commentId: number) {
+  try {
+    await axios.delete(`${API_URL}/posts/comments/${commentId}`, {
+      withCredentials: true,
     });
-  
-    if (!response.ok) {
-      throw new Error('Falha ao atualizar o comentário.');
-    }
-    
-    return await response.json();
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));  
   }
-  
-export async function createComment(data: NewCommentData) {
-  const response = await fetch(`${API_URL}/posts/topics/${data.topicId}/comments`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include', 
-    body: JSON.stringify({ content: data.content }),
-  });
+}
 
-  if (!response.ok) {
-    throw new Error('Falha ao criar o comentário.');
+export async function updateComment(commentId: number, content: string) {
+  try {
+    const response = await axios.patch(`${API_URL}/posts/comments/${commentId}`, { content }, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));  
   }
-  return response.json();
+}
+
+export async function createComment(data: NewCommentData, images: File[]) {
+  try {
+    const formData = new FormData();
+    formData.append("content", data.content);
+    images.forEach((image) => {
+      formData.append("files", image);
+    });
+
+    const response = await axios.post(
+      `${API_URL}/posts/topics/${data.topicId}/comments`,
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error));
+  }
+}
+
+export async function checkTopicCreationPermission(category: string): Promise<boolean> {
+  try {
+    const response = await axios.post(`${API_URL}/permission/topics/check-permission`, 
+      { category }, 
+      { withCredentials: true }
+    );
+    return response.data.allowed;
+  } catch {
+    return false;
+  }
+}
+
+export async function checkCommentCreationPermission(topicId: number): Promise<boolean> {
+  try {
+    const response = await axios.get(`${API_URL}/permission/comments/${topicId}/check-permission`, {
+      withCredentials: true,
+    });
+    return response.data.allowed;
+  } catch {
+    return false;
+  }
 }

@@ -21,6 +21,7 @@ export function PublishForm<T extends "topic" | "comment">({
   setContent,
   title,
   setTitle,
+  onImageAdd,
 }: PublishFormProps<T>) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,13 +56,17 @@ export function PublishForm<T extends "topic" | "comment">({
                 </div>
               )}
               <div className="space-y-2">
-                <RichTextEditor content={content} setContent={setContent} />
+                <RichTextEditor
+                  content={content}
+                  setContent={setContent}
+                  onImageAdd={onImageAdd}
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter>
-          <Button type="submit" form={formId} disabled={isSubmitting}>
+          <Button type="submit" form={formId}>
             {isSubmitting
               ? "Enviando..."
               : type === "topic"

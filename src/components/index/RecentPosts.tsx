@@ -28,7 +28,7 @@ export function RecentPosts() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/posts/recent`);
+        const res = await fetch(`${API_URL}/forum/posts/recent`);
         if (!res.ok) {
           throw new Error("Falha na resposta da API");
         }
@@ -88,10 +88,12 @@ export function RecentPosts() {
         <div className="divide-y divide-gray-700">
           {posts.slice(0, visiblePosts).map((post) => (
             <div key={post.id} className="p-4 flex items-start space-x-4">
-              <Avatar className="w-10 h-10 mt-1">
-                <AvatarImage src={post.author_avatar || undefined} />
-                <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
-              </Avatar>
+              <Link href={`/profile/${post.author_username}`}>
+                <Avatar className="w-10 h-10 mt-1">
+                  <AvatarImage src={post.author_avatar || undefined} />
+                  <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
+                </Avatar>
+              </Link>
               <div className="flex-1 min-w-0">
                 <Link
                   href={
@@ -107,16 +109,21 @@ export function RecentPosts() {
                 </Link>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700 mt-1 dark:text-gray-500">
                   <span>
-                    por{" "}
-                    <span className="font-medium text-gray-500 dark:text-gray-300">
-                      {post.author_username}
-                    </span>
+                    por:{" "}
+                    <Link href={`/profile/${post.author_username}`}>
+                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                        {" "}
+                        {post.author_username}
+                      </span>
+                    </Link>
                   </span>
                   <span>
-                    em{" "}
-                    <span className="font-medium text-gray-500 dark:text-gray-300">
-                      {post.category_name}
-                    </span>
+                    em:{" "}
+                    <Link href={`/topics/${post.category_slug}`}>
+                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                        {post.category_name}
+                      </span>
+                    </Link>
                   </span>
                   <div className="flex items-center space-x-1">
                     <MessageSquare className="w-4 h-4" />

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserPreview, FollowerListProps } from "@/types/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import axios from "axios";
 
 export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
   const [list, setList] = useState<UserPreview[]>([]);
@@ -15,15 +16,14 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_URL}/profile/${userId}/${type}`);
-        if (!response.ok) {
-          throw new Error("Não foi possível carregar a lista.");
-        }
-        const data = await response.json();
-        setList(data);
+        const res = await axios.get(`${API_URL}/follow/${userId}/${type}`);
+        setList(res.data);
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
+        if (axios.isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+              "Não foi possível carregar a lista."
+          );
         } else {
           setError("Ocorreu um erro desconhecido.");
         }

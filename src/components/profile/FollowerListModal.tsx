@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
+import axios from "axios";
 
 export function FollowListModal({
   username,
@@ -22,15 +23,17 @@ export function FollowListModal({
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/profile/${username}/${listType}`);
-        if (!res.ok) {
-          throw new Error("Falha ao carregar a lista de usuários.");
-        }
-        const data: UserPreview[] = await res.json();
+        const res = await axios.get(
+          `${API_URL}/follow/${username}/${listType}`
+        );
+        const data: UserPreview[] = res.data;
         setUsers(data);
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
+        if (axios.isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+              "Falha ao carregar a lista de usuários."
+          );
         } else {
           setError("Ocorreu um erro desconhecido.");
         }
@@ -50,7 +53,7 @@ export function FollowListModal({
           </CardTitle>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-white transition-opacity"
+            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-opacity"
           >
             <X size={24} />
           </button>
@@ -72,7 +75,7 @@ export function FollowListModal({
                   <Link
                     href={`/profile/${user.username}`}
                     onClick={onClose}
-                    className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
                   >
                     <Avatar>
                       <AvatarImage

@@ -14,7 +14,7 @@ export interface UserProfile {
   joined_at: string;
   last_login: string;
   total_posts?: number;
-  mensagens_count?: number
+  mensagens_count?: number;
 }
 
 export interface UserPreview {
@@ -26,6 +26,20 @@ export interface UserPreview {
 export interface FollowStats {
   followers_count: number;
   following_count: number;
+}
+
+export interface UserStats {
+  topicsCount: number;
+  topicsPerDay: string;
+  topicsPercentage: string;
+  lastTopicDate: string | null;
+  messagesCount: number;
+  messagesPerDay: string;
+  messagesPercentage: string;
+  lastPostDate: string | null;
+  followersCount: number;
+  memberSince: string;
+  lastLogin: string | null;
 }
 
 interface FollowState {
@@ -46,14 +60,21 @@ export interface UserProfileLayoutProps {
   followState: FollowState;
 }
 
-export interface UpdateDataProps {
-  profile: Partial<UserProfile>;
-  onSuccess?: () => void;
-}
+type ProfileTabCommonProps = {
+  profile: UserProfile | null;
+  isOwnProfile: boolean;
+  onSuccessUpdate: () => void;
+};
 
-export interface UpdateContactsProps {
+export type ProfileInfoTabProps = ProfileTabCommonProps & {
+  isUpdating?: boolean;
+};
+
+export type ProfileContactTabProps = ProfileTabCommonProps;
+
+export interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 export interface UpdateAvatarProps {

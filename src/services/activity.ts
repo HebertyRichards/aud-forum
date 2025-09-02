@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/services/auth";
+import axios from "axios";
 
 export function UserActivityTracker() {
   const auth = useAuth();
@@ -15,11 +16,11 @@ export function UserActivityTracker() {
 
     const ping = async () => {
       try {
-        await fetch(`${API_URL}/user/ping`, {
-          method: "POST",
-          credentials: "include",
+        await axios.post(`${API_URL}/user/ping`, {}, {
+          withCredentials: true,
         });
-      } catch {}
+      } catch {
+      }
     };
     ping();
     const interval = setInterval(ping, 60 * 1000);

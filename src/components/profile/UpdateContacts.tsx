@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UpdateContactsProps } from "@/types/profile";
+import { ProfileUpdateFormProps } from "@/types/profile";
 import { toast } from "sonner";
+import axios from "axios";
 
-export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
+export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;
   const [form, setForm] = useState({
     website: profile.website || "",
@@ -48,28 +49,26 @@ export function UpdateContacts({ profile, onSuccess }: UpdateContactsProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Salvando contatos...");
+    const toastId = toast.loading("Salvando alterações...");
 
     try {
-      const res = await fetch(`${API_URL}/profile/update`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ ...form, id: user?.id }),
+      const payload = { ...form, id: user?.id };
+
+      await axios.put(`${API_URL}/profile/update`, payload, {
+        withCredentials: true,
       });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.error || "Erro ao atualizar contatos");
-      }
-
-      await res.json();
-      toast.success("Contatos atualizados com sucesso!", { id: toastId });
+      toast.success("Perfil atualizado com sucesso!", { id: toastId });
       if (onSuccess) onSuccess();
       setOpen(false);
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Ocorreu um erro inesperado";
+      let errorMessage = "Ocorreu um erro inesperado";
+      if (axios.isAxiosError(error)) {
+        errorMessage =
+          error.response?.data?.error || "Erro ao atualizar o perfil";
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       setError(errorMessage);
       toast.error(errorMessage, { id: toastId });
     } finally {

@@ -10,10 +10,16 @@ export function useCreateTopic(category: string) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTopicSubmit = async () => {
+  const handleTopicSubmit = async (hasPermission: boolean | null) => {
+    if (!hasPermission) {
+      toast.error("Você não tem permissão para criar um tópico aqui.");
+      return;
+    }
+
     if (!title.trim() || !content.trim()) {
       toast.error("O título e o conteúdo não podem estar vazios.");
       return;
@@ -26,20 +32,25 @@ export function useCreateTopic(category: string) {
       const topicData: NewTopicData = {
         title,
         content,
-        category
+        category,
       };
 
-      const newTopic = await createTopic(topicData); 
-      
+      const newTopic = await createTopic(topicData, images);
+
       toast.success("Tópico criado com sucesso!");
-      router.push(`/topics/${category}/${newTopic.slug}`); 
-    } catch (err: unknown) {
-      const errorMessage = (err as Error).message || "Ocorreu um erro desconhecido.";
+      router.push(`/topics/${category}/${newTopic.slug}`);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as Error).message || "Ocorreu um erro desconhecido.";
       setError(errorMessage);
       toast.error(`Falha ao criar o tópico: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const addImage = (file: File) => {
+    setImages((prev) => [...prev, file]);
   };
 
   return {
@@ -50,5 +61,6 @@ export function useCreateTopic(category: string) {
     isSubmitting,
     error,
     handleTopicSubmit,
+    addImage,
   };
 }

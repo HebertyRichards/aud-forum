@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import axios from "axios";
 
 export function DangerZoneCard() {
   const [step, setStep] = useState<"initial" | "confirmPassword">("initial");
@@ -49,28 +50,23 @@ export function DangerZoneCard() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/delete-account`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-        credentials: "include",
+      await axios.delete(`${API_URL}/auth/delete-account`, {
+        data: { password },
+        withCredentials: true,
       });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Falha ao deletar a conta.");
-      }
-
       toast.success("Conta deletada com sucesso. Você será redirecionado.");
       setTimeout(() => {
         window.location.href = "/login";
       }, 2000);
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Ocorreu uma falha desconhecida.";
+      let errorMessage = "Ocorreu uma falha desconhecida.";
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       toast.error(errorMessage);
+    } finally {
       setIsLoading(false);
     }
   };

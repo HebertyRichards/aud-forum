@@ -12,6 +12,7 @@ export function CreateTopicView({ category }: { category: string }) {
     isSubmitting,
     error,
     handleTopicSubmit,
+    addImage,
   } = useCreateTopic(category);
 
   return (
@@ -21,12 +22,13 @@ export function CreateTopicView({ category }: { category: string }) {
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <PublishForm
           type="topic"
-          onSubmit={handleTopicSubmit}
+          onSubmit={() => handleTopicSubmit(true)}
           isSubmitting={isSubmitting}
           title={title}
           setTitle={setTitle}
           content={content}
           setContent={setContent}
+          onImageAdd={addImage}
           className="bg-white dark:bg-gray-800"
         />
       </div>

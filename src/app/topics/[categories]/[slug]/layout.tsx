@@ -3,15 +3,14 @@ import { generateMetadata } from "./metadata";
 
 export { generateMetadata };
 
-export default async function Layout({
+export default async function TopicLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: Promise<{ username: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await params;
-  void resolvedParams.username;
+  await params;
 
   return <>{children}</>;
 }

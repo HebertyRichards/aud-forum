@@ -12,6 +12,7 @@ export interface TopicSummary {
   id: number;
   title: string;
   slug: string;
+  category: string;
   created_in: string;
   profiles: {
     username: string;
@@ -24,7 +25,7 @@ export interface Comment {
   id: number;
   content: string;
   created_in: string;
-  updated_at?: string | null;
+  updated_in?: string | null;
   author_id: string; 
   profiles: {
     username: string;
@@ -37,8 +38,9 @@ export interface TopicDetails {
   id: number;
   title: string;
   content: string;
+  category: string;
   created_in: string;
-  updated_in?: string | null; 
+  updated_in?: string | null;
   author_id: string;
   profiles: {
     username: string;
@@ -90,6 +92,7 @@ export interface PublishFormProps<T extends "topic" | "comment"> {
   setContent: (value: string) => void;
   title?: string;
   setTitle?: (value: string) => void;
+  onImageAdd?: (file: File) => void;
 }
 
 export interface CreateTopicViewProps {

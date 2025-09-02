@@ -13,11 +13,13 @@ import {
 } from "@/services/topic";
 import { NewCommentData, TopicDetails, UpdateTopicData } from "@/types/post";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export function useTopicPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
+  const { canCreateComment, isCheckingComment, checkCommentPermission } = usePermissions(); 
 
   const slug = params.slug as string;
   const category = params.categories as string;
@@ -28,6 +30,7 @@ export function useTopicPage() {
 
   const [newCommentContent, setNewCommentContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentImages, setCommentImages] = useState<File[]>([]); 
 
   useEffect(() => {
     if (!slug) return;
@@ -37,6 +40,9 @@ export function useTopicPage() {
       try {
         const data = await getTopicBySlug(slug);
         setTopic(data);
+        if (user) { 
+          checkCommentPermission(data.id);
+        }
       } catch {
         setError(
           "Não foi possível carregar o tópico. Tente novamente mais tarde."
@@ -46,11 +52,15 @@ export function useTopicPage() {
       }
     };
     fetchTopic();
-  }, [slug]);
+  }, [slug, user, checkCommentPermission]);
 
   const handlers = useMemo(
     () => ({
       handleCommentSubmit: async () => {
+        if (!canCreateComment) {
+          toast.error("Você não tem permissão para comentar.");
+          return;
+        }
         if (!topic || !newCommentContent.trim()) return;
         setIsSubmitting(true);
         try {
@@ -58,13 +68,14 @@ export function useTopicPage() {
             content: newCommentContent,
             topicId: topic.id,
           };
-          const newComment = await createComment(commentData);
+          const newComment = await createComment(commentData, commentImages);
           setTopic((prev) =>
             prev
               ? { ...prev, comentarios: [...prev.comentarios, newComment] }
               : null
           );
           setNewCommentContent("");
+          setCommentImages([]);
           toast.success("Comentário publicado com sucesso!");
         } catch (error: unknown) {
           toast.error((error as Error).message);
@@ -97,10 +108,6 @@ export function useTopicPage() {
       },
 
       handleUpdateComment: async (commentId: number, content: string) => {
-        console.log(
-          `Tentando atualizar comentário ID ${commentId} com conteúdo:`,
-          content
-        );
         try {
           const updatedComment = await updateComment(commentId, content);
           setTopic((prev) => {
@@ -148,8 +155,12 @@ export function useTopicPage() {
         }
       },
     }),
-    [topic, newCommentContent, router, category]
+    [topic, newCommentContent, router, category, canCreateComment, commentImages]
   );
+
+  const addCommentImage = (file: File) => {
+    setCommentImages((prev) => [...prev, file]);
+  }
 
   return {
     topic,
@@ -160,6 +171,9 @@ export function useTopicPage() {
     newCommentContent,
     setNewCommentContent,
     isSubmitting,
+    canCreateComment,
+    isCheckingComment,
     handlers,
+    addCommentImage,
   };
 }

@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const ALLOWED_ROLES = ["Membro", "Leader", "Fundador", "Desenvolvedor"];
 
 export default function Rules() {
   const { user, loading: authLoading } = useAuth();
@@ -14,8 +15,6 @@ export default function Rules() {
 
   const [isCheckingPermission, setIsCheckingPermission] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
-
-  const allowedRoles = ["Membro", "Leader", "Fundador", "Desenvolvedor"];
 
   useEffect(() => {
     if (authLoading) {
@@ -32,7 +31,7 @@ export default function Rules() {
         const res = await fetch(`${API_URL}/profile/${user.id}`);
         if (res.ok) {
           const profileData = await res.json();
-          if (profileData.role && allowedRoles.includes(profileData.role)) {
+          if (profileData.role && ALLOWED_ROLES.includes(profileData.role)) {
             setHasPermission(true);
           } else {
             router.push("/not-found");
@@ -84,7 +83,7 @@ export default function Rules() {
           </div>
           <ol
             className="list-decimal list-inside space-y-4 text-gray-700 dark:text-gray-300 text-justify 
-               marker:font-bold marker:text-gray-700 marker:dark:text-white"
+                       marker:font-bold marker:text-gray-700 marker:dark:text-white"
           >
             <li>{`Prezamos pelo mínimo de lealdade.`}</li>
             <li>
@@ -138,7 +137,7 @@ export default function Rules() {
               responsável no privado e fale a verdade. Diga: 'Olha, eu estou
               saindo da Auditore por esse motivo' ou simplesmente nem precisa
               falar o motivo, só diga: "Estou saindo da família por motivos
-              pessoais, obrigado pela oportunidade". Só não fique inventando
+-             pessoais, obrigado pela oportunidade". Só não fique inventando
               desculpinhas pra sair, porque isso fica muito na cara e vai ficar
               feio pra você. Se for sair, saia de cabeça erguida, sem mentiras
               ou tretas com ninguém.`}
