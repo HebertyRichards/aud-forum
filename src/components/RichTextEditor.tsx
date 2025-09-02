@@ -67,9 +67,11 @@ const ToolbarButton = ({
 export function RichTextEditor({
   content,
   setContent,
+  onImageAdd,
 }: {
   content: string;
   setContent: (content: string) => void;
+  onImageAdd?: (file: File) => void;
 }) {
   const [isSmileyPanelOpen, setIsSmileyPanelOpen] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -154,18 +156,17 @@ export function RichTextEditor({
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) {
+    if (!file || !editor) {
       return;
     }
+    onImageAdd?.(file);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      if (url) {
-        editor.chain().focus().setImage({ src: url }).run();
-      }
-    };
-    reader.readAsDataURL(file);
+    const url = URL.createObjectURL(file);
+    editor.chain().focus().setImage({ src: url }).run();
+
+    if (event.target) {
+      event.target.value = "";
+    }
   };
 
   return (

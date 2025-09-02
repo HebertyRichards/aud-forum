@@ -10,6 +10,7 @@ export function useCreateTopic(category: string) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,20 +32,25 @@ export function useCreateTopic(category: string) {
       const topicData: NewTopicData = {
         title,
         content,
-        category
+        category,
       };
 
-      const newTopic = await createTopic(topicData); 
-      
+      const newTopic = await createTopic(topicData, images);
+
       toast.success("Tópico criado com sucesso!");
-      router.push(`/topics/${category}/${newTopic.slug}`); 
+      router.push(`/topics/${category}/${newTopic.slug}`);
     } catch (error: unknown) {
-      const errorMessage = (error as Error).message || "Ocorreu um erro desconhecido.";
+      const errorMessage =
+        (error as Error).message || "Ocorreu um erro desconhecido.";
       setError(errorMessage);
       toast.error(`Falha ao criar o tópico: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const addImage = (file: File) => {
+    setImages((prev) => [...prev, file]);
   };
 
   return {
@@ -55,5 +61,6 @@ export function useCreateTopic(category: string) {
     isSubmitting,
     error,
     handleTopicSubmit,
+    addImage,
   };
 }

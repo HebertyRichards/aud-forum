@@ -30,6 +30,7 @@ export function useTopicPage() {
 
   const [newCommentContent, setNewCommentContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentImages, setCommentImages] = useState<File[]>([]); 
 
   useEffect(() => {
     if (!slug) return;
@@ -67,13 +68,14 @@ export function useTopicPage() {
             content: newCommentContent,
             topicId: topic.id,
           };
-          const newComment = await createComment(commentData);
+          const newComment = await createComment(commentData, commentImages);
           setTopic((prev) =>
             prev
               ? { ...prev, comentarios: [...prev.comentarios, newComment] }
               : null
           );
           setNewCommentContent("");
+          setCommentImages([]);
           toast.success("Comentário publicado com sucesso!");
         } catch (error: unknown) {
           toast.error((error as Error).message);
@@ -156,6 +158,10 @@ export function useTopicPage() {
     [topic, newCommentContent, router, category, canCreateComment]
   );
 
+  const addCommentImage = (file: File) => {
+    setCommentImages((prev) => [...prev, file]);
+  }
+
   return {
     topic,
     isLoading,
@@ -168,5 +174,6 @@ export function useTopicPage() {
     canCreateComment,
     isCheckingComment,
     handlers,
+    addCommentImage,
   };
 }

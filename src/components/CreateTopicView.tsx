@@ -12,6 +12,7 @@ export function CreateTopicView({ category }: { category: string }) {
     isSubmitting,
     error,
     handleTopicSubmit,
+    addImage,
   } = useCreateTopic(category);
 
   return (
@@ -27,6 +28,7 @@ export function CreateTopicView({ category }: { category: string }) {
           setTitle={setTitle}
           content={content}
           setContent={setContent}
+          onImageAdd={addImage}
           className="bg-white dark:bg-gray-800"
         />
       </div>

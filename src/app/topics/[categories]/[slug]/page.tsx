@@ -310,6 +310,7 @@ export default function TopicPage() {
     handlers,
     canCreateComment,
     isCheckingComment,
+    addCommentImage,
   } = useTopicPage();
 
   useEffect(() => {
@@ -368,6 +369,7 @@ export default function TopicPage() {
           isSubmitting={isSubmitting}
           content={newCommentContent}
           setContent={setNewCommentContent}
+          onImageAdd={addCommentImage}
         />
       );
     }

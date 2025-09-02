@@ -30,14 +30,25 @@ export async function getTopicBySlug(slug: string) {
   }
 }
 
-export async function createTopic(data: NewTopicData) {
+export async function createTopic(data: NewTopicData, images: File[]) {
   try {
-    const response = await axios.post(`${API_URL}/posts/topics`, data, {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("category", data.category);
+    images.forEach((image) => {
+      formData.append("files", image);
+    });
+
+    const response = await axios.post(`${API_URL}/posts/topics`, formData, {
       withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    throw new Error(getErrorMessage(error));
   }
 }
 
@@ -83,16 +94,27 @@ export async function updateComment(commentId: number, content: string) {
   }
 }
 
-export async function createComment(data: NewCommentData) {
+export async function createComment(data: NewCommentData, images: File[]) {
   try {
+    const formData = new FormData();
+    formData.append("content", data.content);
+    images.forEach((image) => {
+      formData.append("files", image);
+    });
+
     const response = await axios.post(
       `${API_URL}/posts/topics/${data.topicId}/comments`,
-      { content: data.content }, 
-      { withCredentials: true }
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response.data;
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    throw new Error(getErrorMessage(error));
   }
 }
 

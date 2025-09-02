@@ -92,6 +92,7 @@ export interface PublishFormProps<T extends "topic" | "comment"> {
   setContent: (value: string) => void;
   title?: string;
   setTitle?: (value: string) => void;
+  onImageAdd?: (file: File) => void;
 }
 
 export interface CreateTopicViewProps {
