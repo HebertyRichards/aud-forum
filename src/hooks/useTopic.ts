@@ -155,7 +155,7 @@ export function useTopicPage() {
         }
       },
     }),
-    [topic, newCommentContent, router, category, canCreateComment]
+    [topic, newCommentContent, router, category, canCreateComment, commentImages]
   );
 
   const addCommentImage = (file: File) => {

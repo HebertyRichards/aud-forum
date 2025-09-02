@@ -31,6 +31,15 @@ const MessageCard = ({ message }: { message: string }) => (
   </Card>
 );
 
+const categoryTitles: { [key: string]: string } = {
+  downloads: "Downloads",
+  manuals: "Manuais",
+  "general-discussions": "Discussões Gerais",
+  members: "Área dos Membros",
+  subscribe: "Inscrições",
+  updates: "Atualizações",
+};
+
 export default function CategoryTopicPage() {
   const params = useParams();
   const router = useRouter();
@@ -42,14 +51,6 @@ export default function CategoryTopicPage() {
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
   const [authMessage, setAuthMessage] = useState<string | null>(null);
-  const categoryTitles: { [key: string]: string } = {
-    downloads: "Downloads",
-    manuals: "Manuais",
-    "general-discussions": "Discussões Gerais",
-    members: "Área dos Membros",
-    subscribe: "Inscrições",
-    updates: "Atualizações",
-  };
 
   useEffect(() => {
     if (user && category) {

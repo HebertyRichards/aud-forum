@@ -42,7 +42,7 @@ export function usePermissions() {
     } finally {
       setIsCheckingComment(false);
     }
-  }, [checkCommentCreationPermission]);
+  }, []);
 
   return {
     canCreateTopic,
