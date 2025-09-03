@@ -1,11 +1,10 @@
 import { Member, ApiMember } from "@/types/users";
 import axios from "axios";
-export async function getAllMembers(page: number): Promise<{ members: Member[], totalCount: number }> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export async function getAllMembers(page: number): Promise<{ members: Member[], totalCount: number }> {;
   const limit = 20;
   
   try {
-    const res = await axios.get(`${API_URL}/user/user/all`, {
+    const res = await axios.get(`/api/user/user/all`, {
       params: { page, limit }
     });
 

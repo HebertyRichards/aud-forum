@@ -37,8 +37,6 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -57,7 +55,7 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     try {
       const payload = { ...form, id: user?.id };
 
-      await axios.put(`${API_URL}/profile/update`, payload, {
+      await axios.put(`/api/profile/update`, payload, {
         withCredentials: true,
       });
 

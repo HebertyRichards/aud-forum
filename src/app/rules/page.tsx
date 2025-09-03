@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const ALLOWED_ROLES = ["Membro", "Leader", "Fundador", "Desenvolvedor"];
 
 export default function Rules() {
@@ -28,7 +27,7 @@ export default function Rules() {
 
     const checkPermission = async () => {
       try {
-        const res = await fetch(`${API_URL}/profile/${user.id}`);
+        const res = await fetch(`/api/profile/${user.id}`);
         if (res.ok) {
           const profileData = await res.json();
           if (profileData.role && ALLOWED_ROLES.includes(profileData.role)) {

@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 export const useFollow = (
   profileUsername: string,
   initialIsFollowing: boolean,
@@ -22,7 +20,7 @@ export const useFollow = (
 
     try {
       await axios.post(
-        `${API_URL}/follow/${profileUsername}/follow`,
+        `/api/follow/${profileUsername}/follow`,
         {},
         { withCredentials: true }
       );
@@ -46,7 +44,7 @@ export const useFollow = (
     setFollowersCount((prev) => prev - 1);
 
     try {
-      await axios.delete(`${API_URL}/follow/${profileUsername}/follow`, {
+      await axios.delete(`/api/follow/${profileUsername}/follow`, {
         withCredentials: true,
       });
     } catch (error: unknown) {

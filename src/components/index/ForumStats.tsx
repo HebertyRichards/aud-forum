@@ -10,7 +10,6 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export function ForumStats() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [stats, setStats] = useState<MainStats | null>(null);
   const [newestMember, setNewestMember] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,8 +19,8 @@ export function ForumStats() {
       setLoading(true);
       try {
         const [statsRes, newestMemberRes] = await Promise.all([
-          fetch(`${API_URL}/forum/stats`),
-          fetch(`${API_URL}/user/last-registration`),
+          fetch(`/api/forum/stats`),
+          fetch(`/api/user/last-registration`),
         ]);
 
         if (statsRes.ok) {
@@ -40,7 +39,7 @@ export function ForumStats() {
     };
 
     fetchAllData();
-  }, [API_URL]);
+  }, []);
 
   if (loading) {
     return (

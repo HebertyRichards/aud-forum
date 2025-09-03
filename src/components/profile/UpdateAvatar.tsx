@@ -17,8 +17,6 @@ export function UpdateAvatar({
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -38,11 +36,9 @@ export function UpdateAvatar({
       if (!user) throw new Error("Usuário não encontrado.");
       const formData = new FormData();
       formData.append("avatar", compressedFile);
-      const res = await axios.patch(
-        `${API_URL}/profile/user/avatar`,
-        formData,
-        { withCredentials: true }
-      );
+      const res = await axios.patch(`/api/profile/user/avatar`, formData, {
+        withCredentials: true,
+      });
       toast.success("Avatar atualizado com sucesso!", { id: toastId });
       updateUserAvatar(res.data.avatar_url);
       onSuccess();
@@ -66,7 +62,7 @@ export function UpdateAvatar({
     setError(null);
     const toastId = toast.loading("Removendo avatar...");
     try {
-      const res = await axios.delete(`${API_URL}/profile/user/avatar`, {
+      const res = await axios.delete(`/api/profile/user/avatar`, {
         withCredentials: true,
       });
 

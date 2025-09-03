@@ -1,7 +1,6 @@
 import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error) && error.response?.data?.message) {
     return error.response.data.message;
@@ -14,7 +13,7 @@ const getErrorMessage = (error: unknown): string => {
 
 export async function getTopicsByCategory(category: string) {
   try {
-    const response = await axios.get(`${API_URL}/categories/topics/category/${category}`);
+    const response = await axios.get(`/api/categories/topics/category/${category}`);
     return response.data;
   } catch (error: unknown) {
     throw new Error(getErrorMessage(error));  
@@ -23,7 +22,7 @@ export async function getTopicsByCategory(category: string) {
 
 export async function getTopicBySlug(slug: string) {
   try {
-    const response = await axios.get(`${API_URL}/posts/topics/slug/${slug}`);
+    const response = await axios.get(`/api/posts/topics/slug/${slug}`);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));  
@@ -40,7 +39,7 @@ export async function createTopic(data: NewTopicData, images: File[]) {
       formData.append("files", image);
     });
 
-    const response = await axios.post(`${API_URL}/posts/topics`, formData, {
+    const response = await axios.post(`/api/posts/topics`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -54,7 +53,7 @@ export async function createTopic(data: NewTopicData, images: File[]) {
 
 export async function updateTopic(topicId: number, data: UpdateTopicData) {
   try {
-    const response = await axios.patch(`${API_URL}/posts/topics/${topicId}`, data, {
+    const response = await axios.patch(`/api/posts/topics/${topicId}`, data, {
       withCredentials: true,
     });
     return response.data;
@@ -65,7 +64,7 @@ export async function updateTopic(topicId: number, data: UpdateTopicData) {
 
 export async function deleteTopic(topicId: number) {
   try {
-    await axios.delete(`${API_URL}/posts/topics/${topicId}`, {
+    await axios.delete(`/api/posts/topics/${topicId}`, {
       withCredentials: true,
     });
   } catch (error: unknown) {
@@ -75,7 +74,7 @@ export async function deleteTopic(topicId: number) {
 
 export async function deleteComment(commentId: number) {
   try {
-    await axios.delete(`${API_URL}/posts/comments/${commentId}`, {
+    await axios.delete(`/api/posts/comments/${commentId}`, {
       withCredentials: true,
     });
   } catch (error: unknown) {
@@ -85,7 +84,7 @@ export async function deleteComment(commentId: number) {
 
 export async function updateComment(commentId: number, content: string) {
   try {
-    const response = await axios.patch(`${API_URL}/posts/comments/${commentId}`, { content }, {
+    const response = await axios.patch(`/api/posts/comments/${commentId}`, { content }, {
       withCredentials: true,
     });
     return response.data;
@@ -103,7 +102,7 @@ export async function createComment(data: NewCommentData, images: File[]) {
     });
 
     const response = await axios.post(
-      `${API_URL}/posts/topics/${data.topicId}/comments`,
+      `/api/posts/topics/${data.topicId}/comments`,
       formData,
       {
         withCredentials: true,
@@ -120,7 +119,7 @@ export async function createComment(data: NewCommentData, images: File[]) {
 
 export async function checkTopicCreationPermission(category: string): Promise<boolean> {
   try {
-    const response = await axios.post(`${API_URL}/permission/topics/check-permission`, 
+    const response = await axios.post(`/api/permission/topics/check-permission`, 
       { category }, 
       { withCredentials: true }
     );
@@ -132,7 +131,7 @@ export async function checkTopicCreationPermission(category: string): Promise<bo
 
 export async function checkCommentCreationPermission(topicId: number): Promise<boolean> {
   try {
-    const response = await axios.get(`${API_URL}/permission/comments/${topicId}/check-permission`, {
+    const response = await axios.get(`/api/permission/comments/${topicId}/check-permission`, {
       withCredentials: true,
     });
     return response.data.allowed;

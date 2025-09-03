@@ -7,7 +7,6 @@ import axios from "axios";
 export function UserActivityTracker() {
   const auth = useAuth();
   const user = auth?.user;
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (!user) {
@@ -16,7 +15,7 @@ export function UserActivityTracker() {
 
     const ping = async () => {
       try {
-        await axios.post(`${API_URL}/user/ping`, {}, {
+        await axios.post(`/api/user/ping`, {}, {
           withCredentials: true,
         });
       } catch {
@@ -26,7 +25,7 @@ export function UserActivityTracker() {
     const interval = setInterval(ping, 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [user, API_URL]);
+  }, [user]);
 
   return null;
 }

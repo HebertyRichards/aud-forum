@@ -17,7 +17,6 @@ import Link from "next/link";
 import { RecentPost } from "@/types/post";
 
 export function RecentPosts() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [posts, setPosts] = useState<RecentPost[]>([]);
   const [visiblePosts, setVisiblePosts] = useState(4);
   const [loading, setLoading] = useState(true);
@@ -28,7 +27,7 @@ export function RecentPosts() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/forum/posts/recent`);
+        const res = await fetch(`/api/forum/posts/recent`);
         if (!res.ok) {
           throw new Error("Falha na resposta da API");
         }
@@ -41,7 +40,7 @@ export function RecentPosts() {
       }
     };
     fetchRecentPosts();
-  }, [API_URL]);
+  }, []);
 
   if (loading) {
     return (

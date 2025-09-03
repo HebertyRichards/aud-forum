@@ -23,7 +23,6 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,7 +33,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
     setIsLoading(true);
     try {
       await axios.patch(
-        `${API_URL}/auth/update-password`,
+        `/api/auth/update-password`,
         { newPassword },
         { withCredentials: true }
       );

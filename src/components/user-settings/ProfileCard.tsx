@@ -25,20 +25,19 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
   const [username, setUsername] = useState(user.username ?? "");
   const [email, setEmail] = useState(user.email ?? "");
   const [isLoading, setIsLoading] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     try {
       await axios.patch(
-        `${API_URL}/auth/update-user`,
+        `/api/auth/update-user`,
         { username, newEmail: email },
         { withCredentials: true }
       );
 
       toast.success("Perfil atualizado com sucesso!");
-      
+
       setTimeout(() => {
         window.location.reload();
       }, 1500);

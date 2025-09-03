@@ -12,13 +12,12 @@ import { getRoleColor } from "@/utils/colors";
 
 export function OnlineUsers() {
   const [users, setUsers] = useState<OnlineUser[]>([]);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const { user: currentUser } = useAuth();
   useEffect(() => {
     async function fetchOnlineUsers() {
       try {
-        const res = await fetch(`${API_URL}/user/online`, {
+        const res = await fetch(`/api/user/online`, {
           credentials: "include",
         });
 
@@ -43,7 +42,7 @@ export function OnlineUsers() {
 
     const interval = setInterval(fetchOnlineUsers, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [API_URL]);
+  }, []);
 
   return (
     <Card className="bg-white dark:bg-gray-800">
