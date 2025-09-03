@@ -4,7 +4,6 @@ import { AuthContextType, UserWithProfile } from "@/types/autentication";
 import { handleAuthError } from "@/utils/errorsAuth";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -13,7 +12,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const checkUserSession = async () => {
     try {
-      const res = await axios.get(`${API_URL}/auth/session`, {
+      const res = await axios.get(`/api/auth/session`, {
         withCredentials: true,
       });
       setUser(res.data);
@@ -35,11 +34,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     try {
       await axios.post(
-        `${API_URL}/auth/login`,
+        `/api/auth/login`,
         { email, password, keepLogged },
         { withCredentials: true }
       );
-      await checkUserSession(); 
+      await checkUserSession();
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível fazer o login.");
     }
@@ -51,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string
   ) => {
     try {
-      await axios.post(`${API_URL}/auth/register`, {
+      await axios.post(`/api/auth/register`, {
         username,
         email,
         password,
@@ -63,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`/api/auth/logout`, {}, { withCredentials: true });
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível fazer o logout.");
     } finally {
@@ -74,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const updatePassword = async (newPassword: string, accessToken?: string) => {
     try {
       const res = await axios.put(
-        `${API_URL}/auth/change-password`,
+        `/api/auth/change-password`,
         { newPassword, accessToken },
         { withCredentials: true }
       );
@@ -86,7 +85,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const forgotPassword = async (email: string) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/forgot-password`, {
+      const res = await axios.post(`/api/auth/forgot-password`, {
         email,
       });
       return res.data;

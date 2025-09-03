@@ -9,14 +9,13 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
   const [list, setList] = useState<UserPreview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchList = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await axios.get(`${API_URL}/follow/${userId}/${type}`);
+        const res = await axios.get(`/api/follow/${userId}/${type}`);
         setList(res.data);
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -35,7 +34,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
     if (userId) {
       fetchList();
     }
-  }, [userId, type, API_URL]);
+  }, [userId, type]);
 
   if (isLoading) {
     return (

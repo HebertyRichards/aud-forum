@@ -30,7 +30,6 @@ export function DangerZoneCard() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -50,7 +49,7 @@ export function DangerZoneCard() {
 
     setIsLoading(true);
     try {
-      await axios.delete(`${API_URL}/auth/delete-account`, {
+      await axios.delete(`/api/auth/delete-account`, {
         data: { password },
         withCredentials: true,
       });

@@ -12,8 +12,6 @@ import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 export function ForumCategoryList() {
   const auth = useAuth();
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -27,7 +25,7 @@ export function ForumCategoryList() {
 
     const fetchUserProfile = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/profile/${userId}`);
+        const { data } = await axios.get(`/api/profile/${userId}`);
         setUserRole(data.role ?? null);
       } catch {
         setUserRole(null);

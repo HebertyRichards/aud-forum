@@ -19,8 +19,6 @@ export default function Profile() {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const fetchProfile = useCallback(
     async (userId: string, username: string) => {
       if (!updating) {
@@ -29,8 +27,8 @@ export default function Profile() {
       setError(null);
       try {
         const [res, statsRes] = await Promise.all([
-          axios.get(`${API_URL}/profile/${userId}`),
-          axios.get(`${API_URL}/follow/${username}/stats`).catch(() => null),
+          axios.get(`/api/profile/${userId}`),
+          axios.get(`/api/follow/${username}/stats`).catch(() => null),
         ]);
         const data: UserProfile = res.data;
         setProfile(data);
@@ -52,7 +50,7 @@ export default function Profile() {
         setLoading(false);
       }
     },
-    [API_URL, updating]
+    [updating]
   );
 
   useEffect(() => {

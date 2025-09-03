@@ -16,16 +16,13 @@ export function FollowListModal({
   const [users, setUsers] = useState<UserPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(
-          `${API_URL}/follow/${username}/${listType}`
-        );
+        const res = await axios.get(`/api/follow/${username}/${listType}`);
         const data: UserPreview[] = res.data;
         setUsers(data);
       } catch (error: unknown) {
@@ -42,7 +39,7 @@ export function FollowListModal({
       }
     };
     fetchUsers();
-  }, [username, listType, API_URL]);
+  }, [username, listType]);
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
