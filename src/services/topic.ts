@@ -11,9 +11,9 @@ const getErrorMessage = (error: unknown): string => {
   return "Ocorreu um erro desconhecido.";
 };
 
-export async function getTopicsByCategory(category: string) {
+export async function getTopicsByCategory(category: string, page: number, limit: number) {
   try {
-    const response = await axios.get(`/api/categories/topics/category/${category}`);
+    const response = await axios.get(`/api/categories/topics/category/${category}?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
     throw new Error(getErrorMessage(error));  
@@ -23,6 +23,15 @@ export async function getTopicsByCategory(category: string) {
 export async function getTopicBySlug(slug: string) {
   try {
     const response = await axios.get(`/api/posts/topics/slug/${slug}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));  
+  }
+}
+
+export async function getTopicBySlugWithComments(slug: string, page: number, limit: number) {
+  try {
+    const response = await axios.get(`/api/posts/topics/slug/${slug}?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));  

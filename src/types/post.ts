@@ -137,3 +137,9 @@ export interface RecentPost {
   author_avatar: string | null;
   comment_count: number;
 }
+
+export interface PaginationControlsProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
