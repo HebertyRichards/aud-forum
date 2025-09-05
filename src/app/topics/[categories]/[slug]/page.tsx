@@ -23,6 +23,18 @@ import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { PaginationControls } from "@/components/PaginationControls";
+
+const COMMENTS_PER_PAGE = 10;
+const getOptimizedAvatarUrl = (
+  url: string | null | undefined,
+  size: number
+): string | undefined => {
+  if (!url) {
+    return undefined;
+  }
+  return `${url}?width=${size}&height=${size}&quality=85resize=cover`;
+};
 
 const DisabledCommentForm = ({ message }: { message: string }) => (
   <Card className="dark:bg-gray-800 border-gray-400/50">
@@ -64,7 +76,10 @@ const CommentItem = ({
       <CardContent className="p-5 flex gap-4">
         <Link href={`/profile/${comment.profiles.username}`}>
           <Avatar>
-            <AvatarImage src={comment.profiles.avatar_url || undefined} />
+            <AvatarImage
+              src={getOptimizedAvatarUrl(comment.profiles.avatar_url, 40)}
+              alt={`Avatar de ${comment.profiles.username}`}
+            />
             <AvatarFallback>
               {comment.profiles.username.charAt(0).toUpperCase()}
             </AvatarFallback>
@@ -82,7 +97,7 @@ const CommentItem = ({
               </p>
             </Link>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-700 dark:text-gray-500">
+              <p className="text-xs text-gray-700 dark:text-gray-400">
                 {formatPostTimestamp(comment.created_in)}
               </p>
               {user && user.id === comment.author_id && !isEditing && (
@@ -258,7 +273,10 @@ const TopicView = ({
           <div className="flex items-center gap-3 mb-6">
             <Link href={`/profile/${topic.profiles.username}`}>
               <Avatar>
-                <AvatarImage src={topic.profiles.avatar_url || undefined} />
+                <AvatarImage
+                  src={getOptimizedAvatarUrl(topic.profiles.avatar_url, 48)}
+                  alt={`Avatar de ${topic.profiles.username}`}
+                />
                 <AvatarFallback>
                   {topic.profiles.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
@@ -274,12 +292,12 @@ const TopicView = ({
                   {topic.profiles.username}
                 </p>
               </Link>
-              <p className="text-xs text-gray-700 dark:text-gray-500">
+              <p className="text-xs text-gray-700 dark:text-gray-400">
                 Postado {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
               {topic.updated_in &&
                 new Date(topic.updated_in) > new Date(topic.created_in) && (
-                  <p className="text-xs text-gray-400 italic mt-1">
+                  <p className="text-xs text-gray-300 italic mt-1">
                     Atualizado{" "}
                     {formatPostTimestamp(topic.updated_in).toLowerCase()}
                   </p>
@@ -311,6 +329,9 @@ export default function TopicPage() {
     canCreateComment,
     isCheckingComment,
     addCommentImage,
+    totalComments,
+    currentPage,
+    handlePageChange,
   } = useTopicPage();
 
   useEffect(() => {
@@ -365,6 +386,7 @@ export default function TopicPage() {
     updates: "Atualizações",
   };
 
+  const totalPages = Math.ceil(totalComments / COMMENTS_PER_PAGE);
   if (isLoading) {
     return (
       <div className="text-center p-10 text-white">Carregando tópico...</div>
@@ -435,9 +457,14 @@ export default function TopicPage() {
           />
           <Separator className="bg-gray-700" />
           <h2 className="text-2xl font-semibold">
-            Comentários ({topic.comentarios.length})
+            Comentários ({totalComments})
           </h2>
           <CommentList topic={topic} user={user} handlers={handlers} />
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
           {renderCommentBox()}
         </div>
       </div>

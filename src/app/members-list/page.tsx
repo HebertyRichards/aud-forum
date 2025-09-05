@@ -5,7 +5,7 @@ import { MembersTable } from "@/components/members-list/Members-table";
 import { getAllMembers } from "@/services/member";
 import { Member } from "@/types/users";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { PaginationControls } from "@/components/PaginationControls";
 
 export default function MembersList() {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
@@ -72,6 +72,12 @@ export default function MembersList() {
     return members;
   }, [allMembers, searchTerm, sortBy, sortOrder]);
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   const totalPages = Math.ceil(totalCount / usersPerPage);
 
   return (
@@ -94,27 +100,11 @@ export default function MembersList() {
             isLoading={isLoading}
             error={error}
           />
-          <div className="mt-6 flex justify-center items-center gap-4">
-            <Button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1 || isLoading}
-            >
-              Anterior
-            </Button>
-            <span>
-              Página {currentPage} de {totalPages > 0 ? totalPages : 1}
-            </span>
-            <Button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={
-                currentPage === totalPages || isLoading || totalPages === 0
-              }
-            >
-              Próxima
-            </Button>
-          </div>
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </main>
       </div>
     </div>

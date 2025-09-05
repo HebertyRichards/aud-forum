@@ -3,12 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, MessageSquare, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/dateUtils";
+import type { UserProfile } from "@/types/profile";
 
-interface TopicsTabProps {
-  username: string;
-}
-
-export function TopicsTab({ username }: TopicsTabProps) {
+export type StatisticsTabProps = Pick<UserProfile, 'username'>;
+export function TopicsTab({ username }: StatisticsTabProps) {
   const { topics, isLoading, error } = useUserTopics(username);
 
   if (isLoading) return <Loader2 className="animate-spin mx-auto mt-4" />;

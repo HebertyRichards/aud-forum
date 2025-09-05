@@ -11,6 +11,8 @@ import {
   ArrowLeft,
   MessageSquare,
   AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +21,43 @@ import { useAuth } from "@/services/auth";
 import { getTopicsByCategory } from "@/services/topic";
 import { TopicSummary } from "@/types/post";
 import { usePermissions } from "@/hooks/usePermissions";
+import { PaginationControlsProps } from "@/types/post";
+
+const PaginationControls = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationControlsProps) => {
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-4 mt-8">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        <ChevronLeft className="h-4 w-4 mr-2" />
+        Anterior
+      </Button>
+      <span className="text-sm font-medium">
+        Página {currentPage} de {totalPages}
+      </span>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Próxima
+        <ChevronRight className="h-4 w-4 ml-2" />
+      </Button>
+    </div>
+  );
+};
 
 const MessageCard = ({ message }: { message: string }) => (
   <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-gray-800">
@@ -51,6 +90,9 @@ export default function CategoryTopicPage() {
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
   const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalTopics, setTotalTopics] = useState(0);
+  const TOPICS_PER_PAGE = 10;
 
   useEffect(() => {
     if (user && category) {
@@ -74,20 +116,47 @@ export default function CategoryTopicPage() {
       return;
     }
 
-    const fetchTopics = async () => {
+    const fetchTopics = async (page: number) => {
       setIsLoading(true);
       try {
-        const data = await getTopicsByCategory(category);
+        const { data, totalCount } = await getTopicsByCategory(
+          category,
+          page,
+          TOPICS_PER_PAGE
+        );
         setTopics(data);
+        setTotalTopics(totalCount ?? 0);
+        setCurrentPage(page);
       } catch {
         setTopics([]);
+        setTotalTopics(0);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchTopics();
+    fetchTopics(1);
   }, [category, view]);
+
+  const handlePageChange = async (newPage: number) => {
+    setIsLoading(true);
+    try {
+      const { data, totalCount } = await getTopicsByCategory(
+        category,
+        newPage,
+        TOPICS_PER_PAGE
+      );
+      setTopics(data);
+      setTotalTopics(totalCount ?? 0);
+      setCurrentPage(newPage);
+      window.scrollTo(0, 0);
+    } catch {
+      setTopics([]);
+      setTotalTopics(0);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleNewTopicClick = () => {
     setAuthMessage(null);
@@ -106,6 +175,8 @@ export default function CategoryTopicPage() {
       setView("create");
     }
   };
+
+  const totalPages = Math.ceil(totalTopics / TOPICS_PER_PAGE);
 
   const renderMainContent = () => {
     if (authMessage) {
@@ -128,39 +199,50 @@ export default function CategoryTopicPage() {
     }
 
     return (
-      <div className="space-y-4">
-        {topics.map((topic) => (
-          <Link
-            href={`/topics/${category}/${topic.slug}`}
-            key={topic.id}
-            className="block"
-          >
-            <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarImage src={topic.profiles.avatar_url || undefined} />
-                    <AvatarFallback>
-                      {topic.profiles.username.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold text-lg">{topic.title}</h3>
-                    <p className="text-xs text-gray-700 dark:text-gray-500">
-                      por {topic.profiles.username} •{" "}
-                      {formatPostTimestamp(topic.created_in)}
-                    </p>
+      <>
+        <div className="space-y-4">
+          {topics
+            .filter((topic) => topic && topic.slug)
+            .map((topic) => (
+              <Link
+                href={`/topics/${category}/${topic.slug}`}
+                key={topic.slug}
+                className="block"
+              >
+                <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Avatar>
+                        <AvatarImage
+                          src={topic.profiles.avatar_url || undefined}
+                        />
+                        <AvatarFallback>
+                          {topic.profiles.username.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-semibold text-lg">{topic.title}</h3>
+                        <p className="text-xs text-gray-700 dark:text-gray-500">
+                          por {topic.profiles.username} •{" "}
+                          {formatPostTimestamp(topic.created_in)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
+                      <MessageSquare className="h-4 w-4" />
+                      <span>{topic.comentarios[0]?.count ?? 0}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
-                  <MessageSquare className="h-4 w-4" />
-                  <span>{topic.comentarios[0]?.count ?? 0}</span>
-                </div>
-              </div>
-            </Card>
-          </Link>
-        ))}
-      </div>
+                </Card>
+              </Link>
+            ))}
+        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </>
     );
   };
 

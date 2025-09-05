@@ -3,10 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { formatPostTimestamp } from "@/utils/dateUtils";
+import type { UserProfile } from "@/types/profile";
 
-interface StatisticsTabProps {
-  username: string;
-}
+export type StatisticsTabProps = Pick<UserProfile, "username">;
 
 export function StatisticsTab({ username }: StatisticsTabProps) {
   const { stats, isLoading, error } = useUserStats(username);

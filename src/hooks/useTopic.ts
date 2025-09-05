@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/services/auth";
 import {
-  getTopicBySlug,
+  getTopicBySlugWithComments, 
   createComment,
   deleteTopic,
   updateTopic,
@@ -14,6 +14,8 @@ import {
 import { NewCommentData, TopicDetails, UpdateTopicData } from "@/types/post";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
+
+const COMMENTS_PER_PAGE = 10;
 
 export function useTopicPage() {
   const params = useParams();
@@ -27,32 +29,48 @@ export function useTopicPage() {
   const [topic, setTopic] = useState<TopicDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [totalComments, setTotalComments] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [newCommentContent, setNewCommentContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentImages, setCommentImages] = useState<File[]>([]); 
 
-  useEffect(() => {
-    if (!slug) return;
-    const fetchTopic = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await getTopicBySlug(slug);
-        setTopic(data);
-        if (user) { 
-          checkCommentPermission(data.id);
-        }
-      } catch {
-        setError(
-          "Não foi possível carregar o tópico. Tente novamente mais tarde."
-        );
-      } finally {
-        setIsLoading(false);
+  const fetchTopic = useCallback(async (page: number) => {
+    setIsLoading(true); 
+    setError(null);
+    try {
+      const { data, totalComments: newTotalComments } = await getTopicBySlugWithComments(slug, page, COMMENTS_PER_PAGE);
+      setTopic(data);
+      setTotalComments(newTotalComments);
+      setCurrentPage(page);
+      if (user && page === 1) {
+        checkCommentPermission(data.id);
       }
-    };
-    fetchTopic();
+    } catch {
+      setError(
+        "Não foi possível carregar o tópico. Tente novamente mais tarde."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }, [slug, user, checkCommentPermission]);
+
+  useEffect(() => {
+    if (slug) {
+      fetchTopic(1); 
+    }
+  }, [slug, fetchTopic]); 
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage !== currentPage && newPage > 0) {
+      fetchTopic(newPage);
+    }
+  };
+  
+  const addCommentImage = (file: File) => {
+    setCommentImages((prev) => [...prev, file]);
+  };
 
   const handlers = useMemo(
     () => ({
@@ -64,19 +82,14 @@ export function useTopicPage() {
         if (!topic || !newCommentContent.trim()) return;
         setIsSubmitting(true);
         try {
-          const commentData: NewCommentData = {
-            content: newCommentContent,
-            topicId: topic.id,
-          };
-          const newComment = await createComment(commentData, commentImages);
-          setTopic((prev) =>
-            prev
-              ? { ...prev, comentarios: [...prev.comentarios, newComment] }
-              : null
-          );
+          const commentData: NewCommentData = { content: newCommentContent, topicId: topic.id };
+          await createComment(commentData, commentImages);
           setNewCommentContent("");
           setCommentImages([]);
           toast.success("Comentário publicado com sucesso!");
+          const newTotal = totalComments + 1;
+          const lastPage = Math.ceil(newTotal / COMMENTS_PER_PAGE);
+          fetchTopic(lastPage);
         } catch (error: unknown) {
           toast.error((error as Error).message);
         } finally {
@@ -89,17 +102,8 @@ export function useTopicPage() {
           return;
         try {
           await deleteComment(commentId);
-          setTopic((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  comentarios: prev.comentarios.filter(
-                    (c) => c.id !== commentId
-                  ),
-                }
-              : null
-          );
           toast.success("Comentário deletado com sucesso!");
+          fetchTopic(currentPage); 
         } catch (error: unknown) {
           toast.error(
             (error as Error).message || "Falha ao deletar o comentário."
@@ -109,23 +113,15 @@ export function useTopicPage() {
 
       handleUpdateComment: async (commentId: number, content: string) => {
         try {
-          const updatedComment = await updateComment(commentId, content);
-          setTopic((prev) => {
-            if (!prev) return null;
-            const updatedComentarios = prev.comentarios.map((c) =>
-              c.id === commentId ? updatedComment : c
-            );
-            return { ...prev, comentarios: updatedComentarios };
-          });
+          await updateComment(commentId, content);
           toast.success("Comentário atualizado com sucesso!");
+          fetchTopic(currentPage);
         } catch (error: unknown) {
           toast.error((error as Error).message);
         }
       },
-
       handleDeleteTopic: async () => {
-        if (
-          !topic ||
+        if (!topic ||
           !window.confirm("Tem certeza que deseja deletar este tópico?")
         )
           return;
@@ -155,13 +151,8 @@ export function useTopicPage() {
         }
       },
     }),
-    [topic, newCommentContent, router, category, canCreateComment, commentImages]
+    [topic, newCommentContent, canCreateComment, commentImages, currentPage, totalComments, fetchTopic, router, category]
   );
-
-  const addCommentImage = (file: File) => {
-    setCommentImages((prev) => [...prev, file]);
-  }
-
   return {
     topic,
     isLoading,
@@ -175,5 +166,8 @@ export function useTopicPage() {
     isCheckingComment,
     handlers,
     addCommentImage,
+    totalComments,
+    currentPage,
+    handlePageChange,
   };
 }
