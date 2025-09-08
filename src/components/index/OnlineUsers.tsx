@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,39 +10,29 @@ import Link from "next/link";
 import { useAuth } from "@/services/auth";
 import { getRoleColor } from "@/utils/colors";
 
-export function OnlineUsers() {
-  const [users, setUsers] = useState<OnlineUser[]>([]);
-
-  const { user: currentUser } = useAuth();
-  useEffect(() => {
-    async function fetchOnlineUsers() {
-      try {
-        const res = await fetch(`/api/user/online`, {
-          credentials: "include",
-        });
-
-        if (!res.ok) {
-          return;
-        }
-
-        const data = await res.json();
-        const onlineUsers: OnlineUser[] = (data as RawOnlineUser[]).map(
-          (item) => ({
-            username: item.profiles.username,
-            avatar_url: item.profiles.avatar_url,
-            role: item.profiles.role,
-          })
-        );
-
-        setUsers(onlineUsers);
-      } catch {}
+const fetchOnlineUsers = async (): Promise<OnlineUser[]> => {
+  try {
+    const res = await fetch(`/api/user/online`, { credentials: "include" });
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    fetchOnlineUsers();
+    const data = await res.json();
+    return (data as RawOnlineUser[]).map((item) => item.profiles);
+  } catch {
+    return [];
+  }
+};
 
-    const interval = setInterval(fetchOnlineUsers, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
+export function OnlineUsers() {
+  const { user: currentUser } = useAuth();
+
+  const { data: users = [] } = useQuery<OnlineUser[]>({
+    queryKey: ["onlineUsers"],
+    queryFn: fetchOnlineUsers,
+    refetchInterval: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <Card className="bg-white dark:bg-gray-800">
