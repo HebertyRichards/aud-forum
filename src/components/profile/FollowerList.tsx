@@ -1,40 +1,37 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { UserPreview, FollowerListProps } from "@/types/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 
-export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
-  const [list, setList] = useState<UserPreview[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchList = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get(`/api/follow/${userId}/${type}`);
-        setList(res.data);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          setError(
-            error.response?.data?.message ||
-              "Não foi possível carregar a lista."
-          );
-        } else {
-          setError("Ocorreu um erro desconhecido.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchList();
+const fetchFollowList = async (
+  userId: string,
+  type: "followers" | "following"
+) => {
+  try {
+    const { data } = await axios.get<UserPreview[]>(
+      `/api/follow/${userId}/${type}`
+    );
+    return data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      throw new Error(err.response.data.message);
     }
-  }, [userId, type]);
+    throw new Error("Não foi possível carregar a lista.");
+  }
+};
+
+export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
+  const {
+    data: list,
+    isLoading,
+    error,
+  } = useQuery<UserPreview[], Error>({
+    queryKey: ["followList", userId, type],
+    queryFn: () => fetchFollowList(userId, type),
+    enabled: !!userId,
+  });
 
   if (isLoading) {
     return (
@@ -48,12 +45,12 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
     return (
       <div className="flex flex-col items-center justify-center h-24 text-red-500">
         <AlertTriangle className="h-5 w-5 mb-1" />
-        <p className="text-sm">{error}</p>
+        <p className="text-sm">{error.message}</p>
       </div>
     );
   }
 
-  if (list.length === 0) {
+  if (!list || list.length === 0) {
     return (
       <p className="text-center text-sm text-gray-400 py-4">
         Nenhum usuário para mostrar.

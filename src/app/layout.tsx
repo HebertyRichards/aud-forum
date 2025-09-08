@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/services/auth";
 import { UserActivityTracker } from "@/services/activity";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -68,7 +69,7 @@ export default function RootLayout({
             <AuthProvider>
               <UserActivityTracker />
               <Header />
-              {children}
+              <Providers>{children}</Providers>
               <Footer />
             </AuthProvider>
           </div>

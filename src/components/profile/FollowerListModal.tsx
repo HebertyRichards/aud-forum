@@ -1,45 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
 import axios from "axios";
 
+const fetchModalUsers = async (
+  username: string,
+  listType: "followers" | "following"
+) => {
+  try {
+    const { data } = await axios.get<UserPreview[]>(
+      `/api/follow/${username}/${listType}`
+    );
+    return data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      throw new Error(err.response.data.message);
+    }
+    throw new Error("Falha ao carregar a lista de usuários.");
+  }
+};
+
 export function FollowListModal({
   username,
   listType,
   onClose,
 }: FollowListModalProps) {
-  const [users, setUsers] = useState<UserPreview[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get(`/api/follow/${username}/${listType}`);
-        const data: UserPreview[] = res.data;
-        setUsers(data);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          setError(
-            error.response?.data?.message ||
-              "Falha ao carregar a lista de usuários."
-          );
-        } else {
-          setError("Ocorreu um erro desconhecido.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, [username, listType]);
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useQuery<UserPreview[], Error>({
+    queryKey: ["followModalList", username, listType],
+    queryFn: () => fetchModalUsers(username, listType),
+    enabled: !!username,
+  });
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
@@ -56,16 +55,16 @@ export function FollowListModal({
           </button>
         </CardHeader>
         <CardContent className="max-h-[60vh] overflow-y-auto">
-          {loading ? (
+          {isLoading ? (
             <div className="flex justify-center items-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center p-8 text-red-500">
               <AlertTriangle className="h-6 w-6 mb-2" />
-              <p>{error}</p>
+              <p>{error.message}</p>
             </div>
-          ) : users.length > 0 ? (
+          ) : users && users.length > 0 ? (
             <ul className="space-y-4">
               {users.map((user) => (
                 <li key={user.username}>
