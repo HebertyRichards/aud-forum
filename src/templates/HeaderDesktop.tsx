@@ -96,7 +96,7 @@ export function HeaderDesktop() {
               Membros
             </Link>
             <Link
-              href="/topics/subscribe"
+              href="/topics/subscribes"
               className="text-gray-600 hover:text-blue-700 dark:text-gray-300 dark:hover:text-blue-400 transition-colors text-xs lg:text-sm"
             >
               Inscreva-se

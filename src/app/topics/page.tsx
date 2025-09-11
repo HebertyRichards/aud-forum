@@ -40,7 +40,7 @@ const categoryDetailsMap: Record<
     description: "Tópicos e discussões exclusivas para membros da equipe.",
     icon: <Users className="h-8 w-8 text-teal-500" />,
   },
-  subscribe: {
+  subscribes: {
     description: "Formulários e informações para se tornar um membro.",
     icon: <PenSquare className="h-8 w-8 text-orange-500" />,
   },

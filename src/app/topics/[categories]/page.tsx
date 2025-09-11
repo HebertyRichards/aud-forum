@@ -80,7 +80,7 @@ const categoryTitles: { [key: string]: string } = {
   manuals: "Manuais",
   "general-discussions": "Discussões Gerais",
   members: "Área dos Membros",
-  subscribe: "Inscrições",
+  subscribes: "Inscrições",
   updates: "Atualizações",
 };
 
@@ -214,51 +214,51 @@ export default function CategoryTopicPage() {
   };
   const renderTopicList = () => (
     <>
-    <div className={`space-y-4 ${isFetching ? "opacity-70" : ""}`}>
-          {topics
-            .filter((topic) => !!topic.slug)
-            .map((topic) => (
-              <Link
-                href={`/topics/${category}/${topic.slug}`}
-                key={topic.slug}
-                className="block"
-              >
-                <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Avatar>
-                        <AvatarImage
-                          src={topic.profiles.avatar_url || undefined}
-                        />
-                        <AvatarFallback>
-                          {topic.profiles.username.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="font-semibold text-lg">{topic.title}</h3>
-                        <p className="text-xs text-gray-700 dark:text-gray-500">
-                          por {topic.profiles.username} •{" "}
-                          {formatPostTimestamp(topic.created_in)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>{topic.comentarios[0]?.count ?? 0}</span>
+      <div className={`space-y-4 ${isFetching ? "opacity-70" : ""}`}>
+        {topics
+          .filter((topic) => !!topic.slug)
+          .map((topic) => (
+            <Link
+              href={`/topics/${category}/${topic.slug}`}
+              key={topic.slug}
+              className="block"
+            >
+              <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Avatar>
+                      <AvatarImage
+                        src={topic.profiles.avatar_url || undefined}
+                      />
+                      <AvatarFallback>
+                        {topic.profiles.username.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-semibold text-lg">{topic.title}</h3>
+                      <p className="text-xs text-gray-700 dark:text-gray-500">
+                        por {topic.profiles.username} •{" "}
+                        {formatPostTimestamp(topic.created_in)}
+                      </p>
                     </div>
                   </div>
-                </Card>
-              </Link>
-            ))}
-        </div>
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          isFetching={isFetching}
-        />
-      </>
-    );
+                  <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
+                    <MessageSquare className="h-4 w-4" />
+                    <span>{topic.comentarios[0]?.count ?? 0}</span>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          ))}
+      </div>
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        isFetching={isFetching}
+      />
+    </>
+  );
 
   return (
     <div className="min-h-screen font-sans p-8">

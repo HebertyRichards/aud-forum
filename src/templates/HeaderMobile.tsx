@@ -201,7 +201,7 @@ export function HeaderMobile() {
               Membros
             </Link>
             <Link
-              href="/topics/subscribe"
+              href="/topics/subscribes"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >
