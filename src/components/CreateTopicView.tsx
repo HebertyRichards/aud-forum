@@ -29,7 +29,7 @@ export function CreateTopicView({ category }: { category: string }) {
           content={content}
           setContent={setContent}
           onImageAdd={addImage}
-          className="bg-white dark:bg-gray-800"
+          className="bg-white dark:bg-slate-800"
         />
       </div>
     </div>

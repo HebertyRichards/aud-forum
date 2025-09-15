@@ -21,7 +21,7 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
   if (!stats) return null;
 
   return (
-    <Card className="border-gray-700 bg-white dark:bg-gray-800">
+    <Card className="border-gray-700 bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle>Estatísticas Gerais</CardTitle>
       </CardHeader>

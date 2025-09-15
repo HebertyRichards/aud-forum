@@ -1,39 +1,24 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getUserStats } from '@/services/profile';
-import { UserStats } from '@/types/profile'; 
+import type { UserStats } from '@/types/profile'; 
 
 export function useUserStats(username?: string) {
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { 
+    data: stats,
+    isLoading, 
+    error,
+    isError,
+  } = useQuery<UserStats, Error>({
+    queryKey: ['userStats', username], 
+    queryFn: () => getUserStats(username!),
+    enabled: !!username,
+  });
 
-  useEffect(() => {
-    if (!username) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchStats = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await getUserStats(username);
-        setStats(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Ocorreu um erro desconhecido.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchStats();
-  }, [username]);
-
-  return { stats, isLoading, error };
+  return { 
+    stats, 
+    isLoading, 
+    error: isError ? error.message : null 
+  };
 }

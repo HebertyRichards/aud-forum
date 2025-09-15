@@ -79,7 +79,14 @@ export function HeaderMobile() {
   };
 
   return (
-    <header className="border-b shadow-sm bg-white dark:bg-gray-800">
+    <header
+      className="sticky top-0 z-50 w-full 
+             border-b border-border shadow-sm 
+             bg-white/80 dark:bg-gray-800/80 
+             backdrop-blur 
+             supports-[backdrop-filter]:bg-white/60 
+             dark:supports-[backdrop-filter]:bg-gray-800/60"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
@@ -201,7 +208,7 @@ export function HeaderMobile() {
               Membros
             </Link>
             <Link
-              href="/topics/subscribe"
+              href="/topics/subscribes"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
               onClick={closeNav}
             >

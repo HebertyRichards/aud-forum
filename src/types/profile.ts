@@ -97,4 +97,5 @@ export interface FollowListModalProps {
   username: string;
   listType: "followers" | "following";
   onClose: () => void;
+  isOwnProfile: boolean;
 }

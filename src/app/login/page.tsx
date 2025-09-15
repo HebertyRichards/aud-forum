@@ -53,8 +53,8 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-sm bg-white dark:bg-gray-800">
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-sm bg-white dark:bg-slate-800">
         <CardHeader className="text-center">
           <CardTitle>Entre com a sua conta</CardTitle>
           <CardDescription>

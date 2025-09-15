@@ -34,7 +34,7 @@ export const forumStructure: ForumCategory[] = [
       { 
         icon: Pencil, 
         title: "Inscreva-se", 
-        href: "/topics/subscribe" 
+        href: "/topics/subscribes" 
       },
       { 
         icon: Album, 

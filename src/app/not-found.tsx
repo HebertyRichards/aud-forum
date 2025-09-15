@@ -7,7 +7,7 @@ export default function NotFound() {
     <div className="flex items-center justify-center min-h-screen p-6">
       <Alert
         variant="destructive"
-        className="max-w-lg w-full bg-white dark:bg-gray-800"
+        className="max-w-lg w-full bg-white dark:bg-slate-800"
       >
         <AlertTitle className="text-2xl font-bold">
           Erro 404: Página Não Encontrada

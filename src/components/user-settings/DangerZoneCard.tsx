@@ -71,7 +71,7 @@ export function DangerZoneCard() {
   };
 
   return (
-    <Card className="border-red-500/50 bg-white dark:bg-gray-800">
+    <Card className="border-red-500/50 bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle className="text-red-700 dark:text-red-500">
           Zona de Perigo
@@ -85,7 +85,7 @@ export function DangerZoneCard() {
           <AlertDialogTrigger asChild>
             <Button variant="destructive">Deletar Conta</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white dark:bg-gray-800">
+          <AlertDialogContent className="bg-white dark:bg-slate-800">
             <AlertDialogHeader>
               <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
               <AlertDialogDescription>

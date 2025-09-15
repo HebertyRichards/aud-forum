@@ -78,7 +78,7 @@ export default function NewPasswordForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md shadow-xl bg-white dark:bg-gray-800">
+      <Card className="w-full max-w-md shadow-xl bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="text-center">Redefinir senha</CardTitle>
         </CardHeader>

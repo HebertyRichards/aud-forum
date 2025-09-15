@@ -57,7 +57,7 @@ export default function SettingsPage() {
               Gerencie as configurações da sua conta e preferências.
             </p>
           </div>
-          <Card className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-slate-800">
             <CardHeader>
               <CardTitle>Perfil e Senha</CardTitle>
               <CardDescription>

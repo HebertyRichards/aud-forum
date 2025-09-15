@@ -1,53 +1,30 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { MembersFilters } from "@/components/members-list/Members-filter";
 import { MembersTable } from "@/components/members-list/Members-table";
-import { getAllMembers } from "@/services/member";
-import { Member } from "@/types/users";
-import { useEffect, useMemo, useState } from "react";
 import { PaginationControls } from "@/components/PaginationControls";
+import { useMembers } from "@/hooks/useMembers";
 
 export default function MembersList() {
-  const [allMembers, setAllMembers] = useState<Member[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const usersPerPage = 20;
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("ultima-visita");
   const [sortOrder, setSortOrder] = useState("decrescente");
+  const usersPerPage = 20;
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        setIsLoading(true);
-        const { members, totalCount } = await getAllMembers(currentPage);
-        setAllMembers(members);
-        setTotalCount(totalCount);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("Ocorreu uma falha inesperada.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchMembers();
-  }, [currentPage]);
+  const { data, isLoading, error } = useMembers(currentPage);
 
   const filteredMembers = useMemo(() => {
-    let members = [...allMembers];
+    const membersToSort = [...(data?.members || [])];
 
     if (searchTerm) {
-      members = members.filter((member) =>
+      return membersToSort.filter((member) =>
         member.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    members.sort((a, b) => {
+    return membersToSort.sort((a, b) => {
       let compareResult = 0;
       switch (sortBy) {
         case "nome-usuario":
@@ -68,17 +45,15 @@ export default function MembersList() {
       }
       return sortOrder === "crescente" ? compareResult : -compareResult;
     });
+  }, [data?.members, searchTerm, sortBy, sortOrder]);
 
-    return members;
-  }, [allMembers, searchTerm, sortBy, sortOrder]);
+  const totalPages = Math.ceil((data?.totalCount || 0) / usersPerPage);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
-
-  const totalPages = Math.ceil(totalCount / usersPerPage);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -98,13 +73,15 @@ export default function MembersList() {
           <MembersTable
             members={filteredMembers}
             isLoading={isLoading}
-            error={error}
+            error={error ? (error as Error).message : null}
           />
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {totalPages > 1 && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </main>
       </div>
     </div>

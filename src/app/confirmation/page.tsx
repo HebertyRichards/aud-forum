@@ -26,7 +26,7 @@ export default function SuccessRegister() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="max-w-md w-full bg-white dark:bg-gray-800">
+      <Card className="max-w-md w-full bg-white dark:bg-slate-800">
         <CardHeader className="text-center">
           <CardTitle>Conta criada com sucesso!</CardTitle>
           <CardDescription>

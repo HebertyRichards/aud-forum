@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,41 +11,39 @@ import {
   Loader2,
   AlertTriangle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Link from "next/link";
 import { RecentPost } from "@/types/post";
 
+const fetchRecentPosts = async (): Promise<RecentPost[]> => {
+  try {
+    const res = await fetch(`/api/forum/posts/recent`);
+    if (!res.ok) {
+      throw new Error("Falha na resposta da API");
+    }
+    return res.json();
+  } catch {
+    throw new Error("Erro ao mostrar os tópicos recentes.");
+  }
+};
+
 export function RecentPosts() {
-  const [posts, setPosts] = useState<RecentPost[]>([]);
   const [visiblePosts, setVisiblePosts] = useState(4);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchRecentPosts = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`/api/forum/posts/recent`);
-        if (!res.ok) {
-          throw new Error("Falha na resposta da API");
-        }
-        const data: RecentPost[] = await res.json();
-        setPosts(data);
-      } catch {
-        setError("Erro ao mostrar os tópicos recentes.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRecentPosts();
-  }, []);
+  const {
+    data: posts,
+    isLoading,
+    error,
+  } = useQuery<RecentPost[], Error>({
+    queryKey: ["recentPosts"],
+    queryFn: fetchRecentPosts,
+  });
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -60,7 +59,7 @@ export function RecentPosts() {
 
   if (error) {
     return (
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -69,14 +68,14 @@ export function RecentPosts() {
         </CardHeader>
         <CardContent className="flex flex-col text-red-500 justify-center items-center h-48">
           <AlertTriangle className="h-6 w-6 mb-2" />
-          <p>{error}</p>
+          <p>{error.message}</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-white dark:bg-gray-800">
+    <Card className="bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
@@ -85,7 +84,7 @@ export function RecentPosts() {
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-gray-700">
-          {posts.slice(0, visiblePosts).map((post) => (
+          {posts?.slice(0, visiblePosts).map((post) => (
             <div key={post.id} className="p-4 flex items-start space-x-4">
               <Link href={`/profile/${post.author_username}`}>
                 <Avatar className="w-10 h-10 mt-1">
@@ -144,7 +143,7 @@ export function RecentPosts() {
             </div>
           ))}
         </div>
-        {posts.length > 4 && visiblePosts < 10 && (
+        {posts && posts.length > 4 && visiblePosts < 10 && (
           <div className="p-4 text-center">
             <Button
               onClick={() => setVisiblePosts(10)}

@@ -1,49 +1,86 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
 import axios from "axios";
+import { Button } from "../ui/button";
+import { useRemoveFollower } from "@/hooks/useRemoveFollower";
+import { toast } from "sonner";
+
+const fetchModalUsers = async (
+  username: string,
+  listType: "followers" | "following"
+) => {
+  try {
+    const { data } = await axios.get<UserPreview[]>(
+      `/api/follow/${username}/${listType}`
+    );
+    return data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      throw new Error(err.response.data.message);
+    }
+    throw new Error("Falha ao carregar a lista de usuários.");
+  }
+};
 
 export function FollowListModal({
   username,
   listType,
   onClose,
+  isOwnProfile,
 }: FollowListModalProps) {
-  const [users, setUsers] = useState<UserPreview[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { removeFollower, isPending: isRemoving } = useRemoveFollower();
+  const [mutatingUsername, setMutatingUsername] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get(`/api/follow/${username}/${listType}`);
-        const data: UserPreview[] = res.data;
-        setUsers(data);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          setError(
-            error.response?.data?.message ||
-              "Falha ao carregar a lista de usuários."
-          );
-        } else {
-          setError("Ocorreu um erro desconhecido.");
-        }
-      } finally {
-        setLoading(false);
+  const handleRemoveClick = (followerUsername: string) => {
+    removeFollower({
+      followerUsername,
+      profileOwnerUsername: username,
+    });
+  };
+
+  const { mutate: unfollowUser } = useMutation({
+    mutationFn: async (usernameToUnfollow: string) => {
+      setMutatingUsername(usernameToUnfollow);
+      await axios.delete(`/api/follow/${usernameToUnfollow}/follow`, {
+        withCredentials: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["followModalList"] });
+    },
+    onError: (error) => {
+      let errorMessage = "Ocorreu um erro ao deixar de seguir o usuário.";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
       }
-    };
-    fetchUsers();
-  }, [username, listType]);
+      toast.error(errorMessage);
+    },
+    onSettled: () => {
+      setMutatingUsername(null);
+    },
+  });
+
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useQuery<UserPreview[], Error>({
+    queryKey: ["followModalList", username, listType],
+    queryFn: () => fetchModalUsers(username, listType),
+    enabled: !!username,
+  });
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <Card className="w-full max-w-md border-gray-700 bg-white dark:bg-gray-800 relative animate-in fade-in-0 zoom-in-95">
+      <Card className="w-full max-w-md border-gray-700 bg-white dark:bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader className="text-center">
           <CardTitle className="capitalize">
             {listType === "followers" ? "Seguidores" : "Seguindo"}
@@ -56,23 +93,26 @@ export function FollowListModal({
           </button>
         </CardHeader>
         <CardContent className="max-h-[60vh] overflow-y-auto">
-          {loading ? (
+          {isLoading ? (
             <div className="flex justify-center items-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center p-8 text-red-500">
               <AlertTriangle className="h-6 w-6 mb-2" />
-              <p>{error}</p>
+              <p>{error.message}</p>
             </div>
-          ) : users.length > 0 ? (
-            <ul className="space-y-4">
+          ) : users && users.length > 0 ? (
+            <ul className="space-y-2">
               {users.map((user) => (
-                <li key={user.username}>
+                <li
+                  key={user.username}
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
                   <Link
                     href={`/profile/${user.username}`}
                     onClick={onClose}
-                    className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+                    className="flex items-center gap-4 grow"
                   >
                     <Avatar>
                       <AvatarImage
@@ -85,6 +125,36 @@ export function FollowListModal({
                     </Avatar>
                     <span className="font-semibold">{user.username}</span>
                   </Link>
+
+                  {isOwnProfile && listType === "followers" && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleRemoveClick(user.username)}
+                      disabled={isRemoving}
+                    >
+                      {isRemoving ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Remover"
+                      )}
+                    </Button>
+                  )}
+
+                  {isOwnProfile && listType === "following" && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => unfollowUser(user.username)}
+                      disabled={mutatingUsername === user.username}
+                    >
+                      {mutatingUsername === user.username ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Deixar de seguir"
+                      )}
+                    </Button>
+                  )}
                 </li>
               ))}
             </ul>

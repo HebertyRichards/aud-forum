@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
   Accordion,
@@ -11,30 +11,30 @@ import {
 import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
 import axios from "axios";
+import { UserProfile } from "@/types/profile";
+
+const fetchUserProfile = async (
+  userId: string
+): Promise<UserProfile | null> => {
+  try {
+    const { data } = await axios.get(`/api/profile/${userId}`);
+    return data;
+  } catch {
+    return null;
+  }
+};
 
 export function ForumCategoryList() {
   const auth = useAuth();
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const userId = auth.user?.id;
 
-  useEffect(() => {
-    const userId = auth.user?.id;
-    if (!userId) {
-      setUserRole(null);
-      return;
-    }
+  const { data: userProfile } = useQuery<UserProfile | null>({
+    queryKey: ["userProfile", userId],
+    queryFn: () => fetchUserProfile(userId!),
+    enabled: !!userId,
+  });
 
-    const fetchUserProfile = async () => {
-      try {
-        const { data } = await axios.get(`/api/profile/${userId}`);
-        setUserRole(data.role ?? null);
-      } catch {
-        setUserRole(null);
-      }
-    };
-
-    fetchUserProfile();
-  }, [auth.user?.id]);
-
+  const userRole = userProfile?.role;
   const allowedRolesForHiddenArea = [
     "Leader",
     "Desenvolvedor",
@@ -64,7 +64,7 @@ export function ForumCategoryList() {
           <AccordionItem
             key={category.id}
             value={category.id}
-            className="border-none rounded-md overflow-hidden shadow-md bg-white dark:bg-gray-800"
+            className="border-none rounded-md overflow-hidden shadow-md bg-white dark:bg-slate-800"
           >
             <AccordionTrigger className="bg-blue-700 px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full, dark:bg-blue-500">
               {category.title}

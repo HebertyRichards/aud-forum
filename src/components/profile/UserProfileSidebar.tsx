@@ -24,7 +24,7 @@ export function UserProfileSidebar({
 
   return (
     <aside className="space-y-6">
-      <Card className="border-gray-700 text-center bg-white dark:bg-gray-800">
+      <Card className="border-gray-700 text-center bg-white dark:bg-slate-800">
         <CardContent className="p-6 flex flex-col items-center">
           <h2
             className={`${getRoleColor(
@@ -74,7 +74,7 @@ export function UserProfileSidebar({
           </div>
         </CardContent>
       </Card>
-      <Card className="border-gray-700 bg-white dark:bg-gray-800">
+      <Card className="border-gray-700 bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="text-lg text-center">Estatísticas</CardTitle>
         </CardHeader>

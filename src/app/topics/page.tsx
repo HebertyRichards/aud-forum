@@ -106,7 +106,7 @@ export default async function TopicsIndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (
               <Link href={category.href} key={category.href} className="group">
-                <Card className="border border-gray-700 bg-white hover:border-blue-500 transition-all duration-300 h-full dark:bg-gray-800">
+                <Card className="border border-gray-700 bg-white hover:border-blue-500 transition-all duration-300 h-full dark:bg-slate-800">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div>{category.icon}</div>
                     <div>

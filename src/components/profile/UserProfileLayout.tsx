@@ -76,6 +76,7 @@ export function UserProfileLayout({
           username={profile.username}
           listType={modalState.listType!}
           onClose={closeModal}
+          isOwnProfile={isOwnProfile}
         />
       )}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -84,7 +85,7 @@ export function UserProfileLayout({
             Tudo sobre {profile?.username}
           </h1>
           <Tabs defaultValue="perfil" className="w-full">
-            <TabsList className="border border-gray-700 bg-white dark:bg-gray-800">
+            <TabsList className="border border-gray-700 bg-white dark:bg-slate-800">
               <TabsTrigger value="perfil">Perfil</TabsTrigger>
               <TabsTrigger value="estatisticas">Estatísticas</TabsTrigger>
               <TabsTrigger value="seguidores">Seguidores</TabsTrigger>
@@ -103,7 +104,7 @@ export function UserProfileLayout({
               )}
             </TabsContent>
             <TabsContent value="seguidores" className="mt-4">
-              <Card className="border-gray-700 bg-white dark:bg-gray-800">
+              <Card className="border-gray-700 bg-white dark:bg-slate-800">
                 <CardHeader>
                   <CardTitle>Seguidores</CardTitle>
                 </CardHeader>
