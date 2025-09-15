@@ -43,7 +43,7 @@ export function RecentPosts() {
 
   if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -59,7 +59,7 @@ export function RecentPosts() {
 
   if (error) {
     return (
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -75,7 +75,7 @@ export function RecentPosts() {
   }
 
   return (
-    <Card className="bg-white dark:bg-gray-800">
+    <Card className="bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />

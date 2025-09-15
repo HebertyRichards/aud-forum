@@ -1,54 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import axios from "axios";
 
 const ALLOWED_ROLES = ["Membro", "Leader", "Fundador", "Desenvolvedor"];
+
+const fetchUserProfile = async (userId: string | undefined) => {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+  const res = await axios.get(`/api/profile/${userId}`);
+  return res.data;
+};
 
 export default function Rules() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  const [isCheckingPermission, setIsCheckingPermission] = useState(true);
-  const [hasPermission, setHasPermission] = useState(false);
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useQuery({
+    queryKey: ["userProfilePermission", user?.id],
+    queryFn: () => fetchUserProfile(user?.id),
+    enabled: !!user,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const hasPermission = profileData && ALLOWED_ROLES.includes(profileData.role);
 
   useEffect(() => {
-    if (authLoading) {
+    if (authLoading || isProfileLoading) {
       return;
     }
 
-    if (!user) {
+    if (!user || isProfileError || (profileData && !hasPermission)) {
       router.push("/not-found");
-      return;
     }
+  }, [
+    authLoading,
+    isProfileLoading,
+    user,
+    profileData,
+    hasPermission,
+    isProfileError,
+    router,
+  ]);
 
-    const checkPermission = async () => {
-      try {
-        const res = await fetch(`/api/profile/${user.id}`);
-        if (res.ok) {
-          const profileData = await res.json();
-          if (profileData.role && ALLOWED_ROLES.includes(profileData.role)) {
-            setHasPermission(true);
-          } else {
-            router.push("/not-found");
-          }
-        } else {
-          router.push("/not-found");
-        }
-      } catch {
-        router.push("/not-found");
-      } finally {
-        setIsCheckingPermission(false);
-      }
-    };
-
-    checkPermission();
-  }, [user, authLoading, router]);
-
-  if (authLoading || isCheckingPermission) {
+  if (authLoading || isProfileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
@@ -60,7 +66,7 @@ export default function Rules() {
   if (hasPermission) {
     return (
       <div className="container mx-auto p-4 md:p-8 max-w-4xl">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
           <div className="flex justify-center items-center gap-x-4 mb-6">
             <Image
               src="/header.png"
@@ -136,9 +142,9 @@ export default function Rules() {
               responsável no privado e fale a verdade. Diga: 'Olha, eu estou
               saindo da Auditore por esse motivo' ou simplesmente nem precisa
               falar o motivo, só diga: "Estou saindo da família por motivos
--             pessoais, obrigado pela oportunidade". Só não fique inventando
+              pessoais, obrigado pela oportunidade". Só não fique inventando
               desculpinhas pra sair, porque isso fica muito na cara e vai ficar
-              feio pra você. Se for sair, saia de cabeça erguida, sem mentiras
+              feio pra você. Se for sair, saia de cabeça erquida, sem mentiras
               ou tretas com ninguém.`}
             </li>
           </ol>

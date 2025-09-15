@@ -29,7 +29,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   return (
-    <div className="mt-6 rounded-md border bg-white dark:bg-gray-800 overflow-x-auto">
+    <div className="mt-6 rounded-md border bg-white dark:bg-slate-800 overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

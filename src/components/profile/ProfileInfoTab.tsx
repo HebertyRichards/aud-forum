@@ -14,7 +14,7 @@ export function ProfileInfoTab({
 }: ProfileInfoTabProps) {
   return (
     <TabsContent value="perfil" className="mt-4">
-      <Card className="border-gray-700 bg-white dark:bg-gray-800">
+      <Card className="border-gray-700 bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle>Sobre</CardTitle>
           {isOwnProfile && profile && (

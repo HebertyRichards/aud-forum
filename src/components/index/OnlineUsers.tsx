@@ -35,7 +35,7 @@ export function OnlineUsers() {
   });
 
   return (
-    <Card className="bg-white dark:bg-gray-800">
+    <Card className="bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />

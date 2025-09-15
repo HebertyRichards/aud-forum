@@ -6,7 +6,9 @@ import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
 import { UserProfile, FollowStats } from "@/types/profile";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
+import { useFollow } from "@/hooks/useFollow";
 import axios from "axios";
+
 export default function OtherProfile() {
   const auth = useAuth();
   const user = auth?.user;
@@ -16,9 +18,23 @@ export default function OtherProfile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<FollowStats | null>(null);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [initialStats, setInitialStats] = useState<FollowStats>({
+    followers_count: 0,
+    following_count: 0,
+  });
+  const [initialIsFollowing, setInitialIsFollowing] = useState(false);
+
+  const {
+    isFollowing,
+    followersCount,
+    isLoading: isFollowLoading,
+    handleFollow,
+    handleUnfollow,
+  } = useFollow(
+    username as string,
+    initialIsFollowing,
+    initialStats.followers_count
+  );
 
   const fetchProfile = useCallback(async (profileUsername: string) => {
     setLoading(true);
@@ -27,98 +43,41 @@ export default function OtherProfile() {
       const axiosOptions = { withCredentials: true };
       const [profileRes, statsRes, isFollowingRes] = await Promise.all([
         axios.get(`/api/profile/user/${profileUsername}`),
-        axios.get(`/api/follow/${profileUsername}/stats`).catch(() => null),
-        axios
-          .get(`/api/follow/${profileUsername}/is-following`, axiosOptions)
-          .catch(() => null),
+        axios.get(`/api/follow/${profileUsername}/stats`),
+        axios.get(`/api/follow/${profileUsername}/is-following`, axiosOptions),
       ]);
-      const profileData: UserProfile = profileRes.data;
-      setProfile(profileData);
-      if (statsRes) {
-        const statsData: FollowStats = statsRes.data;
-        setStats(statsData);
-      } else {
-        setStats({ followers_count: 0, following_count: 0 });
-      }
 
-      if (isFollowingRes) {
-        const isFollowingData = isFollowingRes.data;
-        setIsFollowing(isFollowingData.isFollowing);
-      } else {
-        setIsFollowing(false);
-      }
+      setProfile(profileRes.data);
+      setInitialStats(statsRes.data);
+      setInitialIsFollowing(isFollowingRes.data.isFollowing);
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        setError(error.response?.data?.message || "Erro ao carregar perfil.");
-      } else if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu uma falha inesperada.");
-      }
+      const errorMessage =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "Ocorreu uma falha inesperada ao carregar o perfil.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (auth.loading) {
-      return;
-    }
+    if (auth.loading) return;
     if (!user) {
       router.push("/login");
       return;
     }
-    if (typeof username === "string" && user.username === username) {
-      router.push("/profile");
-      return;
-    }
     if (typeof username === "string") {
-      fetchProfile(username);
+      if (user.username === username) {
+        router.push("/profile");
+      } else {
+        fetchProfile(username);
+      }
     } else {
       setLoading(false);
       setError("Nome de usuário inválido.");
     }
   }, [user, auth.loading, router, fetchProfile, username]);
-
-  const handleApiAction = async (method: "POST" | "DELETE") => {
-    if (!profile?.username) {
-      alert("Ação não disponível: nome de usuário não encontrado.");
-      return;
-    }
-    setIsFollowLoading(true);
-    try {
-      const url = `/api/follow/${profile.username}/follow`;
-      const config = { withCredentials: true };
-
-      if (method === "POST") {
-        await axios.post(url, {}, config);
-      } else {
-        await axios.delete(url, config);
-      }
-      setIsFollowing(method === "POST");
-      setStats((prev) => {
-        const currentFollowers = prev?.followers_count ?? 0;
-        const change = method === "POST" ? 1 : -1;
-        return {
-          followers_count: Math.max(0, currentFollowers + change),
-          following_count: prev?.following_count ?? 0,
-        };
-      });
-    } catch (error: unknown) {
-      let errorMessage = "Não foi possível realizar essa ação, tente novamente";
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      alert(errorMessage);
-    } finally {
-      setIsFollowLoading(false);
-    }
-  };
-
-  const handleFollow = () => handleApiAction("POST");
-  const handleUnfollow = () => handleApiAction("DELETE");
 
   if (auth.loading || loading) {
     return (
@@ -130,7 +89,10 @@ export default function OtherProfile() {
   }
 
   const followState = {
-    stats,
+    stats: {
+      followers_count: followersCount,
+      following_count: initialStats.following_count,
+    },
     isFollowing,
     isFollowLoading,
     onFollow: handleFollow,

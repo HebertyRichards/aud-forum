@@ -37,7 +37,7 @@ const getOptimizedAvatarUrl = (
 };
 
 const DisabledCommentForm = ({ message }: { message: string }) => (
-  <Card className="dark:bg-gray-800 border-gray-400/50">
+  <Card className="dark:bg-slate-800 border-gray-400/50">
     <CardContent className="p-5 text-center text-gray-500 dark:text-gray-400">
       <p>{message}</p>
     </CardContent>
@@ -72,7 +72,7 @@ const CommentItem = ({
   };
 
   return (
-    <Card key={comment.id} className="dark:bg-gray-800 border-gray-400/50">
+    <Card key={comment.id} className="dark:bg-slate-800 border-gray-400/50">
       <CardContent className="p-5 flex gap-4">
         <Link href={`/profile/${comment.profiles.username}`}>
           <Avatar>
@@ -205,7 +205,7 @@ const TopicView = ({
   };
 
   return (
-    <Card className="bg-white border-gray-100/50 dark:bg-gray-800 border-gray400/50">
+    <Card className="bg-white border-gray-100/50 dark:bg-slate-800 border-gray400/50">
       {isEditing ? (
         <form onSubmit={handleUpdate} className="p-6">
           <div className="space-y-4">

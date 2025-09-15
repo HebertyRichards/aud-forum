@@ -54,8 +54,8 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-sm bg-white dark:bg-gray-800">
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-sm bg-white dark:bg-slate-800">
         <CardHeader className="text-center">
           <CardTitle>Crie a sua Conta</CardTitle>
           <CardDescription>

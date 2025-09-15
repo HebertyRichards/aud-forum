@@ -84,7 +84,7 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
           <DialogTitle>Atualizar Perfil</DialogTitle>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto bg-white dark:bg-gray-800">
+      <DialogContent className="max-w-md mx-auto bg-white dark:bg-slate-800">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Label htmlFor="gender">Gênero</Label>
           <Select value={form.gender} onValueChange={handleSelectChange}>

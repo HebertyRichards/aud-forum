@@ -58,7 +58,7 @@ export default function RecoveryPassword() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <main className="flex-grow flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-white dark:bg-gray-800">
+        <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-white dark:bg-slate-800">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">
               Esqueceu sua senha?

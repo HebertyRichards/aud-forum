@@ -57,7 +57,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle>Alterar Senha</CardTitle>
           <CardDescription>

@@ -1,6 +1,6 @@
 "use-client";
 
-import { useState, useMemo, useEffect } from "react"; // 1. Importar useEffect
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/services/auth";
 import {

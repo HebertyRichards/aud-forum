@@ -38,7 +38,7 @@ export function ForumStats() {
 
   if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-gray-800">
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle className="text-lg">Estatísticas</CardTitle>
         </CardHeader>
@@ -50,7 +50,7 @@ export function ForumStats() {
   }
 
   return (
-    <Card className="bg-white dark:bg-gray-800">
+    <Card className="bg-white dark:bg-slate-800">
       <CardHeader>
         <CardTitle className="text-lg">Estatísticas</CardTitle>
       </CardHeader>

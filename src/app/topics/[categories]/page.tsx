@@ -223,7 +223,7 @@ export default function CategoryTopicPage() {
               key={topic.slug}
               className="block"
             >
-              <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-gray-800">
+              <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-slate-800">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Avatar>

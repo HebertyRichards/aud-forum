@@ -20,7 +20,7 @@ export function MembersFilters({
   setSortOrder,
 }: MembersFiltersProps) {
   return (
-    <div className="rounded-md border bg-white p-4 dark:bg-gray-800">
+    <div className="rounded-md border bg-white p-4 dark:bg-slate-800">
       <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
         <div className="w-full sm:flex-1 sm:min-w-[200px]">
           <Input

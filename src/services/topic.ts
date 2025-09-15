@@ -1,6 +1,8 @@
 import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
 import axios from "axios";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error) && error.response?.data?.message) {
     return error.response.data.message;
@@ -22,9 +24,9 @@ export async function getTopicsByCategory(category: string, page: number, limit:
 
 export async function getTopicBySlug(slug: string) {
   try {
-    const response = await axios.get(`/api/posts/topics/slug/${slug}`);
-    return response.data;
-  } catch (error) {
+    const response = await axios.get(`${API_URL}/posts/topics/slug/${slug}`);
+    return response.data.data; 
+  } catch (error: unknown) {
     throw new Error(getErrorMessage(error));  
   }
 }

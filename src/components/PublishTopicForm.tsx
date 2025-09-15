@@ -32,7 +32,7 @@ export function PublishForm<T extends "topic" | "comment">({
 
   return (
     <div className="flex w-full gap-6">
-      <Card className="flex-1 bg-white dark:bg-gray-800">
+      <Card className="flex-1 bg-white dark:bg-slate-800">
         <CardHeader>
           <CardTitle>
             {type === "topic"
