@@ -105,7 +105,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc rounded-b-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm min-h-[250px] w-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          "prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc rounded-b-md border border-slate-600 border-input bg-transparent px-3 py-2 text-sm shadow-sm min-h-[250px] w-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
       },
       handlePaste: (view: EditorView, event: ClipboardEvent): boolean => {
         let imageUrl: string | undefined;
@@ -200,7 +200,7 @@ export function RichTextEditor({
   };
 
   return (
-    <div className="border rounded-md">
+    <div className="border rounded-md border-slate-600">
       <input
         type="file"
         accept="image/*"
@@ -209,7 +209,7 @@ export function RichTextEditor({
         className="hidden"
       />
       <TooltipProvider delayDuration={100}>
-        <div className="border-b rounded-t-md p-2 flex items-center gap-1 flex-wrap">
+        <div className="border-b border-slate-600 rounded-t-md p-2 flex items-center gap-1 flex-wrap">
           <ToolbarButton
             tooltip="Negrito"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -273,7 +273,7 @@ export function RichTextEditor({
                 <ChevronDown size={16} className="ml-1" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2 max-h-72 overflow-y-auto">
+            <PopoverContent className="w-64 p-2 max-h-72 overflow-y-auto bg-slate-700 text-white">
               <div className="grid grid-cols-4 gap-1">
                 {[
                   8, 10, 12, 14, 16, 20, 24, 26, 30, 32, 36, 40, 48, 60, 72, 80,
@@ -318,7 +318,7 @@ export function RichTextEditor({
                 <Smile size={16} />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-2">
+            <PopoverContent className="w-auto p-2 bg-slate-700">
               <div className="text-xl grid grid-cols-8 gap-1">
                 {smilies.map((smiley, index) => (
                   <span

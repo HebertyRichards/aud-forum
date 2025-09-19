@@ -6,15 +6,15 @@ import Link from "next/link";
 import axios from "axios";
 
 const fetchFollowList = async (
-  userId: string,
+  username: string,
   type: "followers" | "following"
 ) => {
   try {
     const { data } = await axios.get<UserPreview[]>(
-      `/api/follow/${userId}/${type}`
+      `/api/follow/${username}/${type}`
     );
     return data;
-  } catch (err) {
+  } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response?.data?.message) {
       throw new Error(err.response.data.message);
     }
@@ -22,20 +22,23 @@ const fetchFollowList = async (
   }
 };
 
-export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
+export const FollowerList: React.FC<FollowerListProps> = ({
+  username,
+  type,
+}) => {
   const {
     data: list,
     isLoading,
     error,
   } = useQuery<UserPreview[], Error>({
-    queryKey: ["followList", userId, type],
-    queryFn: () => fetchFollowList(userId, type),
-    enabled: !!userId,
+    queryKey: ["followList", username, type],
+    queryFn: () => fetchFollowList(username, type),
+    enabled: !!username,
   });
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-24">
+      <div className="flex justify-center items-center h-24 text-white">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
       </div>
     );
@@ -65,7 +68,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({ userId, type }) => {
           <Avatar className="h-10 w-10">
             <AvatarImage
               src={user.avatar_url || undefined}
-              alt={user.username}
+              alt={`Avatar de ${user.username}`}
             />
             <AvatarFallback>
               {user.username.charAt(0).toUpperCase()}

@@ -78,7 +78,7 @@ export default function Profile() {
 
   if (auth.loading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center text-white">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
         <p className="ml-2">
           {auth.loading ? "Verificando sessão..." : "Carregando perfil..."}
@@ -92,7 +92,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen font-sans text-white">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
         <UserProfileLayout
           profile={profile}

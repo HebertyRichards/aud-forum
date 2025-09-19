@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import type { UserWithProfile } from "@/types/autentication";
 import axios from "axios";
+import { X } from "lucide-react";
 
 interface ProfileCardProps {
   user: UserWithProfile;
@@ -55,32 +56,43 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
   };
 
   return (
-    <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card className="bg-white dark:bg-slate-800">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+      <Card className="w-full max-w-md bg-white dark:bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader>
           <CardTitle>Alterar Perfil</CardTitle>
           <CardDescription>
             Para alterar seu e-mail, um link de confirmação será enviado para o
             novo endereço.
           </CardDescription>
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-opacity"
+            aria-label="Fechar modal"
+          >
+            <X size={24} />
+          </button>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
-            <Label htmlFor="username">Nome de Usuário</Label>
-            <Input
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="max-w-sm"
-            />
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="max-w-sm"
-            />
+            <div className="space-y-2">
+              <Label htmlFor="username">Nome de Usuário</Label>
+              <Input
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
+              />
+            </div>
           </CardContent>
           <CardFooter className="gap-2">
             <Button type="submit" disabled={isLoading}>

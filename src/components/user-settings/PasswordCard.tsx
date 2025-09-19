@@ -57,7 +57,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card className="bg-white dark:bg-slate-800">
+      <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
           <CardTitle>Alterar Senha</CardTitle>
           <CardDescription>
@@ -72,7 +72,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="max-w-sm"
+              className="max-w-sm bg-slate-700 border-slate-600"
             />
             <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
             <Input
@@ -80,14 +80,22 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="max-w-sm"
+              className="max-w-sm bg-slate-700 border-slate-600"
             />
           </CardContent>
           <CardFooter className="gap-2">
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
               {isLoading ? "Alterando..." : "Alterar Senha"}
             </Button>
-            <Button type="button" variant="ghost" onClick={onClose}>
+            <Button
+              type="button"
+              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              onClick={onClose}
+            >
               Cancelar
             </Button>
           </CardFooter>

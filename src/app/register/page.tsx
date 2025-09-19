@@ -55,7 +55,7 @@ export default function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-sm bg-white dark:bg-slate-800">
+      <Card className="w-full max-w-sm bg-slate-800 border-slate-700 text-white">
         <CardHeader className="text-center">
           <CardTitle>Crie a sua Conta</CardTitle>
           <CardDescription>
@@ -75,6 +75,7 @@ export default function Register() {
                   autoComplete="username"
                   placeholder="Digite seu nome de usuário"
                   disabled={loading}
+                  className="bg-slate-700 border-slate-600"
                   required
                 />
               </div>
@@ -88,6 +89,7 @@ export default function Register() {
                   autoComplete="email"
                   placeholder="usuario@example.com"
                   disabled={loading}
+                  className="bg-slate-700 border-slate-600"
                   required
                 />
               </div>
@@ -99,6 +101,7 @@ export default function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
+                  className="bg-slate-700 border-slate-600"
                   required
                 />
               </div>
@@ -107,10 +110,18 @@ export default function Register() {
               )}
             </div>
             <CardFooter className="flex flex-col gap-4 pt-6 px-0 pb-0">
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-4"
+                disabled={loading}
+              >
                 {loading ? "Criando conta..." : "Criar Conta"}
               </Button>
-              <Button variant="link" asChild>
+              <Button
+                variant="link"
+                className="text-white hover:text-blue-300"
+                asChild
+              >
                 <Link href="/login">Já tem uma conta? Faça login</Link>
               </Button>
             </CardFooter>

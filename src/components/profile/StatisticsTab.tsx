@@ -10,7 +10,8 @@ export type StatisticsTabProps = Pick<UserProfile, "username">;
 export function StatisticsTab({ username }: StatisticsTabProps) {
   const { stats, isLoading, error } = useUserStats(username);
 
-  if (isLoading) return <Loader2 className="animate-spin mx-auto mt-4" />;
+  if (isLoading)
+    return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
   if (error)
     return (
       <p className="text-red-500 flex items-center gap-2">
@@ -21,7 +22,7 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
   if (!stats) return null;
 
   return (
-    <Card className="border-gray-700 bg-white dark:bg-slate-800">
+    <Card className="border-slate-700 bg-slate-800 text-white">
       <CardHeader>
         <CardTitle>Estatísticas Gerais</CardTitle>
       </CardHeader>
@@ -32,19 +33,19 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
             {stats.topicsCount} ({stats.topicsPerDay} por dia)
           </span>
         </div>
-        <Separator className="bg-gray-600" />
+        <Separator className="bg-slate-600" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">Total de Mensagens:</span>
           <span>
             {stats.messagesCount} ({stats.messagesPerDay} por dia)
           </span>
         </div>
-        <Separator className="bg-gray-600" />
+        <Separator className="bg-slate-600" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">Última postagem:</span>
           <span>{formatPostTimestamp(stats.lastPostDate)}</span>
         </div>
-        <Separator className="bg-gray-600" />
+        <Separator className="bg-slate-600" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">% de posts do fórum:</span>
           <span>{stats.messagesPercentage}%</span>

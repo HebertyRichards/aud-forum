@@ -29,19 +29,21 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   return (
-    <div className="mt-6 rounded-md border bg-white dark:bg-slate-800 overflow-x-auto">
+    <div className="mt-6 rounded-md border bg-slate-800 overflow-x-auto border-slate-700">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[50px]">#</TableHead>
-            <TableHead className="min-w-[200px]">
+          <TableRow className="border-slate-700 hover:bg-slate-800">
+            <TableHead className="w-[50px] text-white">#</TableHead>
+            <TableHead className="min-w-[200px] text-white">
               Avatar - Nome de usuário
             </TableHead>
-            <TableHead>Data de inscrição</TableHead>
-            <TableHead className="hidden md:table-cell">
+            <TableHead className="text-white">Data de inscrição</TableHead>
+            <TableHead className="hidden md:table-cell text-white">
               Última visita
             </TableHead>
-            <TableHead className="hidden md:table-cell">Mensagens</TableHead>
+            <TableHead className="hidden md:table-cell text-white">
+              Mensagens
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -52,7 +54,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               : `/profile/${member.username}`;
 
             return (
-              <TableRow key={member.username}>
+              <TableRow key={member.username} className="border-slate-700">
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">

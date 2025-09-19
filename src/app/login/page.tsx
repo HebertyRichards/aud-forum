@@ -54,7 +54,7 @@ export default function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-sm bg-white dark:bg-slate-800">
+      <Card className="w-full max-w-sm bg-slate-800 border-slate-700 text-white">
         <CardHeader className="text-center">
           <CardTitle>Entre com a sua conta</CardTitle>
           <CardDescription>
@@ -75,6 +75,7 @@ export default function Login() {
                   autoFocus
                   placeholder="seu@email.com"
                   required
+                  className="bg-slate-700 border-slate-600"
                   disabled={loading}
                 />
               </div>
@@ -95,6 +96,8 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
+                  className="bg-slate-700 border-slate-600"
+                  placeholder="********"
                   disabled={loading}
                 />
               </div>
@@ -104,6 +107,7 @@ export default function Login() {
                   checked={keepLoggedIn}
                   onCheckedChange={(checked) => setKeepLoggedIn(!!checked)}
                   disabled={loading}
+                  className="border-slate-600 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-400"
                 />
                 <Label
                   htmlFor="keep-logged-in"
@@ -117,10 +121,18 @@ export default function Login() {
               )}
             </div>
             <CardFooter className="flex flex-col gap-4 pt-6 px-0 pb-0">
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400"
+                disabled={loading}
+              >
                 {loading ? "Entrando..." : "Entrar"}
               </Button>
-              <Button variant="link" asChild>
+              <Button
+                variant="link"
+                className="text-white hover:text-blue-300"
+                asChild
+              >
                 <Link href="/register">Não tem uma conta? Registre-se</Link>
               </Button>
             </CardFooter>

@@ -77,11 +77,11 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
           <DialogTitle>Atualizar Contatos</DialogTitle>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto bg-white dark:bg-slate-800">
+      <DialogContent className="max-w-md mx-auto bg-slate-800">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Label htmlFor="website">Website</Label>
           <Input

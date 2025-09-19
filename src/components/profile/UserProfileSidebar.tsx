@@ -24,7 +24,7 @@ export function UserProfileSidebar({
 
   return (
     <aside className="space-y-6">
-      <Card className="border-gray-700 text-center bg-white dark:bg-slate-800">
+      <Card className="border-gray-700 text-center bg-slate-800 text-white">
         <CardContent className="p-6 flex flex-col items-center">
           <h2
             className={`${getRoleColor(
@@ -37,10 +37,12 @@ export function UserProfileSidebar({
             <Avatar className="w-24 h-24 border-2 border-gray-500">
               <AvatarImage
                 src={profile?.avatar_url || undefined}
-                alt={profile?.username}
+                alt={`Avatar de ${profile?.username}`}
                 key={profile?.avatar_url}
               />
-              <AvatarFallback>{profile?.username?.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="bg-slate-600">
+                {profile?.username?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             {isOwnProfile && (
               <UpdateAvatar
@@ -53,11 +55,14 @@ export function UserProfileSidebar({
             <Button
               onClick={isFollowing ? onUnfollow : onFollow}
               disabled={isFollowLoading}
-              variant={isFollowing ? "outline" : "default"}
-              className="w-full mb-4"
+              className={`w-full mb-4 text-white transition-colors ${
+                isFollowing
+                  ? "bg-slate-700 hover:bg-slate-600"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
             >
               {isFollowLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               ) : isFollowing ? (
                 <UserCheck className="mr-2 h-4 w-4" />
               ) : (
@@ -74,21 +79,21 @@ export function UserProfileSidebar({
           </div>
         </CardContent>
       </Card>
-      <Card className="border-gray-700 bg-white dark:bg-slate-800">
+      <Card className="border-gray-700 bg-slate-800 text-white">
         <CardHeader>
           <CardTitle className="text-lg text-center">Estatísticas</CardTitle>
         </CardHeader>
         <CardContent className="flex justify-around text-center">
           <button
             onClick={() => onOpenModal("followers")}
-            className="p-2 rounded-md hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-700"
+            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.followers_count ?? 0}</p>
             <p className="text-sm text-gray-400">Seguidores</p>
           </button>
           <button
             onClick={() => onOpenModal("following")}
-            className="p-2 rounded-md hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-700"
+            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.following_count ?? 0}</p>
             <p className="text-sm text-gray-400">Seguindo</p>

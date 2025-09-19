@@ -98,9 +98,9 @@ export function UpdateAvatar({
         accept="image/png, image/jpeg, image/webp"
         disabled={loading}
       />
-      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer gap-4">
+      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer gap-4 text-white">
         {loading ? (
-          <Loader2 className="h-6 w-6 animate-spin text-white" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         ) : (
           <>
             <button

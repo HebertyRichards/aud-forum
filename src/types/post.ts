@@ -136,6 +136,7 @@ export interface RecentPost {
   author_username: string;
   author_avatar: string | null;
   comment_count: number;
+  role: string;
 }
 
 export interface PaginationControlsProps {

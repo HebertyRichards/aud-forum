@@ -89,7 +89,7 @@ export interface FollowButtonProps {
 }
 
 export interface FollowerListProps {
-  userId: string;
+  username: string;
   type: "followers" | "following";
 }
 

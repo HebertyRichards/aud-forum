@@ -4,9 +4,9 @@ import { MailCheck } from "lucide-react";
 export default function VerificationEmail() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md shadow-xl bg-white dark:bg-slate-800">
+      <Card className="w-full max-w-md shadow-xl bg-slate-800 text-white border-slate-700">
         <CardHeader className="flex flex-col items-center text-center space-y-2">
-          <MailCheck className="w-10 h-10 text-primary" />
+          <MailCheck className="w-10 h-10 text-white" />
           <CardTitle className="text-2xl font-semibold">
             Confirme seu e-mail
           </CardTitle>

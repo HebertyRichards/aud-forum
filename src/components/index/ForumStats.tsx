@@ -38,7 +38,7 @@ export function ForumStats() {
 
   if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-slate-800">
+      <Card className="bg-slate-800">
         <CardHeader>
           <CardTitle className="text-lg">Estatísticas</CardTitle>
         </CardHeader>
@@ -50,32 +50,32 @@ export function ForumStats() {
   }
 
   return (
-    <Card className="bg-white dark:bg-slate-800">
+    <Card className="bg-slate-800 text-white border-slate-700">
       <CardHeader>
         <CardTitle className="text-lg">Estatísticas</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Membros</span>
+          <span className="text-sm text-slate-500">Membros</span>
           <span className="font-semibold">
             {data?.stats?.activeMembers ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Posts Totais</span>
+          <span className="text-sm text-slate-500">Posts Totais</span>
           <span className="font-semibold">
             {data?.stats?.totalPosts ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Tópicos Totais</span>
+          <span className="text-sm text-slate-500">Tópicos Totais</span>
           <span className="font-semibold">
             {data?.stats?.totalTopics ?? "..."}
           </span>
         </div>
-        <Separator />
+        <Separator className="bg-slate-600" />
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Novo Membro</span>
+          <span className="text-sm text-slate-500">Novo Membro</span>
           {data?.newestMember ? (
             <Link href={`/profile/${data.newestMember.username}`}>
               <span
