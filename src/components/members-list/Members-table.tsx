@@ -54,7 +54,10 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
               : `/profile/${member.username}`;
 
             return (
-              <TableRow key={member.username} className="border-slate-700">
+              <TableRow
+                key={member.username}
+                className="border-slate-700 hover:bg-slate-700"
+              >
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -69,7 +72,9 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                     </Avatar>
                     <Link href={profileHref} className="hover:underline">
                       <span
-                        className={`font-semibold ${getRoleColor(member.role)}`}
+                        className={`truncate font-semibold ${getRoleColor(
+                          member.role
+                        )}`}
                       >
                         {member.username}
                       </span>

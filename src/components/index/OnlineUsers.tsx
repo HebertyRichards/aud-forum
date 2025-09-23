@@ -67,7 +67,7 @@ export function OnlineUsers() {
                 </Avatar>
                 <Link href={profileUrl}>
                   <span
-                    className={`text-sm font-semibold hover:underline cursor-pointer ${getRoleColor(
+                    className={`truncate text-sm font-semibold hover:underline cursor-pointer ${getRoleColor(
                       user.role
                     )}`}
                   >

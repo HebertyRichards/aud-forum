@@ -38,7 +38,7 @@ export function ForumStats() {
 
   if (isLoading) {
     return (
-      <Card className="bg-slate-800">
+      <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
           <CardTitle className="text-lg">Estatísticas</CardTitle>
         </CardHeader>
@@ -79,7 +79,7 @@ export function ForumStats() {
           {data?.newestMember ? (
             <Link href={`/profile/${data.newestMember.username}`}>
               <span
-                className={`font-semibold hover:underline cursor-pointer ${getRoleColor(
+                className={`truncate font-semibold hover:underline cursor-pointer ${getRoleColor(
                   data.newestMember.role
                 )}`}
               >

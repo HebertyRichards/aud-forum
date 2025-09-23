@@ -1,82 +1,63 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { UserProfile, FollowStats } from "@/types/profile";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import axios from "axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Profile() {
   const auth = useAuth();
   const user = auth?.user;
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [stats, setStats] = useState<FollowStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const fetchOwnProfile = async (userId: string, username: string) => {
+    try {
+      const [res, statsRes] = await Promise.all([
+        axios.get(`/api/profile/${userId}`),
+        axios.get(`/api/follow/${username}/stats`).catch(() => null),
+      ]);
 
-  const fetchProfile = useCallback(
-    async (userId: string, username: string) => {
-      if (!updating) {
-        setLoading(true);
+      const profileData: UserProfile = res.data;
+      const statsData: FollowStats | null = statsRes ? statsRes.data : null;
+
+      return { profile: profileData, stats: statsData };
+    } catch (error: unknown) {
+      let errorMessage = "Não foi possível carregar os dados do seu perfil.";
+
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
-      setError(null);
-      try {
-        const [res, statsRes] = await Promise.all([
-          axios.get(`/api/profile/${userId}`),
-          axios.get(`/api/follow/${username}/stats`).catch(() => null),
-        ]);
-        const data: UserProfile = res.data;
-        setProfile(data);
-        if (statsRes) {
-          const statsData: FollowStats = statsRes.data;
-          setStats(statsData);
-        }
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          setError(
-            error.response?.data?.message || "Erro ao carregar o perfil."
-          );
-        } else if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("Ocorreu uma falha inesperada ao carregar o perfil.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [updating]
-  );
-
-  useEffect(() => {
-    if (auth.loading) {
-      return;
-    }
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    if (user.id && user.username) {
-      fetchProfile(user.id, user.username);
-    } else {
-      setLoading(false);
-      setError("Não foi possível identificar o usuário.");
-    }
-  }, [user, auth.loading, router, fetchProfile]);
-
-  const handleSuccessUpdate = () => {
-    if (user?.id && user.username) {
-      setUpdating(true);
-      fetchProfile(user.id, user.username).finally(() => setUpdating(false));
+      throw new Error(errorMessage);
     }
   };
 
-  if (auth.loading || loading) {
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["ownProfile", user?.id],
+    queryFn: () =>
+      fetchOwnProfile(user?.id as string, user?.username as string),
+    enabled: !!user?.id && !!user.username,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (auth.loading) return;
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, auth.loading, router]);
+
+  const handleSuccessUpdate = () => {
+    queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.id] });
+  };
+
+  if (auth.loading || (isLoading && !data)) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
@@ -87,18 +68,21 @@ export default function Profile() {
     );
   }
 
+  const errorMessage =
+    error instanceof Error ? error.message : "Ocorreu uma falha inesperada.";
+
   const followState = {
-    stats,
+    stats: data?.stats,
   };
 
   return (
     <div className="min-h-screen font-sans text-white">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
         <UserProfileLayout
-          profile={profile}
-          isLoading={loading}
-          isUpdating={updating}
-          error={error}
+          profile={data?.profile ?? null}
+          isLoading={isLoading && !data}
+          isUpdating={isFetching && !!data}
+          error={error ? errorMessage : null}
           isOwnProfile={true}
           onSuccessUpdate={handleSuccessUpdate}
           followState={followState}

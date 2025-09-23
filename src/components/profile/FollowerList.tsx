@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
+import { getRoleColor } from "@/utils/colors";
 
 const fetchFollowList = async (
   username: string,
@@ -76,9 +77,11 @@ export const FollowerList: React.FC<FollowerListProps> = ({
           </Avatar>
           <Link
             href={`/profile/${user.username}`}
-            className="font-semibold hover:underline"
+            className={`font-semibold hover:underline ${getRoleColor}`}
           >
-            {user.username}
+            <span className="font-semibold truncate hover:underline">
+              <span className={getRoleColor(user.role)}>{user.username}</span>
+            </span>
           </Link>
         </li>
       ))}

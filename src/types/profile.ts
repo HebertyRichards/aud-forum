@@ -21,6 +21,7 @@ export interface UserPreview {
   id: string;
   username: string;
   avatar_url: string | null;
+  role: string;
 }
 
 export interface FollowStats {

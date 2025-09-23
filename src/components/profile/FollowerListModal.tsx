@@ -11,6 +11,7 @@ import axios from "axios";
 import { Button } from "../ui/button";
 import { useRemoveFollower } from "@/hooks/useRemoveFollower";
 import { toast } from "sonner";
+import { getRoleColor } from "@/utils/colors";
 
 const fetchModalUsers = async (
   username: string,
@@ -124,7 +125,9 @@ export function FollowListModal({
                       </AvatarFallback>
                     </Avatar>
                     <span className="font-semibold truncate">
-                      {user.username}
+                      <span className={getRoleColor(user.role)}>
+                        {user.username}
+                      </span>
                     </span>
                   </Link>
                   <div className="flex-shrink-0">
@@ -143,7 +146,6 @@ export function FollowListModal({
                         )}
                       </Button>
                     )}
-
                     {isOwnProfile && listType === "following" && (
                       <Button
                         variant="destructive"

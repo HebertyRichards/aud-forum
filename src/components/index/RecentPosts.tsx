@@ -114,7 +114,7 @@ export function RecentPosts() {
                     por:{" "}
                     <Link href={`/profile/${post.author_username}`}>
                       <span
-                        className={`font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
+                        className={`truncate font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
                           post.role
                         )}`}
                       >

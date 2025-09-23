@@ -32,7 +32,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
     setIsLoading(true);
     try {
       await axios.patch(
-        `/api/auth/update-user`,
+        `/api/profile/update-data`,
         { username, newEmail: email },
         { withCredentials: true }
       );
@@ -57,7 +57,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <Card className="w-full max-w-md bg-white dark:bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
+      <Card className="text-white w-full max-w-md bg-slate-800 border-slate-700 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader>
           <CardTitle>Alterar Perfil</CardTitle>
           <CardDescription>
@@ -66,7 +66,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
           </CardDescription>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-opacity"
+            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-opacity"
             aria-label="Fechar modal"
           >
             <X size={24} />
@@ -80,7 +80,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full"
+                className="w-full bg-slate-700 border-slate-600"
               />
             </div>
             <div className="space-y-2">
@@ -90,15 +90,23 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full"
+                className="w-full bg-slate-700 border-slate-600"
               />
             </div>
           </CardContent>
           <CardFooter className="gap-2">
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="bg-blue-500 border border-blue-400 hover:bg-blue-400"
+              disabled={isLoading}
+            >
               {isLoading ? "Salvando..." : "Salvar Alterações"}
             </Button>
-            <Button type="button" variant="ghost" onClick={onClose}>
+            <Button
+              type="button"
+              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              onClick={onClose}
+            >
               Cancelar
             </Button>
           </CardFooter>

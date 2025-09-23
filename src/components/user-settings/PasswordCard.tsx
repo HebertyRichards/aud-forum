@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,13 +69,28 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
             <Label htmlFor="new-password">Nova Senha</Label>
-            <Input
-              id="new-password"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="max-w-sm bg-slate-700 border-slate-600"
-            />
+            <div className="relative max-w-sm">
+              <Input
+                id="new-password"
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="bg-slate-700 border-slate-600 pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 text-slate-400 hover:bg-slate-600 hover:text-white"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
             <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
             <Input
               id="confirm-password"
