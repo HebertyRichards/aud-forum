@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Loader2, AlertTriangle, ChevronDown } from "lucide-react";
 import { UserProfileLayoutProps } from "@/types/profile";
 import { FollowListModal } from "./FollowerListModal";
 import { StatisticsTab } from "./StatisticsTab";
@@ -12,6 +19,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileContactTab } from "./ProfileContactTab";
 import { ProfileInfoTab } from "./ProfileInfoTab";
 import { UserProfileSidebar } from "./UserProfileSidebar";
+
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [matches, query]);
+
+  return matches;
+};
 
 const ProfileStateDisplay = ({
   isLoading,
@@ -23,7 +46,7 @@ const ProfileStateDisplay = ({
   if (isLoading) {
     return (
       <div className="text-center py-10">
-        <Loader2 className="h-6 w-6 animate-spin mx-auto text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         <p>Carregando perfil...</p>
       </div>
     );
@@ -41,6 +64,14 @@ const ProfileStateDisplay = ({
   return null;
 };
 
+const navItems = [
+  { value: "perfil", label: "Perfil" },
+  { value: "estatisticas", label: "Estatísticas" },
+  { value: "seguidores", label: "Seguidores" },
+  { value: "publicacoes", label: "Tópicos Criados" },
+  { value: "contato", label: "Contato" },
+];
+
 export function UserProfileLayout({
   profile,
   isLoading,
@@ -54,6 +85,8 @@ export function UserProfileLayout({
     isOpen: boolean;
     listType: "followers" | "following" | null;
   }>({ isOpen: false, listType: null });
+  const [activeTab, setActiveTab] = useState("perfil");
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const openModal = (listType: "followers" | "following") => {
     if (profile?.username) {
@@ -68,6 +101,47 @@ export function UserProfileLayout({
   if (isLoading || error) {
     return <ProfileStateDisplay isLoading={isLoading} error={error} />;
   }
+
+  const currentLabel = navItems.find((item) => item.value === activeTab)?.label;
+
+  const renderNavigation = () => {
+    if (isMobile) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="w-full justify-between border border-slate-600 bg-slate-700">
+              {currentLabel}
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-full md:w-56" align="start">
+            {navItems.map((item) => (
+              <DropdownMenuItem
+                key={item.value}
+                onSelect={() => setActiveTab(item.value)}
+              >
+                {item.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <TabsList className="border border-slate-700 bg-slate-800">
+        {navItems.map((item) => (
+          <TabsTrigger
+            key={item.value}
+            value={item.value}
+            className="text-white data-[state=active]:bg-slate-700 data-[state=active]:text-white"
+          >
+            {item.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    );
+  };
 
   return (
     <>
@@ -84,45 +158,58 @@ export function UserProfileLayout({
           <h1 className="text-2xl font-bold mb-4">
             Tudo sobre {profile?.username}
           </h1>
-          <Tabs defaultValue="perfil" className="w-full">
-            <TabsList className="border border-gray-700 bg-white dark:bg-slate-800">
-              <TabsTrigger value="perfil">Perfil</TabsTrigger>
-              <TabsTrigger value="estatisticas">Estatísticas</TabsTrigger>
-              <TabsTrigger value="seguidores">Seguidores</TabsTrigger>
-              <TabsTrigger value="publicacoes">Tópicos Criados</TabsTrigger>
-              <TabsTrigger value="contato">Contato</TabsTrigger>
-            </TabsList>
-            <ProfileInfoTab
-              profile={profile}
-              isOwnProfile={isOwnProfile}
-              isUpdating={isUpdating}
-              onSuccessUpdate={onSuccessUpdate}
-            />
-            <TabsContent value="estatisticas" className="mt-4">
-              {profile?.username && (
-                <StatisticsTab username={profile.username} />
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            {renderNavigation()}
+            <div className="mt-4">
+              {activeTab === "perfil" && (
+                <ProfileInfoTab
+                  profile={profile}
+                  isOwnProfile={isOwnProfile}
+                  isUpdating={isUpdating}
+                  onSuccessUpdate={onSuccessUpdate}
+                />
               )}
-            </TabsContent>
-            <TabsContent value="seguidores" className="mt-4">
-              <Card className="border-gray-700 bg-white dark:bg-slate-800">
-                <CardHeader>
-                  <CardTitle>Seguidores</CardTitle>
-                </CardHeader>
-                <CardContent>
+              {activeTab === "estatisticas" && (
+                <>
                   {profile?.username && (
-                    <FollowerList userId={profile.username} type="followers" />
+                    <StatisticsTab username={profile.username} />
                   )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="publicacoes" className="mt-4">
-              {profile?.username && <TopicsTab username={profile.username} />}
-            </TabsContent>
-            <ProfileContactTab
-              profile={profile}
-              isOwnProfile={isOwnProfile}
-              onSuccessUpdate={onSuccessUpdate}
-            />
+                </>
+              )}
+              {activeTab === "seguidores" && (
+                <Card className="border-slate-700 bg-slate-800 text-white">
+                  <CardHeader>
+                    <CardTitle>Seguidores</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {profile?.username && (
+                      <FollowerList
+                        username={profile.username}
+                        type="followers"
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+              {activeTab === "publicacoes" && (
+                <>
+                  {profile?.username && (
+                    <TopicsTab username={profile.username} />
+                  )}
+                </>
+              )}
+              {activeTab === "contato" && (
+                <ProfileContactTab
+                  profile={profile}
+                  isOwnProfile={isOwnProfile}
+                  onSuccessUpdate={onSuccessUpdate}
+                />
+              )}
+            </div>
           </Tabs>
         </main>
         <UserProfileSidebar

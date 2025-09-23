@@ -71,11 +71,9 @@ export function DangerZoneCard() {
   };
 
   return (
-    <Card className="border-red-500/50 bg-white dark:bg-slate-800">
+    <Card className="border-slate-700 bg-slate-800 hover:border-red-500/50 transition-all duration-500">
       <CardHeader>
-        <CardTitle className="text-red-700 dark:text-red-500">
-          Zona de Perigo
-        </CardTitle>
+        <CardTitle className="text-red-500">Zona de Perigo</CardTitle>
         <CardDescription>
           Ações irreversíveis. Tenha certeza antes de prosseguir.
         </CardDescription>
@@ -85,7 +83,7 @@ export function DangerZoneCard() {
           <AlertDialogTrigger asChild>
             <Button variant="destructive">Deletar Conta</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white dark:bg-slate-800">
+          <AlertDialogContent className="bg-slate-800 text-white">
             <AlertDialogHeader>
               <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -109,7 +107,9 @@ export function DangerZoneCard() {
               </div>
             )}
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="bg-slate-600 border border-slate-700 cursor-poiner">
+                Cancelar
+              </AlertDialogCancel>
               {step === "initial" ? (
                 <AlertDialogAction
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -122,7 +122,7 @@ export function DangerZoneCard() {
                 </AlertDialogAction>
               ) : (
                 <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/50"
                   onClick={handleDeleteAccount}
                   disabled={isLoading}
                 >

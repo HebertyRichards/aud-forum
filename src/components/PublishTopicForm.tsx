@@ -32,7 +32,7 @@ export function PublishForm<T extends "topic" | "comment">({
 
   return (
     <div className="flex w-full gap-6">
-      <Card className="flex-1 bg-white dark:bg-slate-800">
+      <Card className="flex-1 bg-slate-800 text-white border-slate-700">
         <CardHeader>
           <CardTitle>
             {type === "topic"
@@ -51,11 +51,12 @@ export function PublishForm<T extends "topic" | "comment">({
                     placeholder="Digite o título do seu tópico aqui..."
                     value={title}
                     onChange={(e) => setTitle?.(e.target.value)}
+                    className="border-slate-600 bg-slate-700"
                     required
                   />
                 </div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-2 bg-slate-700">
                 <RichTextEditor
                   content={content}
                   setContent={setContent}
@@ -66,7 +67,11 @@ export function PublishForm<T extends "topic" | "comment">({
           </form>
         </CardContent>
         <CardFooter>
-          <Button type="submit" form={formId}>
+          <Button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600"
+            form={formId}
+          >
             {isSubmitting
               ? "Enviando..."
               : type === "topic"

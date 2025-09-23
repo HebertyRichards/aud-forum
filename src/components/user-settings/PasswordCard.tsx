@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,7 +59,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card className="bg-white dark:bg-slate-800">
+      <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
           <CardTitle>Alterar Senha</CardTitle>
           <CardDescription>
@@ -67,27 +69,50 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
             <Label htmlFor="new-password">Nova Senha</Label>
-            <Input
-              id="new-password"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="max-w-sm"
-            />
+            <div className="relative max-w-sm">
+              <Input
+                id="new-password"
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="bg-slate-700 border-slate-600 pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 text-slate-400 hover:bg-slate-600 hover:text-white"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
             <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
             <Input
               id="confirm-password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="max-w-sm"
+              className="max-w-sm bg-slate-700 border-slate-600"
             />
           </CardContent>
           <CardFooter className="gap-2">
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
               {isLoading ? "Alterando..." : "Alterar Senha"}
             </Button>
-            <Button type="button" variant="ghost" onClick={onClose}>
+            <Button
+              type="button"
+              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              onClick={onClose}
+            >
               Cancelar
             </Button>
           </CardFooter>

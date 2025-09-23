@@ -86,7 +86,7 @@ export default async function TopicsIndexPage() {
   });
 
   return (
-    <div className="min-h-screen font-sans p-8">
+    <div className="min-h-screen font-sans p-8 text-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-2">Fóruns</h1>
@@ -95,7 +95,10 @@ export default async function TopicsIndexPage() {
           </p>
         </div>
         <div className="mb-6">
-          <Button variant="outline" asChild>
+          <Button
+            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            asChild
+          >
             <Link href="/">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar para o Início
@@ -106,7 +109,7 @@ export default async function TopicsIndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (
               <Link href={category.href} key={category.href} className="group">
-                <Card className="border border-gray-700 bg-white hover:border-blue-500 transition-all duration-300 h-full dark:bg-slate-800">
+                <Card className="border border-slate-700 hover:border-blue-500 transition-all duration-300 h-full bg-slate-800 hover:bg-slate-700 text-white">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div>{category.icon}</div>
                     <div>

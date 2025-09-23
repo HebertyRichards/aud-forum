@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import axios from "axios";
 
-const ALLOWED_ROLES = ["Membro", "Leader", "Fundador", "Desenvolvedor"];
+const ALLOWED_ROLES = ["Auditore", "Leader", "Fundador", "Desenvolvedor"];
 
 const fetchUserProfile = async (userId: string | undefined) => {
   if (!userId) {
@@ -65,8 +65,8 @@ export default function Rules() {
 
   if (hasPermission) {
     return (
-      <div className="container mx-auto p-4 md:p-8 max-w-4xl">
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+      <div className="container mx-auto p-4 md:p-8 max-w-4xl text-white">
+        <div className="bg-slate-800 p-6 rounded-lg shadow-md">
           <div className="flex justify-center items-center gap-x-4 mb-6">
             <Image
               src="/header.png"
@@ -87,8 +87,8 @@ export default function Rules() {
             />
           </div>
           <ol
-            className="list-decimal list-inside space-y-4 text-gray-700 dark:text-gray-300 text-justify 
-                       marker:font-bold marker:text-gray-700 marker:dark:text-white"
+            className="list-decimal list-inside space-y-4 text-gray-400 text-justify 
+                       marker:font-bold marker:text-white"
           >
             <li>{`Prezamos pelo mínimo de lealdade.`}</li>
             <li>

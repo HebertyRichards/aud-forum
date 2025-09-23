@@ -17,13 +17,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { PaginationControls } from "@/components/PaginationControls";
+
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [matches, query]);
+  return matches;
+};
 
 const COMMENTS_PER_PAGE = 10;
 const getOptimizedAvatarUrl = (
@@ -37,8 +57,8 @@ const getOptimizedAvatarUrl = (
 };
 
 const DisabledCommentForm = ({ message }: { message: string }) => (
-  <Card className="dark:bg-slate-800 border-gray-400/50">
-    <CardContent className="p-5 text-center text-gray-500 dark:text-gray-400">
+  <Card className="bg-slate-800 border-slate-700/50">
+    <CardContent className="p-5 text-center text-gray-400">
       <p>{message}</p>
     </CardContent>
   </Card>
@@ -72,7 +92,10 @@ const CommentItem = ({
   };
 
   return (
-    <Card key={comment.id} className="dark:bg-slate-800 border-gray-400/50">
+    <Card
+      key={comment.id}
+      className="bg-slate-800 border-slate-700/50 text-white"
+    >
       <CardContent className="p-5 flex gap-4">
         <Link href={`/profile/${comment.profiles.username}`}>
           <Avatar>
@@ -97,7 +120,7 @@ const CommentItem = ({
               </p>
             </Link>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-700 dark:text-gray-400">
+              <p className="text-xs text-gray-400">
                 {formatPostTimestamp(comment.created_in)}
               </p>
               {user && user.id === comment.author_id && !isEditing && (
@@ -146,7 +169,7 @@ const CommentItem = ({
               />
               {comment.updated_in &&
                 new Date(comment.updated_in) > new Date(comment.created_in) && (
-                  <p className="text-xs text-gray-400 italic mt-1">
+                  <p className="text-xs text-slate-400 italic mt-1">
                     Editado{" "}
                     {formatPostTimestamp(comment.updated_in).toLowerCase()}
                   </p>
@@ -198,14 +221,66 @@ const TopicView = ({
     content: topic.content,
   });
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     await handlers.handleUpdateTopic(editData);
     setIsEditing(false);
   };
 
+  const renderActionButtons = () => {
+    if (!user || user.id !== topic.author_id) return null;
+    if (isMobile) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreVertical className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setIsEditing(true)}>
+              <Edit className="h-4 w-4 mr-2" />
+              Editar
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handlers.handleDeleteTopic}
+              disabled={isSubmitting}
+              className="text-red-500"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {isSubmitting ? "..." : "Deletar"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+    return (
+      <div className="flex items-center gap-2">
+        <Button
+          className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+          size="sm"
+          onClick={() => setIsEditing(true)}
+        >
+          <Edit className="h-4 w-4 mr-2" />
+          Editar
+        </Button>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={handlers.handleDeleteTopic}
+          disabled={isSubmitting}
+        >
+          <Trash2 className="h-4 w-4 mr-2" />
+          {isSubmitting ? "..." : "Deletar"}
+        </Button>
+      </div>
+    );
+  };
+
   return (
-    <Card className="bg-white border-gray-100/50 dark:bg-slate-800 border-gray400/50">
+    <Card className="border border-slate-700 bg-slate-800 text-white">
       {isEditing ? (
         <form onSubmit={handleUpdate} className="p-6">
           <div className="space-y-4">
@@ -247,28 +322,10 @@ const TopicView = ({
       ) : (
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-4">
-            <h1 className="text-3xl font-bold">{topic.title}</h1>
-            {user && user.id === topic.author_id && (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Editar
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handlers.handleDeleteTopic}
-                  disabled={isSubmitting}
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  {isSubmitting ? "..." : "Deletar"}
-                </Button>
-              </div>
-            )}
+            <h1 className="text-2xl md:text-3xl font-bold mr-4">
+              {topic.title}
+            </h1>
+            {renderActionButtons()}
           </div>
           <div className="flex items-center gap-3 mb-6">
             <Link href={`/profile/${topic.profiles.username}`}>
@@ -292,7 +349,7 @@ const TopicView = ({
                   {topic.profiles.username}
                 </p>
               </Link>
-              <p className="text-xs text-gray-700 dark:text-gray-400">
+              <p className="text-xs text-gray-400">
                 Postado {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
               {topic.updated_in &&
@@ -438,10 +495,13 @@ export default function TopicPage() {
   return (
     <>
       <Toaster position="bottom-right" richColors />
-      <div className="min-h-screen font-sans p-4 md:p-8">
+      <div className="min-h-screen font-sans p-4 md:p-8 text-white">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="mb-4">
-            <Button variant="outline" asChild>
+            <Button
+              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              asChild
+            >
               <Link href={`/topics/${category}`}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Voltar para{" "}

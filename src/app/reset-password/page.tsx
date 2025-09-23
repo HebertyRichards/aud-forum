@@ -78,7 +78,7 @@ export default function NewPasswordForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md shadow-xl bg-white dark:bg-slate-800">
+      <Card className="w-full max-w-md shadow-xl bg-slate-800 border-slate-700 text-white">
         <CardHeader>
           <CardTitle className="text-center">Redefinir senha</CardTitle>
         </CardHeader>
@@ -90,6 +90,7 @@ export default function NewPasswordForm() {
               type={mostrarSenha ? "text" : "password"}
               value={novaSenha}
               onChange={(e) => setNovaSenha(e.target.value)}
+              className="bg-slate-700 border-slate-600"
             />
             <button
               type="button"
@@ -104,12 +105,13 @@ export default function NewPasswordForm() {
               type="password"
               value={confirmacaoSenha}
               onChange={(e) => setConfirmacaoSenha(e.target.value)}
+              className="bg-slate-700 border-slate-600"
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {sucesso && <p className="text-green-600 text-sm">{sucesso}</p>}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full mt-4 border border-slate-600 bg-slate-700 hover:bg-slate-600"
               disabled={loading || !accessToken}
             >
               {loading ? "Atualizando..." : "Atualizar senha"}

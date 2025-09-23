@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useAuth } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ModeToggle";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -55,7 +54,7 @@ export function HeaderMobile() {
     fetchUserProfile();
   }, [auth.user?.id]);
 
-  const allowedRoles = ["Fundador", "Leader", "Membro", "Desenvolvedor"];
+  const allowedRoles = ["Fundador", "Leader", "Auditore", "Desenvolvedor"];
   const canViewRules = userRole && allowedRoles.includes(userRole);
 
   const toggleMenu = () => {
@@ -81,11 +80,9 @@ export function HeaderMobile() {
   return (
     <header
       className="sticky top-0 z-50 w-full 
-             border-b border-border shadow-sm 
-             bg-white/80 dark:bg-gray-800/80 
-             backdrop-blur 
-             supports-[backdrop-filter]:bg-white/60 
-             dark:supports-[backdrop-filter]:bg-gray-800/60"
+             border-b shadow-sm 
+            bg-slate-800/80 
+             backdrop-blur supports-[backdrop-filter]:bg-slate-800/60 border-slate-700"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -100,7 +97,7 @@ export function HeaderMobile() {
           </Link>
           <div className="flex items-center space-x-2">
             {auth?.loading ? (
-              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+              <div className="h-8 w-24 bg-slate-700 rounded-md animate-pulse" />
             ) : auth?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -119,7 +116,11 @@ export function HeaderMobile() {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent
+                  className="w-56 bg-slate-800 text-white border-slate-700"
+                  align="end"
+                  forceMount
+                >
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
@@ -130,7 +131,7 @@ export function HeaderMobile() {
                       </p>
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-slate-700" />
                   <Link href="/profile">
                     <DropdownMenuItem className="cursor-pointer">
                       Meu Perfil
@@ -141,10 +142,10 @@ export function HeaderMobile() {
                       Configurações
                     </DropdownMenuItem>
                   </Link>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-slate-700" />
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="cursor-pointer text-red-500 focus:text-red-500"
+                    className="cursor-pointer text-red-500 data-[highlighted]:bg-red-900/50 data-[highlighted]:text-red-400"
                   >
                     Sair
                   </DropdownMenuItem>
@@ -154,13 +155,22 @@ export function HeaderMobile() {
               <div className="flex items-center space-x-1">
                 <Link
                   href="/login"
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
+                  className={buttonVariants({
+                    size: "sm",
+                    variant: "outline",
+                    className:
+                      "bg-blue-500 border border-blue-400 text-white hover:bg-blue-400 hover:text-white",
+                  })}
                 >
                   Entrar
                 </Link>
                 <Link
                   href="/register"
-                  className={buttonVariants({ size: "sm" })}
+                  className={buttonVariants({
+                    size: "sm",
+                    className:
+                      "bg-slate-700 border border-slate-600 hover:bg-slate-600",
+                  })}
                 >
                   Registrar
                 </Link>
@@ -168,7 +178,7 @@ export function HeaderMobile() {
             )}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 cursor-pointer dark:text-gray-300 dark:hover:bg-gray-700"
+              className="p-2 rounded-md text-gray-300 hover:bg-gray-700"
               aria-label="Abrir menu"
             >
               <svg
@@ -186,44 +196,43 @@ export function HeaderMobile() {
                 />
               </svg>
             </button>
-            <ModeToggle />
           </div>
         </div>
       </div>
       {isMenuOpen && (
-        <div className="border-t dark:border-gray-700 md:hidden">
+        <div className="border-t border-slate-700 md:hidden">
           <div className="px-2 pt-2 pb-4 space-y-2">
             <Link
               href="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
               onClick={closeNav}
             >
               Início
             </Link>
             <Link
               href="/members-list"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
               onClick={closeNav}
             >
               Membros
             </Link>
             <Link
               href="/topics/subscribes"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
               onClick={closeNav}
             >
               Inscreva-se
             </Link>
             <Link
               href="/topics/downloads"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
               onClick={closeNav}
             >
               Downloads
             </Link>
             <Link
               href="/topics"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
               onClick={closeNav}
             >
               Categorias
@@ -231,7 +240,7 @@ export function HeaderMobile() {
             {canViewRules && (
               <Link
                 href="/rules"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-700 dark:text-gray-300 dark:hovertext-blue-400"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hovertext-blue-400"
                 onClick={closeNav}
               >
                 Regras

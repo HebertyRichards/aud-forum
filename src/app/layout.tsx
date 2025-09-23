@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import Header from "@/templates/Header";
 import Footer from "@/templates/Footer";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/services/auth";
 import { UserActivityTracker } from "@/services/activity";
 import { Providers } from "./providers";
@@ -59,13 +58,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="min-h-screen bg-gray-300 dark:bg-slate-900">
+          <div className="min-h-screen bg-slate-900">
             <AuthProvider>
               <UserActivityTracker />
               <Header />
@@ -73,7 +66,6 @@ export default function RootLayout({
               <Footer />
             </AuthProvider>
           </div>
-        </ThemeProvider>
       </body>
     </html>
   );

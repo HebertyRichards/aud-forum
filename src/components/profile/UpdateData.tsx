@@ -80,11 +80,11 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
           <DialogTitle>Atualizar Perfil</DialogTitle>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto bg-white dark:bg-slate-800">
+      <DialogContent className="max-w-md mx-auto dark:bg-slate-800">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Label htmlFor="gender">Gênero</Label>
           <Select value={form.gender} onValueChange={handleSelectChange}>
@@ -116,7 +116,9 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
           />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+            {loading ? (
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            ) : null}
             Salvar alterações
           </Button>
         </form>

@@ -14,7 +14,7 @@ export function ProfileInfoTab({
 }: ProfileInfoTabProps) {
   return (
     <TabsContent value="perfil" className="mt-4">
-      <Card className="border-gray-700 bg-white dark:bg-slate-800">
+      <Card className="border-gray-700 bg-slate-800 text-white">
         <CardHeader>
           <CardTitle>Sobre</CardTitle>
           {isOwnProfile && profile && (
@@ -23,8 +23,8 @@ export function ProfileInfoTab({
         </CardHeader>
         <CardContent className="space-y-4">
           {isUpdating && (
-            <div className="text-sm text-blue-500 flex items-center gap-2 mb-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
+            <div className="text-sm text-white flex items-center gap-2 mb-2">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               Atualizando perfil...
             </div>
           )}

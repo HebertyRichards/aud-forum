@@ -5,11 +5,12 @@ import Link from "next/link";
 import { formatDate } from "@/utils/dateUtils";
 import type { UserProfile } from "@/types/profile";
 
-export type StatisticsTabProps = Pick<UserProfile, 'username'>;
+export type StatisticsTabProps = Pick<UserProfile, "username">;
 export function TopicsTab({ username }: StatisticsTabProps) {
   const { topics, isLoading, error } = useUserTopics(username);
 
-  if (isLoading) return <Loader2 className="animate-spin mx-auto mt-4" />;
+  if (isLoading)
+    return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
   if (error)
     return (
       <p className="text-red-500 flex items-center gap-2">
@@ -19,7 +20,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
     );
 
   return (
-    <Card className="border-gray-700 bg-white dark:bg-slate-800">
+    <Card className="border-slate-700 bg-slate-800 text-white">
       <CardHeader>
         <CardTitle>Tópicos Recentes</CardTitle>
       </CardHeader>
@@ -29,7 +30,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
             {topics.map((topic) => (
               <li
                 key={topic.title}
-                className="border-b border-gray-700 pb-3 last:border-b-0"
+                className="border-b border-slate-700 pb-3 last:border-b-0"
               >
                 <Link
                   href={`/topics/${topic.category}/${topic.slug}`}

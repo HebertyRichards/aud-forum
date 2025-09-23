@@ -35,14 +35,12 @@ export function OnlineUsers() {
   });
 
   return (
-    <Card className="bg-white dark:bg-slate-800">
+    <Card className="bg-slate-800 border-slate-700 text-white">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />
           <span>Usuários Online</span>
-          <Badge variant="secondary" className="ml-auto">
-            {users.length}
-          </Badge>
+          <Badge className="ml-auto bg-slate-700">{users.length}</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -57,16 +55,19 @@ export function OnlineUsers() {
               <div key={index} className="flex items-center space-x-2">
                 <Avatar className="w-6 h-6">
                   {user.avatar_url ? (
-                    <AvatarImage src={user.avatar_url} />
+                    <AvatarImage
+                      src={user.avatar_url}
+                      alt={`avatar de ${user.username}`}
+                    />
                   ) : (
-                    <AvatarFallback className="text-xs">
+                    <AvatarFallback className="text-xs bg-slate-600">
                       {user.username[0]}
                     </AvatarFallback>
                   )}
                 </Avatar>
                 <Link href={profileUrl}>
                   <span
-                    className={`text-sm font-medium hover:underline cursor-pointer ${getRoleColor(
+                    className={`truncate text-sm font-semibold hover:underline cursor-pointer ${getRoleColor(
                       user.role
                     )}`}
                   >

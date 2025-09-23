@@ -37,35 +37,82 @@ const PaginationControls = ({
     return null;
   }
 
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+      if (currentPage > 2) {
+        pages.push(currentPage - 1);
+      }
+      if (currentPage !== 1 && currentPage !== totalPages) {
+        pages.push(currentPage);
+      }
+      if (currentPage < totalPages - 1) {
+        pages.push(currentPage + 1);
+      }
+      if (currentPage < totalPages - 2) {
+        pages.push("...");
+      }
+      pages.push(totalPages);
+    }
+    return [...new Set(pages)];
+  };
+
+  const pageNumbers = getPageNumbers();
+
   return (
-    <div className="flex items-center justify-center gap-4 mt-8">
+    <div className="flex items-center justify-center gap-2 mt-8">
       <Button
         variant="outline"
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1 || isFetching}
+        className="h-9 w-9 p-0"
       >
-        <ChevronLeft className="h-4 w-4 mr-2" />
-        Anterior
+        <ChevronLeft className="h-4 w-4" />
+        <span className="sr-only">Anterior</span>
       </Button>
-      <span className="text-sm font-medium">
-        Página {currentPage} de {totalPages}
-      </span>
+      {pageNumbers.map((page, index) =>
+        page === "..." ? (
+          <span key={`ellipsis-${index}`} className="px-2">
+            ...
+          </span>
+        ) : (
+          <Button
+            key={page}
+            variant={currentPage === page ? "default" : "outline"}
+            size="sm"
+            onClick={() => onPageChange(page as number)}
+            disabled={isFetching}
+            className="h-9 w-9 p-0"
+          >
+            {page}
+          </Button>
+        )
+      )}
       <Button
         variant="outline"
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages || isFetching}
+        className="h-9 w-9 p-0"
       >
-        Próxima
-        <ChevronRight className="h-4 w-4 ml-2" />
+        <ChevronRight className="h-4 w-4" />
+        <span className="sr-only">Próxima</span>
       </Button>
     </div>
   );
 };
 
 const MessageCard = ({ message }: { message: string }) => (
-  <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-gray-800">
+  <Card className="border-yellow-500/50 bg-slate-800 my-4">
     <CardContent className="p-6 flex items-center gap-4">
       <AlertTriangle className="h-8 w-8 text-yellow-500" />
       <p className="text-yellow-700 dark:text-yellow-300 font-medium">
@@ -168,11 +215,15 @@ export default function CategoryTopicPage() {
   };
 
   const renderHeader = () => (
-    <div className="flex justify-between items-center mb-6">
-      <h1 className="text-3xl font-bold">{pageTitle}</h1>
+    <div className="flex justify-between items-center mb-6 text-white">
+      <h1 className="text-xl font-bold">{pageTitle}</h1>
       <div className="flex gap-2">
         {view === "create" ? (
-          <Button variant="outline" onClick={handleBackToList}>
+          <Button
+            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            onClick={handleBackToList}
+            size="sm"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar
           </Button>
@@ -181,6 +232,7 @@ export default function CategoryTopicPage() {
             onClick={handleNewTopicClick}
             className="bg-blue-600 hover:bg-blue-700"
             disabled={isCheckingTopic || !isCategoryValid}
+            size="sm"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
             {isCheckingTopic ? "Verificando..." : "Novo Tópico"}
@@ -191,15 +243,8 @@ export default function CategoryTopicPage() {
   );
 
   const renderMainContent = () => {
-    if (authMessage) {
-      return <MessageCard message={authMessage} />;
-    }
-
     if (isLoading) {
       return <div className="text-center p-10">Carregando tópicos...</div>;
-    }
-    if (authMessage) {
-      return <MessageCard message={authMessage} />;
     }
 
     if (view === "create") {
@@ -212,6 +257,7 @@ export default function CategoryTopicPage() {
 
     return renderTopicList();
   };
+
   const renderTopicList = () => (
     <>
       <div className={`space-y-4 ${isFetching ? "opacity-70" : ""}`}>
@@ -223,26 +269,27 @@ export default function CategoryTopicPage() {
               key={topic.slug}
               className="block"
             >
-              <Card className="p-4 border border-gray-700 bg-white hover:border-blue-500 transition-colors duration-300 dark:bg-slate-800">
+              <Card className="p-4 border bg-slate-800 border-gray-700 hover:border-blue-500 transition-colors duration-300 text-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Avatar>
                       <AvatarImage
                         src={topic.profiles.avatar_url || undefined}
+                        alt={`avatar de ${topic.profiles.username}`}
                       />
-                      <AvatarFallback>
+                      <AvatarFallback className="bg-slate-600">
                         {topic.profiles.username.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className="font-semibold text-lg">{topic.title}</h3>
-                      <p className="text-xs text-gray-700 dark:text-gray-500">
+                      <p className="text-xs text-slate-500">
                         por {topic.profiles.username} •{" "}
                         {formatPostTimestamp(topic.created_in)}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-500">
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
                     <MessageSquare className="h-4 w-4" />
                     <span>{topic.comentarios[0]?.count ?? 0}</span>
                   </div>
@@ -263,8 +310,11 @@ export default function CategoryTopicPage() {
   return (
     <div className="min-h-screen font-sans p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <Button variant="outline" asChild>
+        <div className="mb-6 border-">
+          <Button
+            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            asChild
+          >
             <Link href="/topics">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar para Fóruns
@@ -272,6 +322,7 @@ export default function CategoryTopicPage() {
           </Button>
         </div>
         {renderHeader()}
+        {authMessage && <MessageCard message={authMessage} />}
         {renderMainContent()}
       </div>
     </div>

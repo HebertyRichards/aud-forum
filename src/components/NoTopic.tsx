@@ -5,7 +5,7 @@ import { EmptyStateProps } from "@/types/post";
 
 export function EmptyState({ onNewTopicClick }: EmptyStateProps) {
   return (
-    <Card className="border border-gray-700 p-4 text-center bg-white dark:bg-slate-800">
+    <Card className="border border-slate-700 p-4 text-center bg-slate-800 text-white">
       <CardHeader>
         <CardTitle>Nenhum tópico encontrado</CardTitle>
       </CardHeader>

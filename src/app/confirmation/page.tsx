@@ -26,7 +26,7 @@ export default function SuccessRegister() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="max-w-md w-full bg-white dark:bg-slate-800">
+      <Card className="max-w-md w-full bg-slate-800 text-white border-slate-700">
         <CardHeader className="text-center">
           <CardTitle>Conta criada com sucesso!</CardTitle>
           <CardDescription>
@@ -35,7 +35,7 @@ export default function SuccessRegister() {
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-slate-300">
             Obrigado por se registrar! Seja Bem-Vindo ao Fórum da Auditore
             Family.
           </p>

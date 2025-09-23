@@ -16,6 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Link from "next/link";
 import { RecentPost } from "@/types/post";
+import { getRoleColor } from "@/utils/colors";
 
 const fetchRecentPosts = async (): Promise<RecentPost[]> => {
   try {
@@ -43,7 +44,7 @@ export function RecentPosts() {
 
   if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-slate-800">
+      <Card className="bg-slate-800 border-slate-700 text-white">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -59,7 +60,7 @@ export function RecentPosts() {
 
   if (error) {
     return (
-      <Card className="bg-white dark:bg-slate-800">
+      <Card className="bg-slate-800 border-slate-700 text-white">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -75,7 +76,7 @@ export function RecentPosts() {
   }
 
   return (
-    <Card className="bg-white dark:bg-slate-800">
+    <Card className="bg-slate-800 text-white border-slate-700">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
@@ -88,7 +89,10 @@ export function RecentPosts() {
             <div key={post.id} className="p-4 flex items-start space-x-4">
               <Link href={`/profile/${post.author_username}`}>
                 <Avatar className="w-10 h-10 mt-1">
-                  <AvatarImage src={post.author_avatar || undefined} />
+                  <AvatarImage
+                    src={post.author_avatar || undefined}
+                    alt={`avatar de ${post.author_username}`}
+                  />
                   <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
                 </Avatar>
               </Link>
@@ -105,11 +109,15 @@ export function RecentPosts() {
                     {post.title}
                   </h4>
                 </Link>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700 mt-1 dark:text-gray-500">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
                   <span>
                     por:{" "}
                     <Link href={`/profile/${post.author_username}`}>
-                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                      <span
+                        className={`truncate font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
+                          post.role
+                        )}`}
+                      >
                         {" "}
                         {post.author_username}
                       </span>
@@ -118,7 +126,7 @@ export function RecentPosts() {
                   <span>
                     em:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
-                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
+                      <span className="font-medium text-gray-300 hover:underline cursor-pointer">
                         {post.category_name}
                       </span>
                     </Link>

@@ -58,7 +58,7 @@ export default function RecoveryPassword() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <main className="flex-grow flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-white dark:bg-slate-800">
+        <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-slate-800">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">
               Esqueceu sua senha?
@@ -80,6 +80,7 @@ export default function RecoveryPassword() {
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-slate-700 border-slate-600 "
                 />
               </div>
               {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -87,11 +88,15 @@ export default function RecoveryPassword() {
             </form>
           </CardContent>
           <CardFooter className="flex flex-col gap-4 pt-4">
-            <Button onClick={handleSubmit} disabled={loading}>
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            >
               {loading ? "Enviando..." : "Enviar link de recuperação"}
             </Button>
             <Button variant="link" asChild>
-              <Link href="/login" className="text-blue-400 hover:text-blue-300">
+              <Link href="/login" className="text-white hover:text-blue-300">
                 Voltar para o login
               </Link>
             </Button>

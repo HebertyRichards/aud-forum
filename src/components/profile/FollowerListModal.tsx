@@ -11,6 +11,7 @@ import axios from "axios";
 import { Button } from "../ui/button";
 import { useRemoveFollower } from "@/hooks/useRemoveFollower";
 import { toast } from "sonner";
+import { getRoleColor } from "@/utils/colors";
 
 const fetchModalUsers = async (
   username: string,
@@ -80,21 +81,21 @@ export function FollowListModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <Card className="w-full max-w-md border-gray-700 bg-white dark:bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
+      <Card className="w-full max-w-md border-gray-700 bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader className="text-center">
-          <CardTitle className="capitalize">
+          <CardTitle className="capitalize text-white">
             {listType === "followers" ? "Seguidores" : "Seguindo"}
           </CardTitle>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-opacity"
+            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 cursor-pointer transition-opacity"
           >
             <X size={24} />
           </button>
         </CardHeader>
         <CardContent className="max-h-[60vh] overflow-y-auto">
           {isLoading ? (
-            <div className="flex justify-center items-center p-8">
+            <div className="flex justify-center items-center p-8 text-white">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             </div>
           ) : error ? (
@@ -107,54 +108,60 @@ export function FollowListModal({
               {users.map((user) => (
                 <li
                   key={user.username}
-                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-slate-700 transition-colors text-white"
                 >
                   <Link
                     href={`/profile/${user.username}`}
                     onClick={onClose}
-                    className="flex items-center gap-4 grow"
+                    className="flex items-center gap-4 flex-1 min-w-0"
                   >
-                    <Avatar>
+                    <Avatar className="bg-slate-600">
                       <AvatarImage
                         src={user.avatar_url || undefined}
-                        alt={user.username}
+                        alt={`avatar de ${user.username}`}
                       />
-                      <AvatarFallback>
+                      <AvatarFallback className="bg-slate-600">
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-semibold">{user.username}</span>
+                    <span className="font-semibold truncate">
+                      <span className={getRoleColor(user.role)}>
+                        {user.username}
+                      </span>
+                    </span>
                   </Link>
-
-                  {isOwnProfile && listType === "followers" && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleRemoveClick(user.username)}
-                      disabled={isRemoving}
-                    >
-                      {isRemoving ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Remover"
-                      )}
-                    </Button>
-                  )}
-
-                  {isOwnProfile && listType === "following" && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => unfollowUser(user.username)}
-                      disabled={mutatingUsername === user.username}
-                    >
-                      {mutatingUsername === user.username ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Deixar de seguir"
-                      )}
-                    </Button>
-                  )}
+                  <div className="flex-shrink-0">
+                    {isOwnProfile && listType === "followers" && (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleRemoveClick(user.username)}
+                        disabled={isRemoving}
+                        className="w-[80px] cursor-pointer"
+                      >
+                        {isRemoving ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Remover"
+                        )}
+                      </Button>
+                    )}
+                    {isOwnProfile && listType === "following" && (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => unfollowUser(user.username)}
+                        disabled={mutatingUsername === user.username}
+                        className="w-[120px] cursor-poiner"
+                      >
+                        {mutatingUsername === user.username ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Deixar de seguir"
+                        )}
+                      </Button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

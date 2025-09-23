@@ -36,7 +36,7 @@ export default function SettingsPage() {
   if (auth.loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         <p className="ml-2">Verificando sessão...</p>
       </div>
     );
@@ -50,14 +50,14 @@ export default function SettingsPage() {
       ) : activeForm === "password" ? (
         <PasswordCard onClose={() => setActiveForm(null)} />
       ) : (
-        <div className="flex-1 space-y-8 p-8 pt-6">
+        <div className="flex-1 space-y-8 p-8 pt-6 text-white">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">Configurações</h2>
             <p className="text-muted-foreground">
               Gerencie as configurações da sua conta e preferências.
             </p>
           </div>
-          <Card className="bg-white dark:bg-slate-800">
+          <Card className="bg-slate-800 text-white border-slate-700">
             <CardHeader>
               <CardTitle>Perfil e Senha</CardTitle>
               <CardDescription>
@@ -66,36 +66,36 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex-1 min-w-0 mr-4">
                   <p className="font-medium">Nome de Usuário</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground truncate">
                     {user.username}
                   </p>
                 </div>
               </div>
-              <Separator />
+              <Separator className="bg-slate-600" />
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex-1 min-w-0 mr-4">
                   <p className="font-medium">Email</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground truncate">
                     {user.email ?? "N/A"}
                   </p>
                 </div>
                 <Button
-                  variant="outline"
+                  className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
                   onClick={() => setActiveForm("profile")}
                 >
                   Alterar Perfil
                 </Button>
               </div>
-              <Separator />
+              <Separator className="bg-slate-600" />
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex-1 min-w-0 mr-4">
                   <p className="font-medium">Senha</p>
                   <p className="text-sm text-muted-foreground">********</p>
                 </div>
                 <Button
-                  variant="outline"
+                  className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
                   onClick={() => setActiveForm("password")}
                 >
                   Alterar Senha
