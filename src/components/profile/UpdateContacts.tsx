@@ -81,7 +81,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
           <DialogTitle>Atualizar Contatos</DialogTitle>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto bg-slate-800">
+      <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Label htmlFor="website">Website</Label>
           <Input
@@ -89,6 +89,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="website"
             value={form.website}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           <Label htmlFor="facebook">Facebook</Label>
           <Input
@@ -96,6 +97,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="facebook"
             value={form.facebook}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           <Label htmlFor="instagram">Instagram</Label>
           <Input
@@ -103,6 +105,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="instagram"
             value={form.instagram}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           <Label htmlFor="discord">Discord</Label>
           <Input
@@ -110,6 +113,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="discord"
             value={form.discord}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           <Label htmlFor="steam">Steam</Label>
           <Input
@@ -117,9 +121,14 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="steam"
             value={form.steam}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-4"
+          >
             {loading && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
             Salvar alterações
           </Button>

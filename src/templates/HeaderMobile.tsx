@@ -27,8 +27,8 @@ export function HeaderMobile() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
   useEffect(() => {
-    const userId = auth.user?.id;
-    if (!userId) {
+    const username = auth.user?.username;
+    if (!username) {
       setUserRole(null);
       setUserAvatarUrl(null);
       return;
@@ -36,7 +36,7 @@ export function HeaderMobile() {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await fetch(`${API_URL}/profile/${userId}`);
+        const res = await fetch(`${API_URL}/profile/${username}`);
         if (res.ok) {
           const profileData = await res.json();
           setUserRole(profileData.role);
@@ -52,7 +52,7 @@ export function HeaderMobile() {
     };
 
     fetchUserProfile();
-  }, [auth.user?.id]);
+  }, [auth.user?.username]);
 
   const allowedRoles = ["Fundador", "Leader", "Auditore", "Desenvolvedor"];
   const canViewRules = userRole && allowedRoles.includes(userRole);

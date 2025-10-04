@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useForumData } from "@/hooks/useForumData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,30 +9,14 @@ import { OnlineUser, RawOnlineUser } from "@/types/users";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
 import { getRoleColor } from "@/utils/colors";
-
-const fetchOnlineUsers = async (): Promise<OnlineUser[]> => {
-  try {
-    const res = await fetch(`/api/user/online`, { credentials: "include" });
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return (data as RawOnlineUser[]).map((item) => item.profiles);
-  } catch {
-    return [];
-  }
-};
-
 export function OnlineUsers() {
   const { user: currentUser } = useAuth();
 
-  const { data: users = [] } = useQuery<OnlineUser[]>({
-    queryKey: ["onlineUsers"],
-    queryFn: fetchOnlineUsers,
-    refetchInterval: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+  const { data } = useForumData();
+
+  const users: OnlineUser[] = data?.onlineUsers
+    ? (data.onlineUsers as RawOnlineUser[]).map((item) => item.profiles)
+    : [];
 
   return (
     <Card className="bg-slate-800 border-slate-700 text-white">
