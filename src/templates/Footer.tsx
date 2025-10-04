@@ -57,7 +57,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/topics/subscribe"
+                  href="/topics/subscribes"
                   className="text-gray-300 hover:text-blue-500 transition-colors text-sm"
                 >
                   Recrutamento

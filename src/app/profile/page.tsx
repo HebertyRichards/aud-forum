@@ -15,10 +15,10 @@ export default function Profile() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const fetchOwnProfile = async (userId: string, username: string) => {
+  const fetchOwnProfile = async (username: string) => {
     try {
       const [res, statsRes] = await Promise.all([
-        axios.get(`/api/profile/${userId}`),
+        axios.get(`/api/profile/${username}`),
         axios.get(`/api/follow/${username}/stats`).catch(() => null),
       ]);
 
@@ -39,10 +39,9 @@ export default function Profile() {
   };
 
   const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: ["ownProfile", user?.id],
-    queryFn: () =>
-      fetchOwnProfile(user?.id as string, user?.username as string),
-    enabled: !!user?.id && !!user.username,
+    queryKey: ["ownProfile", user?.username],
+    queryFn: () => fetchOwnProfile(user?.username as string),
+    enabled: !!user?.username && !!user.username,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -54,7 +53,7 @@ export default function Profile() {
   }, [user, auth.loading, router]);
 
   const handleSuccessUpdate = () => {
-    queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.username] });
   };
 
   if (auth.loading || (isLoading && !data)) {

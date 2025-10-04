@@ -14,10 +14,10 @@ import axios from "axios";
 import { UserProfile } from "@/types/profile";
 
 const fetchUserProfile = async (
-  userId: string
+  username: string
 ): Promise<UserProfile | null> => {
   try {
-    const { data } = await axios.get(`/api/profile/${userId}`);
+    const { data } = await axios.get(`/api/profile/${username}`);
     return data;
   } catch {
     return null;
@@ -26,12 +26,12 @@ const fetchUserProfile = async (
 
 export function ForumCategoryList() {
   const auth = useAuth();
-  const userId = auth.user?.id;
+  const username = auth.user?.username;
 
   const { data: userProfile } = useQuery<UserProfile | null>({
-    queryKey: ["userProfile", userId],
-    queryFn: () => fetchUserProfile(userId!),
-    enabled: !!userId,
+    queryKey: ["userProfile", username],
+    queryFn: () => fetchUserProfile(username!),
+    enabled: !!username,
   });
 
   const userRole = userProfile?.role;

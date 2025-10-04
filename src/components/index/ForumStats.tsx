@@ -1,40 +1,14 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useForumData } from "@/hooks/useForumData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { UserProfile } from "@/types/profile";
-import { MainStats } from "@/types/users";
 import { getRoleColor } from "@/utils/colors";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
-const fetchAllData = async () => {
-  try {
-    const [statsRes, newestMemberRes] = await Promise.all([
-      fetch(`/api/forum/stats`),
-      fetch(`/api/user/last-registration`),
-    ]);
-
-    const statsData = statsRes.ok ? await statsRes.json() : null;
-    const newestMemberData = newestMemberRes.ok
-      ? await newestMemberRes.json()
-      : null;
-
-    return {
-      stats: statsData as MainStats,
-      newestMember: newestMemberData as UserProfile,
-    };
-  } catch {
-    throw new Error("Erro ao carregar estatísticas.");
-  }
-};
-
 export function ForumStats() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["forumStats"],
-    queryFn: fetchAllData,
-  });
+  const { data, isLoading } = useForumData();
 
   if (isLoading) {
     return (
@@ -48,6 +22,8 @@ export function ForumStats() {
       </Card>
     );
   }
+
+  const lastUser = data?.lastUser;
 
   return (
     <Card className="bg-slate-800 text-white border-slate-700">
@@ -75,15 +51,15 @@ export function ForumStats() {
         </div>
         <Separator className="bg-slate-600" />
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">Novo Membro</span>
-          {data?.newestMember ? (
-            <Link href={`/profile/${data.newestMember.username}`}>
+          <span className="text-sm text-slate-500">Último Registrado</span>
+          {lastUser ? (
+            <Link href={`/profile/${lastUser.username}`}>
               <span
                 className={`truncate font-semibold hover:underline cursor-pointer ${getRoleColor(
-                  data.newestMember.role
+                  lastUser.role
                 )}`}
               >
-                {data.newestMember.username}
+                {lastUser.username}
               </span>
             </Link>
           ) : (

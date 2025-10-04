@@ -83,7 +83,7 @@ export function DangerZoneCard() {
           <AlertDialogTrigger asChild>
             <Button variant="destructive">Deletar Conta</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-slate-800 text-white">
+          <AlertDialogContent className="bg-slate-800 text-white border border-slate-700">
             <AlertDialogHeader>
               <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -103,16 +103,17 @@ export function DangerZoneCard() {
                   placeholder="Sua senha..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-slate-700 border border-slate-600 text-white"
                 />
               </div>
             )}
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-slate-600 border border-slate-700 cursor-poiner">
+              <AlertDialogCancel className="bg-slate-700 border border-slate-600 hover:bg-slate-600 cursor-pointer hover:text-white">
                 Cancelar
               </AlertDialogCancel>
               {step === "initial" ? (
                 <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     setStep("confirmPassword");

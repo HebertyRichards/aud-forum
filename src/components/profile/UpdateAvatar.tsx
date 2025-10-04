@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import axios from "axios";
 
 export function UpdateAvatar({
-  onSuccess,
   currentAvatarUrl,
 }: UpdateAvatarProps & { currentAvatarUrl?: string | null }) {
   const { user, updateUserAvatar } = useAuth();
@@ -41,7 +40,9 @@ export function UpdateAvatar({
       });
       toast.success("Avatar atualizado com sucesso!", { id: toastId });
       updateUserAvatar(res.data.avatar_url);
-      onSuccess();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado";
       if (axios.isAxiosError(error)) {
@@ -68,7 +69,9 @@ export function UpdateAvatar({
 
       toast.success("Avatar removido com sucesso!", { id: toastId });
       updateUserAvatar(res.data.avatar_url);
-      onSuccess();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado";
       if (axios.isAxiosError(error)) {

@@ -103,7 +103,7 @@ const CommentItem = ({
               src={getOptimizedAvatarUrl(comment.profiles.avatar_url, 40)}
               alt={`Avatar de ${comment.profiles.username}`}
             />
-            <AvatarFallback>
+            <AvatarFallback className="bg-slate-600">
               {comment.profiles.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -334,7 +334,7 @@ const TopicView = ({
                   src={getOptimizedAvatarUrl(topic.profiles.avatar_url, 48)}
                   alt={`Avatar de ${topic.profiles.username}`}
                 />
-                <AvatarFallback>
+                <AvatarFallback className="bg-slate-600">
                   {topic.profiles.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>

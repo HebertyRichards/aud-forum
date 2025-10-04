@@ -66,7 +66,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                         src={member.avatar_url || undefined}
                         alt={`Avatar de ${member.username}`}
                       />
-                      <AvatarFallback>
+                      <AvatarFallback className="bg-slate-600">
                         {member.username.charAt(0)}
                       </AvatarFallback>
                     </Avatar>

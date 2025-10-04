@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useForumData } from "@/hooks/useForumData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,29 +18,10 @@ import Link from "next/link";
 import { RecentPost } from "@/types/post";
 import { getRoleColor } from "@/utils/colors";
 
-const fetchRecentPosts = async (): Promise<RecentPost[]> => {
-  try {
-    const res = await fetch(`/api/forum/posts/recent`);
-    if (!res.ok) {
-      throw new Error("Falha na resposta da API");
-    }
-    return res.json();
-  } catch {
-    throw new Error("Erro ao mostrar os tópicos recentes.");
-  }
-};
-
 export function RecentPosts() {
   const [visiblePosts, setVisiblePosts] = useState(4);
 
-  const {
-    data: posts,
-    isLoading,
-    error,
-  } = useQuery<RecentPost[], Error>({
-    queryKey: ["recentPosts"],
-    queryFn: fetchRecentPosts,
-  });
+  const { data, isLoading, error } = useForumData();
 
   if (isLoading) {
     return (
@@ -58,6 +39,7 @@ export function RecentPosts() {
     );
   }
 
+  
   if (error) {
     return (
       <Card className="bg-slate-800 border-slate-700 text-white">
@@ -74,7 +56,9 @@ export function RecentPosts() {
       </Card>
     );
   }
-
+  
+  const posts: RecentPost[] | undefined = data?.recentPosts;
+  
   return (
     <Card className="bg-slate-800 text-white border-slate-700">
       <CardHeader>
@@ -85,7 +69,7 @@ export function RecentPosts() {
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-gray-700">
-          {posts?.slice(0, visiblePosts).map((post) => (
+          {posts?.slice(0, visiblePosts).map((post: RecentPost) => (
             <div key={post.id} className="p-4 flex items-start space-x-4">
               <Link href={`/profile/${post.author_username}`}>
                 <Avatar className="w-10 h-10 mt-1">
@@ -93,7 +77,9 @@ export function RecentPosts() {
                     src={post.author_avatar || undefined}
                     alt={`avatar de ${post.author_username}`}
                   />
-                  <AvatarFallback>{post.author_username?.[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-slate-600">
+                    {post.author_username?.[0]}
+                  </AvatarFallback>
                 </Avatar>
               </Link>
               <div className="flex-1 min-w-0">

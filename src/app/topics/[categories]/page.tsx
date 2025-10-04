@@ -244,7 +244,7 @@ export default function CategoryTopicPage() {
 
   const renderMainContent = () => {
     if (isLoading) {
-      return <div className="text-center p-10">Carregando tópicos...</div>;
+      return <div className="text-center p-10 text-white">Carregando tópicos...</div>;
     }
 
     if (view === "create") {

@@ -84,17 +84,17 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
           <DialogTitle>Atualizar Perfil</DialogTitle>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto dark:bg-slate-800">
+      <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Label htmlFor="gender">Gênero</Label>
           <Select value={form.gender} onValueChange={handleSelectChange}>
             <SelectTrigger
               id="gender"
-              className="flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs"
+              className="flex h-9 w-full min-w-0 rounded-md border border-slate-600 bg-slate-700"
             >
               <SelectValue placeholder="Selecione" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-800 text-white border border-slate-700">
               <SelectItem value="Masculino">Masculino</SelectItem>
               <SelectItem value="Feminino">Feminino</SelectItem>
             </SelectContent>
@@ -106,6 +106,7 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
             type="date"
             value={form.birthdate}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           <Label htmlFor="location">Localização</Label>
           <Input
@@ -113,9 +114,14 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
             name="location"
             value={form.location}
             onChange={handleChange}
+            className="bg-slate-700 border border-slate-600 text-white"
           />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-4"
+          >
             {loading ? (
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             ) : null}

@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
-import {
-  type LucideIcon,
-} from "lucide-react";
+import { OnlineUser } from "./users";
+import { type LucideIcon } from "lucide-react";
 
 export interface ApiCategory {
   slug: string;
@@ -26,7 +25,7 @@ export interface Comment {
   content: string;
   created_in: string;
   updated_in?: string | null;
-  author_id: string; 
+  author_id: string;
   profiles: {
     username: string;
     avatar_url: string | null;
@@ -49,7 +48,6 @@ export interface TopicDetails {
   };
   comentarios: Comment[];
 }
-
 
 export interface NewTopicData {
   title: string;
@@ -106,7 +104,7 @@ export interface EmptyStateProps {
 }
 
 export interface ForumTopicRowProps {
-  id: number; 
+  id: number;
   icon: LucideIcon;
   title: string;
   route: string;
@@ -143,4 +141,26 @@ export interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+}
+
+export interface RawOnlineUser {
+  last_seen_at: string;
+  profiles: OnlineUser;
+}
+
+interface ForumMember {
+  username: string;
+  role: string;
+}
+
+export interface DashboardData {
+  stats: {
+    activeMembers: number;
+    totalPosts: number;
+    totalTopics: number;
+    newestMember: ForumMember | null;
+  };
+  recentPosts: RecentPost[];
+  lastUser: ForumMember | null;
+  onlineUsers: RawOnlineUser[];
 }
