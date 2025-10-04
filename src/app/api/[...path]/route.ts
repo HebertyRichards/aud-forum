@@ -8,7 +8,7 @@ async function handler(req: NextRequest) {
 
   if (!API_URL) {
     return NextResponse.json(
-      { error: 'A URL da API não está configurada no servidor.' },
+      { error: "A URL da API não está configurada no servidor." },
       { status: 500 }
     );
   }
@@ -19,13 +19,18 @@ async function handler(req: NextRequest) {
   try {
     const response = await fetch(url, {
       method: req.method,
-      headers: headers, 
+      headers: headers,
       body: req.body,
       duplex: 'half',
     });
 
+    if (response.status === 401) {
+      const loginUrl = new URL("/login", req.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
     const responseHeaders = new Headers(response.headers);
-    const setCookie = response.headers.get('Set-Cookie');
+    const setCookie = response.headers.get("Set-Cookie");
 
     if (setCookie) {
       responseHeaders.set('Set-Cookie', setCookie);
