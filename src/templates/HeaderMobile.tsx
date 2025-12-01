@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
-import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -22,7 +21,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const auth = useAuth();
-  const router = useRouter();
 
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
@@ -69,7 +67,6 @@ export function HeaderMobile() {
       await auth.logout();
     }
     closeNav();
-    router.push("/login");
   };
 
   const getUsername = () => {
@@ -154,7 +151,7 @@ export function HeaderMobile() {
             ) : (
               <div className="flex items-center space-x-1">
                 <Link
-                  href="/login"
+                  href="/"
                   className={buttonVariants({
                     size: "sm",
                     variant: "outline",

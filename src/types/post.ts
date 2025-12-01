@@ -5,6 +5,7 @@ import { type LucideIcon } from "lucide-react";
 export interface ApiCategory {
   slug: string;
   name: string;
+  description?: string;
 }
 
 export interface TopicSummary {

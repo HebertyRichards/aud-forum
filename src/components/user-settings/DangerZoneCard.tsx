@@ -55,7 +55,7 @@ export function DangerZoneCard() {
       });
       toast.success("Conta deletada com sucesso. Você será redirecionado.");
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = "/";
       }, 2000);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu uma falha desconhecida.";

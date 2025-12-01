@@ -16,7 +16,7 @@ export default function SuccessRegister() {
 
   useEffect(() => {
     if (countdown === 0) {
-      router.push("/login");
+      router.push("/");
       return;
     }
 

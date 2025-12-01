@@ -67,7 +67,7 @@ export default function OtherProfile() {
   useEffect(() => {
     if (auth.loading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/");
       return;
     }
     if (user.username === username) {

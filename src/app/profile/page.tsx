@@ -48,7 +48,7 @@ export default function Profile() {
   useEffect(() => {
     if (auth.loading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/");
     }
   }, [user, auth.loading, router]);
 
