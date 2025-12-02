@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -13,17 +13,41 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
+import { LoginForm } from "@/components/LoginForm";
+import { RegisterForm } from "@/components/RegisterForm";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const auth = useAuth();
 
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  const auth = useAuth();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
+
+  const openLogin = () => {
+    setIsRegisterOpen(false);
+    setIsLoginOpen(true);
+  };
+
+  const openRegister = () => {
+    setIsLoginOpen(false);
+    setIsRegisterOpen(true);
+  };
+
   useEffect(() => {
     const username = auth.user?.username;
     if (!username) {
@@ -73,6 +97,11 @@ export function HeaderMobile() {
     if (!auth?.user) return "";
     return auth.user.username || auth.user.email?.split("@")[0];
   };
+
+  const fullScreenModalClasses =
+    "fixed z-[100] left-0 top-0 w-screen h-[100dvh] max-w-none m-0 p-0 " +
+    "translate-x-0 translate-y-0 rounded-none border-none bg-slate-800 " +
+    "flex flex-col justify-center items-center data-[state=open]:animate-in data-[state=closed]:animate-out";
 
   return (
     <header
@@ -150,27 +179,75 @@ export function HeaderMobile() {
               </DropdownMenu>
             ) : (
               <div className="flex items-center space-x-1">
-                <Link
-                  href="/"
-                  className={buttonVariants({
-                    size: "sm",
-                    variant: "outline",
-                    className:
-                      "bg-blue-500 border border-blue-400 text-white hover:bg-blue-400 hover:text-white",
-                  })}
-                >
-                  Entrar
-                </Link>
-                <Link
-                  href="/register"
-                  className={buttonVariants({
-                    size: "sm",
-                    className:
-                      "bg-slate-700 border border-slate-600 hover:bg-slate-600",
-                  })}
-                >
-                  Registrar
-                </Link>
+                <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-blue-500 border border-blue-400 text-white hover:bg-blue-400 hover:text-white"
+                    >
+                      Entrar
+                    </Button>
+                  </DialogTrigger>
+
+                  <DialogContent className={fullScreenModalClasses}>
+                    <div className="w-full max-w-md px-6">
+                      <DialogHeader className="mb-6">
+                        <DialogTitle className="text-center text-2xl text-white">
+                          Bem-vindo de volta
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-slate-400">
+                          Acesse sua conta para continuar
+                        </DialogDescription>
+                      </DialogHeader>
+                      <LoginForm
+                        onSuccess={() => setIsLoginOpen(false)}
+                        onSwitchToRegister={openRegister}
+                      />
+                      <Button
+                        variant="ghost"
+                        className="mt-4 w-full text-slate-500"
+                        onClick={() => setIsLoginOpen(false)}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      size="sm"
+                      className="bg-slate-700 border border-slate-600 hover:bg-slate-600 text-white"
+                    >
+                      Registrar
+                    </Button>
+                  </DialogTrigger>
+
+                  <DialogContent className={fullScreenModalClasses}>
+                    <div className="w-full max-w-md px-6 overflow-y-auto max-h-[100dvh] py-8">
+                      <DialogHeader className="mb-6">
+                        <DialogTitle className="text-center text-2xl text-white">
+                          Crie sua conta
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-slate-400">
+                          Preencha os dados abaixo para começar
+                        </DialogDescription>
+                      </DialogHeader>
+                      <RegisterForm
+                        onSuccess={() => {}}
+                        onSwitchToLogin={openLogin}
+                      />
+                      <Button
+                        variant="ghost"
+                        className="mt-4 w-full text-slate-500"
+                        onClick={() => setIsRegisterOpen(false)}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             )}
             <button
