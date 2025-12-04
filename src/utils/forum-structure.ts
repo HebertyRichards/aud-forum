@@ -7,8 +7,20 @@ import {
   Pencil,
   Bell,
   Album,
+  type LucideIcon,
 } from "lucide-react";
-import { ForumCategory } from "@/types/forum";
+
+export type SubItem = {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+};
+
+export type ForumCategory = {
+  id: string;
+  title: string;
+  subItems: SubItem[];
+};
 
 export const forumStructure: ForumCategory[] = [
   {
