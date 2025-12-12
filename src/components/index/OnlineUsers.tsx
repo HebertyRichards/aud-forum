@@ -1,6 +1,5 @@
 "use client";
 
-import { useForumData } from "@/hooks/useForumData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,13 +8,15 @@ import { OnlineUser, RawOnlineUser } from "@/types/users";
 import Link from "next/link";
 import { useAuth } from "@/services/auth";
 import { getRoleColor } from "@/utils/colors";
+import { useOnlineUsers } from "@/services/online";
+
 export function OnlineUsers() {
   const { user: currentUser } = useAuth();
+  
+  const { onlineUsers } = useOnlineUsers();
 
-  const { data } = useForumData();
-
-  const users: OnlineUser[] = data?.onlineUsers
-    ? (data.onlineUsers as RawOnlineUser[]).map((item) => item.profiles)
+  const users: OnlineUser[] = onlineUsers
+    ? (onlineUsers as RawOnlineUser[]).map((item) => item.profiles)
     : [];
 
   return (

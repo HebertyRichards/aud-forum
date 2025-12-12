@@ -8,16 +8,32 @@ export type OnlineUser = Pick<UserProfile, "username" | "role" | "avatar_url">;
 
 export type Member = Pick<
   UserProfile,
-  "id" | "username" | "role" | "avatar_url" | "joined_at" | "last_login" | "mensagens_count"
+  | "id"
+  | "username"
+  | "role"
+  | "avatar_url"
+  | "joined_at"
+  | "last_login"
+  | "mensagens_count"
 > & {
-  messages: number; 
+  messages: number;
   rowNumber: number;
 };
 
+export interface WebSocketPayload {
+  type: "UPDATE_LIST";
+  users: RawOnlineUser[];
+}
 
 export type ApiMember = Pick<
   UserProfile,
-  "id" | "username" | "role" | "joined_at" | "last_login" | "avatar_url" | "mensagens_count"
+  | "id"
+  | "username"
+  | "role"
+  | "joined_at"
+  | "last_login"
+  | "avatar_url"
+  | "mensagens_count"
 >;
 
 export type MembersTableProps = {
