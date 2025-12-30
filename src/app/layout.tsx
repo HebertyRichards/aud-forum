@@ -4,6 +4,7 @@ import Footer from "@/templates/Footer";
 import "./globals.css";
 import { AuthProvider } from "@/services/auth";
 import { UserActivityTracker } from "@/services/activity";
+import { OnlineUserProvider } from "@/services/online";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -58,14 +59,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-          <div className="min-h-screen bg-slate-900">
-            <AuthProvider>
+        <div className="min-h-screen bg-slate-900">
+          <AuthProvider>
+            <OnlineUserProvider>
               <UserActivityTracker />
               <Header />
               <Providers>{children}</Providers>
               <Footer />
-            </AuthProvider>
-          </div>
+            </OnlineUserProvider>
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );
