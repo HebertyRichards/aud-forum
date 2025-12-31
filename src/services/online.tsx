@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { RawOnlineUser, WebSocketPayload } from "@/types/users";
+import { useAuth } from "@/services/auth";
 
 interface OnlineContextType {
   onlineUsers: RawOnlineUser[];
@@ -21,12 +22,17 @@ export function OnlineUserProvider({
   const [onlineUsers, setOnlineUsers] = useState<RawOnlineUser[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
+  const auth = useAuth();
+  const user = auth?.user;
+
   const socketRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isConnectingRef = useRef(false);
 
   useEffect(() => {
+    if (auth.loading) return;
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const wsBaseUrl = apiUrl?.replace(/^https?/, (match) =>
@@ -78,20 +84,19 @@ export function OnlineUserProvider({
             const data = JSON.parse(event.data) as WebSocketPayload;
 
             if (data.type === "UPDATE_LIST" && Array.isArray(data.users)) {
-              const validUsers = data.users.filter((user) => {
+              const validUsers = data.users.filter((u) => {
                 return (
-                  user &&
-                  typeof user === "object" &&
-                  user.profiles &&
-                  typeof user.profiles === "object" &&
-                  user.profiles.username &&
-                  typeof user.profiles.username === "string"
+                  u &&
+                  typeof u === "object" &&
+                  u.profiles &&
+                  typeof u.profiles === "object" &&
+                  u.profiles.username
                 );
               });
               setOnlineUsers(validUsers);
             }
           } catch (error) {
-            console.error("Erro ao processar: ", error);
+            console.error("Erro ao processar mensagem WS:", error);
           }
         };
 
@@ -120,8 +125,6 @@ export function OnlineUserProvider({
         socketRef.current = ws;
       } catch (error) {
         isConnectingRef.current = false;
-        console.error("Erro ao criar WebSocket:", error);
-
         if (shouldReconnect && reconnectAttempts < maxReconnectAttempts) {
           reconnectAttempts++;
           reconnectTimeoutRef.current = setTimeout(() => {
@@ -152,7 +155,7 @@ export function OnlineUserProvider({
         socketRef.current = null;
       }
     };
-  }, []);
+  }, [user?.username, auth.loading]);
 
   return (
     <OnlineContext.Provider value={{ onlineUsers, isConnected }}>

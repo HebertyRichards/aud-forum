@@ -34,12 +34,12 @@ export function OnlineUsers() {
       <CardContent>
         <div className="space-y-3">
           {!isConnected ? (
-            <p className="text-sm text-slate-400 text-center py-2">
-              Conectando...
+            <p className="text-sm text-slate-400 text-center py-2 animate-pulse">
+              Carregando...
             </p>
           ) : users.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-2">
-              Nenhum usuário online no momento
+              Nenhum usuário online no momento.
             </p>
           ) : (
             users.map((user) => {
@@ -48,20 +48,23 @@ export function OnlineUsers() {
               const profileUrl = isCurrentUser
                 ? "/profile"
                 : `/profile/${user.username}`;
+              const hasValidAvatar =
+                user.avatar_url && !user.avatar_url.includes("/profile/");
+
               return (
                 <div
                   key={user.username}
                   className="flex items-center space-x-2"
                 >
                   <Avatar className="w-6 h-6">
-                    {user.avatar_url ? (
+                    {hasValidAvatar ? (
                       <AvatarImage
-                        src={user.avatar_url}
+                        src={user.avatar_url!}
                         alt={`avatar de ${user.username}`}
                       />
                     ) : (
-                      <AvatarFallback className="text-xs bg-slate-600">
-                        {user.username[0]}
+                      <AvatarFallback className="text-xs bg-slate-600 select-none">
+                        {user.username[0].toUpperCase()}
                       </AvatarFallback>
                     )}
                   </Avatar>
