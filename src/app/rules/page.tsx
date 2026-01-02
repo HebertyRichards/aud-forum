@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import axios from "axios";
 
 const ALLOWED_ROLES = ["Auditore", "Leader", "Fundador", "Desenvolvedor"];
 
@@ -14,8 +13,13 @@ const fetchUserProfile = async (userId: string | undefined) => {
   if (!userId) {
     throw new Error("User ID is required");
   }
-  const res = await axios.get(`/api/profile/${userId}`);
-  return res.data;
+  const res = await fetch(`/api/profile/${userId}`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Falha ao carregar o perfil do usuário.");
+  }
+  return await res.json();
 };
 
 export default function Rules() {

@@ -15,7 +15,7 @@ import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Link from "next/link";
-import { RecentPost } from "@/types/post";
+import { RecentPost } from "@/schema/forum";
 import { getRoleColor } from "@/utils/colors";
 
 export function RecentPosts() {

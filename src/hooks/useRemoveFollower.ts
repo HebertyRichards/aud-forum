@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "sonner";
 
 type RemoveFollowerVars = {
@@ -10,10 +9,15 @@ type RemoveFollowerVars = {
 };
 
 const removeFollowerFn = async ({ followerUsername }: RemoveFollowerVars) => {
-  const { data } = await axios.delete(
-    `/api/follow/followers/${followerUsername}`,
-    { withCredentials: true }
-  );
+  const res = await fetch(`/api/follow/followers/${followerUsername}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || "Não foi possível remover o seguidor.");
+  }
+  const data = await res.json();
   return data;
 };
 
@@ -25,12 +29,16 @@ export const useRemoveFollower = () => {
     onSuccess: (data, variables) => {
       toast.success(data.message || "Seguidor removido com sucesso!");
       const { profileOwnerUsername } = variables;
-      queryClient.invalidateQueries({ queryKey: ["followModalList", profileOwnerUsername] });
-      queryClient.invalidateQueries({ queryKey: ["followStats", profileOwnerUsername] });
+      queryClient.invalidateQueries({
+        queryKey: ["followModalList", profileOwnerUsername],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["followStats", profileOwnerUsername],
+      });
     },
     onError: (err) => {
-      if (axios.isAxiosError(err) && err.response?.data?.error) {
-        toast.error(err.response.data.error);
+      if (err instanceof Error) {
+        toast.error(err.message);
       } else {
         toast.error("Não foi possível remover o seguidor.");
       }

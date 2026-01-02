@@ -4,12 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTopicPage } from "@/hooks/useTopic";
-import {
-  Comment,
-  TopicDetails,
-  CommentHandlers,
-  TopicHandlers,
-} from "@/types/post";
+import { TopicDetails, UpdateTopic, Comment } from "@/schema/forum";
 import { PublishForm } from "@/components/PublishTopicForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserWithProfile } from "@/types/autentication";
@@ -30,6 +25,16 @@ import { getRoleColor } from "@/utils/colors";
 import { Toaster } from "sonner";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { PaginationControls } from "@/components/PaginationControls";
+
+interface TopicHandlers {
+  handleDeleteTopic: () => void;
+  handleUpdateTopic: (editData: UpdateTopic) => void;
+}
+
+interface CommentHandlers {
+  handleDeleteComment: (commentId: number) => void;
+  handleUpdateComment: (commentId: number, content: string) => void;
+}
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false);

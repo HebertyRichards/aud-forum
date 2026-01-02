@@ -10,17 +10,21 @@ import {
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
-import axios from "axios";
-import { UserProfile } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
 
 const fetchUserProfile = async (
   username: string
 ): Promise<UserProfile | null> => {
   try {
-    const { data } = await axios.get(`/api/profile/${username}`);
-    return data;
+    const res = await fetch(`/api/profile/${username}`, {
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Falha ao carregar o perfil do usuário.");
+    }
+    return await res.json();
   } catch {
-    return null;
+    throw new Error("Falha ao carregar o perfil do usuário.");
   }
 };
 

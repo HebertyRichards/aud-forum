@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, MessageSquare, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/dateUtils";
-import type { UserProfile } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
 
 export type StatisticsTabProps = Pick<UserProfile, "username">;
 export function TopicsTab({ username }: StatisticsTabProps) {

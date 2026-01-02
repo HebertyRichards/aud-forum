@@ -2,7 +2,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContextType, UserWithProfile } from "@/types/autentication";
 import { handleAuthError } from "@/utils/errorsAuth";
-import axios from "axios";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,10 +11,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const checkUserSession = async () => {
     try {
-      const res = await axios.get(`/api/auth/session`, {
-        withCredentials: true,
+      const res = await fetch(`/api/auth/session`, {
+        credentials: "include",
       });
-      setUser(res.data);
+      if (!res.ok) {
+        throw new Error("Sessão inválida");
+      }
+      const data = await res.json();
+      setUser(data);
     } catch {
       setUser(null);
     } finally {
@@ -33,11 +36,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     keepLogged: boolean
   ) => {
     try {
-      await axios.post(
-        `/api/auth/login`,
-        { email, password, keepLogged },
-        { withCredentials: true }
-      );
+      const res = await fetch(`/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, keepLogged }),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message);
+      }
       await checkUserSession();
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível fazer o login.");
@@ -50,11 +60,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string
   ) => {
     try {
-      await axios.post(`/api/auth/register`, {
-        username,
-        email,
-        password,
+      const res = await fetch(`/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message);
+      }
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível completar o registro.");
     }
@@ -62,7 +82,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`/api/auth/logout`, {}, { withCredentials: true });
+      const res = await fetch(`/api/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message);
+      }
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível fazer o logout.");
     } finally {
@@ -72,12 +103,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updatePassword = async (newPassword: string, accessToken?: string) => {
     try {
-      const res = await axios.put(
-        `/api/auth/change-password`,
-        { newPassword, accessToken },
-        { withCredentials: true }
-      );
-      return res.data;
+      const res = await fetch(`/api/auth/change-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newPassword, accessToken }),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message);
+      }
+      const data = await res.json();
+      return data;
     } catch (error: unknown) {
       throw handleAuthError(error, "Não foi possível atualizar a senha.");
     }
@@ -85,10 +124,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const forgotPassword = async (email: string) => {
     try {
-      const res = await axios.post(`/api/auth/forgot-password`, {
-        email,
+      const res = await fetch(`/api/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
       });
-      return res.data;
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message);
+      }
+      const data = await res.json();
+      return data;
     } catch (error: unknown) {
       throw handleAuthError(
         error,

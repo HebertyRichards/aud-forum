@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import { UserProfile } from "./profile";
+import { UserProfile } from "@/schema/user";
 
 export interface AuthContextType {
   user: UserWithProfile | null;

@@ -10,8 +10,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PublishFormProps } from "@/types/post";
 import { RichTextEditor } from "./RichTextEditor";
+
+export interface PublishFormProps<T extends "topic" | "comment"> {
+  type: T;
+  onSubmit: () => void;
+  isSubmitting?: boolean;
+  className?: string;
+  content: string;
+  setContent: (value: string) => void;
+  title?: string;
+  setTitle?: (value: string) => void;
+  onImageAdd?: (file: File) => void;
+}
 
 export function PublishForm<T extends "topic" | "comment">({
   type,

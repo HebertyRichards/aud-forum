@@ -66,7 +66,7 @@ export default function NewPasswordForm() {
       setSucesso(
         "Senha atualizada com sucesso! Redirecionando para o login..."
       );
-      router.push("/login");
+      router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);

@@ -14,7 +14,6 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import axios from "axios";
 
 interface PasswordCardProps {
   onClose: () => void;
@@ -34,11 +33,21 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
     }
     setIsLoading(true);
     try {
-      await axios.patch(
-        `/api/auth/update-password`,
-        { newPassword },
-        { withCredentials: true }
-      );
+      const res = await fetch(`/api/auth/update-password`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newPassword }),
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || errorData.message || "Falha ao alterar a senha."
+        );
+      }
 
       toast.success("Senha alterada com sucesso!");
       setTimeout(() => {
@@ -46,9 +55,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
       }, 1500);
     } catch (error: unknown) {
       let errorMessage = "Falha ao alterar a senha.";
-      if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
       toast.error(errorMessage);

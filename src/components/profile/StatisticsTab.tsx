@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { formatPostTimestamp } from "@/utils/dateUtils";
-import type { UserProfile } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
 
 export type StatisticsTabProps = Pick<UserProfile, "username">;
 
@@ -43,7 +43,7 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
         <Separator className="bg-slate-600" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">Última postagem:</span>
-          <span>{formatPostTimestamp(stats.lastPostDate)}</span>
+          <span>{formatPostTimestamp(stats.lastPostDate ?? null)}</span>
         </div>
         <Separator className="bg-slate-600" />
         <div className="flex justify-between py-2">

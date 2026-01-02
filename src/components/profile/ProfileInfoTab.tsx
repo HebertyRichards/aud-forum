@@ -4,21 +4,43 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import { UpdateData } from "./UpdateData";
 import { formatDate, formatLastLogin } from "@/utils/dateUtils";
-import type { ProfileInfoTabProps } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
+
+type ProfileTabCommonProps = {
+  profile: UserProfile | null;
+  isOwnProfile: boolean;
+  onSuccessUpdate: () => void;
+  isUpdating?: boolean;
+};
 
 export function ProfileInfoTab({
   profile,
   isOwnProfile,
   isUpdating,
   onSuccessUpdate,
-}: ProfileInfoTabProps) {
+}: ProfileTabCommonProps) {
   return (
     <TabsContent value="perfil" className="mt-4">
       <Card className="border-gray-700 bg-slate-800 text-white">
         <CardHeader>
           <CardTitle>Sobre</CardTitle>
           {isOwnProfile && profile && (
-            <UpdateData profile={profile} onSuccess={onSuccessUpdate} />
+            <UpdateData
+              profile={{
+                ...profile,
+                avatar_url: profile.avatar_url ?? undefined,
+                gender: profile.gender ?? undefined,
+                birthdate: profile.birthdate ?? undefined,
+                location: profile.location ?? undefined,
+                website: profile.website ?? undefined,
+                facebook: profile.facebook ?? undefined,
+                instagram: profile.instagram ?? undefined,
+                discord: profile.discord ?? undefined,
+                steam: profile.steam ?? undefined,
+                last_login: profile.last_login ?? undefined,
+              }}
+              onSuccess={onSuccessUpdate}
+            />
           )}
         </CardHeader>
         <CardContent className="space-y-4">

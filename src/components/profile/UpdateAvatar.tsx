@@ -4,9 +4,12 @@ import { useState, useRef } from "react";
 import { useAuth } from "@/services/auth";
 import imageCompression from "browser-image-compression";
 import { Loader2, Camera, Trash2 } from "lucide-react";
-import { UpdateAvatarProps } from "@/types/profile";
 import { toast } from "sonner";
-import axios from "axios";
+
+interface UpdateAvatarProps {
+  onSuccess: () => void;
+  currentAvatarUrl?: string | null;
+}
 
 export function UpdateAvatar({
   currentAvatarUrl,
@@ -35,20 +38,24 @@ export function UpdateAvatar({
       if (!user) throw new Error("Usuário não encontrado.");
       const formData = new FormData();
       formData.append("avatar", compressedFile);
-      const res = await axios.patch(`/api/profile/user/avatar`, formData, {
-        withCredentials: true,
+      const res = await fetch(`/api/profile/user/avatar`, {
+        method: "PATCH",
+        body: formData,
+        credentials: "include",
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao atualizar o avatar.");
+      }
+      const data = await res.json();
       toast.success("Avatar atualizado com sucesso!", { id: toastId });
-      updateUserAvatar(res.data.avatar_url);
+      updateUserAvatar(data.avatar_url);
       setTimeout(() => {
         window.location.reload();
       }, 500);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado";
-      if (axios.isAxiosError(error)) {
-        errorMessage =
-          error.response?.data?.error || "Falha ao atualizar o avatar.";
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
       setError(errorMessage);
@@ -63,21 +70,23 @@ export function UpdateAvatar({
     setError(null);
     const toastId = toast.loading("Removendo avatar...");
     try {
-      const res = await axios.delete(`/api/profile/user/avatar`, {
-        withCredentials: true,
+      const res = await fetch(`/api/profile/user/avatar`, {
+        method: "DELETE",
+        credentials: "include",
       });
-
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao remover o avatar.");
+      }
+      const data = await res.json();
       toast.success("Avatar removido com sucesso!", { id: toastId });
-      updateUserAvatar(res.data.avatar_url);
+      updateUserAvatar(data.avatar_url);
       setTimeout(() => {
         window.location.reload();
       }, 500);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado";
-      if (axios.isAxiosError(error)) {
-        errorMessage =
-          error.response?.data?.error || "Falha ao remover o avatar.";
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
       setError(errorMessage);

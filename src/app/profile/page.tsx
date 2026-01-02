@@ -3,10 +3,9 @@
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UserProfile, FollowStats } from "@/types/profile";
+import { UserProfile, FollowStats } from "@/schema/user";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
-import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Profile() {
@@ -18,23 +17,24 @@ export default function Profile() {
   const fetchOwnProfile = async (username: string) => {
     try {
       const [res, statsRes] = await Promise.all([
-        axios.get(`/api/profile/${username}`),
-        axios.get(`/api/follow/${username}/stats`).catch(() => null),
+        fetch(`/api/profile/${username}`, {
+          credentials: "include",
+        }),
+        fetch(`/api/follow/${username}/stats`, {
+          credentials: "include",
+        }),
       ]);
 
-      const profileData: UserProfile = res.data;
-      const statsData: FollowStats | null = statsRes ? statsRes.data : null;
+      const profileData: UserProfile = await res.json();
+      const statsData: FollowStats | null = statsRes ? await statsRes.json() : null;
 
       return { profile: profileData, stats: statsData };
     } catch (error: unknown) {
       let errorMessage = "Não foi possível carregar os dados do seu perfil.";
-
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
-      throw new Error(errorMessage);
+      throw new Error(errorMessage || "Ocorreu uma falha inesperada.");
     }
   };
 
@@ -48,7 +48,7 @@ export default function Profile() {
   useEffect(() => {
     if (auth.loading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/");
     }
   }, [user, auth.loading, router]);
 

@@ -7,11 +7,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MembersTableProps } from "@/types/users";
 import { formatLastLogin, formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
 import { useAuth } from "@/services/auth";
+import { Member } from "@/schema/forum";
+
+type MembersTableProps = {
+  members: Member[];
+  isLoading: boolean;
+  error: string | null;
+};
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   const { user } = useAuth();
@@ -83,7 +89,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                 </TableCell>
                 <TableCell>{formatDate(member.joined_at)}</TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {formatLastLogin(member.last_login)}
+                  {formatLastLogin(member.last_login ?? null)}
                 </TableCell>
                 <TableCell className="hidden md:table-cell font-medium">
                   {member.messages}

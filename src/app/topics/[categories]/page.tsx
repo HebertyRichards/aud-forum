@@ -25,7 +25,13 @@ import { formatPostTimestamp } from "@/utils/dateUtils";
 import { useAuth } from "@/services/auth";
 import { getTopicsByCategory } from "@/services/topic";
 import { usePermissions } from "@/hooks/usePermissions";
-import { PaginationControlsProps, TopicSummary } from "@/types/post";
+import { TopicSummary } from "@/schema/forum";
+
+interface PaginationControlsProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
 const PaginationControls = ({
   currentPage,
@@ -244,7 +250,9 @@ export default function CategoryTopicPage() {
 
   const renderMainContent = () => {
     if (isLoading) {
-      return <div className="text-center p-10 text-white">Carregando tópicos...</div>;
+      return (
+        <div className="text-center p-10 text-white">Carregando tópicos...</div>
+      );
     }
 
     if (view === "create") {

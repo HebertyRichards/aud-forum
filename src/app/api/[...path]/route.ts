@@ -25,7 +25,7 @@ async function handler(req: NextRequest) {
     });
 
     if (response.status === 401) {
-      const loginUrl = new URL("/login", req.url);
+      const loginUrl = new URL("/", req.url);
       return NextResponse.redirect(loginUrl);
     }
 

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { DashboardData } from "@/types/post";
+import { DashboardData } from "@/schema/forum";
 
 const fetchForumDashboardData = async (): Promise<DashboardData> => {
   const res = await fetch(`/api/forum/data`);

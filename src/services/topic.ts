@@ -1,46 +1,92 @@
-import { NewTopicData, UpdateTopicData, NewCommentData } from "@/types/post";
-import axios from "axios";
+import { NewTopic, UpdateTopic, NewComment } from "@/schema/forum";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const getErrorMessage = (error: unknown): string => {
-  if (axios.isAxiosError(error) && error.response?.data?.message) {
-    return error.response.data.message;
+const getErrorMessage = async (response: Response): Promise<string> => {
+  try {
+    const data = await response.json();
+    return data.message || "Ocorreu um erro desconhecido.";
+  } catch {
+    return "Ocorreu um erro desconhecido.";
   }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return "Ocorreu um erro desconhecido.";
 };
 
-export async function getTopicsByCategory(category: string, page: number, limit: number) {
+export async function getTopicsByCategory(
+  category: string,
+  page: number,
+  limit: number
+) {
   try {
-    const response = await axios.get(`/api/categories/topics/category/${category}?page=${page}&limit=${limit}`);
-    return response.data;
+    const response = await fetch(
+      `/api/categories/topics/category/${category}?page=${page}&limit=${limit}`,
+      {
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
 export async function getTopicBySlug(slug: string) {
   try {
-    const response = await axios.get(`${API_URL}/posts/topics/slug/${slug}`);
-    return response.data.data; 
+    const response = await fetch(`${API_URL}/posts/topics/slug/${slug}`, {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data.data;
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
-export async function getTopicBySlugWithComments(slug: string, page: number, limit: number) {
+export async function getTopicBySlugWithComments(
+  slug: string,
+  page: number,
+  limit: number
+) {
   try {
-    const response = await axios.get(`/api/posts/topics/slug/${slug}?page=${page}&limit=${limit}`);
-    return response.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));  
+    const response = await fetch(
+      `/api/posts/topics/slug/${slug}?page=${page}&limit=${limit}`,
+      {
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
-export async function createTopic(data: NewTopicData, images: File[]) {
+export async function createTopic(data: NewTopic, images: File[]) {
   try {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -50,102 +96,185 @@ export async function createTopic(data: NewTopicData, images: File[]) {
       formData.append("files", image);
     });
 
-    const response = await axios.post(`/api/posts/topics`, formData, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    const response = await fetch(`/api/posts/topics`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
     });
-    return response.data;
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
-export async function updateTopic(topicId: number, data: UpdateTopicData) {
+export async function updateTopic(topicId: number, data: UpdateTopic) {
   try {
-    const response = await axios.patch(`/api/posts/topics/${topicId}`, data, {
-      withCredentials: true,
+    const response = await fetch(`/api/posts/topics/${topicId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
     });
-    return response.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));  
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
 export async function deleteTopic(topicId: number) {
   try {
-    await axios.delete(`/api/posts/topics/${topicId}`, {
-      withCredentials: true,
+    const response = await fetch(`/api/posts/topics/${topicId}`, {
+      method: "DELETE",
+      credentials: "include",
     });
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
 export async function deleteComment(commentId: number) {
   try {
-    await axios.delete(`/api/posts/comments/${commentId}`, {
-      withCredentials: true,
+    const response = await fetch(`/api/posts/comments/${commentId}`, {
+      method: "DELETE",
+      credentials: "include",
     });
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
 export async function updateComment(commentId: number, content: string) {
   try {
-    const response = await axios.patch(`/api/posts/comments/${commentId}`, { content }, {
-      withCredentials: true,
+    const response = await fetch(`/api/posts/comments/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+      credentials: "include",
     });
-    return response.data;
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));  
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
-export async function createComment(data: NewCommentData, images: File[]) {
+export async function createComment(data: NewComment, images: File[]) {
   try {
     const formData = new FormData();
-    formData.append("content", data.content);
+    if (data.content) {
+      formData.append("content", data.content);
+    }
     images.forEach((image) => {
       formData.append("files", image);
     });
 
-    const response = await axios.post(
-      `/api/posts/topics/${data.topicId}/comments`,
-      formData,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return response.data;
+    const response = await fetch(`/api/posts/topics/${data.topicId}/comments`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
   } catch (error: unknown) {
-    throw new Error(getErrorMessage(error));
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Ocorreu um erro desconhecido.");
   }
 }
 
-export async function checkTopicCreationPermission(category: string): Promise<boolean> {
+export async function checkTopicCreationPermission(
+  category: string
+): Promise<boolean> {
   try {
-    const response = await axios.post(`/api/permission/topics/check-permission`, 
-      { category }, 
-      { withCredentials: true }
-    );
-    return response.data.allowed;
+    const response = await fetch(`/api/permission/topics/check-permission`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ category }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+    return data.allowed;
   } catch {
     return false;
   }
 }
 
-export async function checkCommentCreationPermission(topicId: number): Promise<boolean> {
+export async function checkCommentCreationPermission(
+  topicId: number
+): Promise<boolean> {
   try {
-    const response = await axios.get(`/api/permission/comments/${topicId}/check-permission`, {
-      withCredentials: true,
-    });
-    return response.data.allowed;
+    const response = await fetch(
+      `/api/permission/comments/${topicId}/check-permission`,
+      {
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+    return data.allowed;
   } catch {
     return false;
   }

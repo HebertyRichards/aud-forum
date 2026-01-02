@@ -57,7 +57,7 @@ export default function RecoveryPassword() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <main className="flex-grow flex items-center justify-center p-4">
+      <main className="grow flex items-center justify-center p-4">
         <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-slate-800">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">
@@ -96,7 +96,7 @@ export default function RecoveryPassword() {
               {loading ? "Enviando..." : "Enviar link de recuperação"}
             </Button>
             <Button variant="link" asChild>
-              <Link href="/login" className="text-white hover:text-blue-300">
+              <Link href="/" className="text-white hover:text-blue-300">
                 Voltar para o login
               </Link>
             </Button>

@@ -6,7 +6,6 @@ import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useFollow } from "@/hooks/useFollow";
-import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function OtherProfile() {
@@ -18,23 +17,26 @@ export default function OtherProfile() {
 
   const fetchUserProfile = async (profileUsername: string) => {
     try {
-      const axiosOptions = { withCredentials: true };
       const [profileRes, statsRes, isFollowingRes] = await Promise.all([
-        axios.get(`/api/profile/user/${profileUsername}`),
-        axios.get(`/api/follow/${profileUsername}/stats`),
-        axios.get(`/api/follow/${profileUsername}/is-following`, axiosOptions),
+        fetch(`/api/profile/user/${profileUsername}`, {
+          credentials: "include",
+        }),
+        fetch(`/api/follow/${profileUsername}/stats`, {
+          credentials: "include",
+        }),
+        fetch(`/api/follow/${profileUsername}/is-following`, {
+          credentials: "include",
+        }),
       ]);
 
       return {
-        profile: profileRes.data,
-        stats: statsRes.data,
-        isFollowing: isFollowingRes.data.isFollowing,
+        profile: await profileRes.json(),
+        stats: await statsRes.json(),
+        isFollowing: await isFollowingRes.json(),
       };
     } catch (error: unknown) {
       let errorMessage = "Ocorreu uma falha inesperada ao carregar o perfil.";
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
       throw new Error(errorMessage);
@@ -67,7 +69,7 @@ export default function OtherProfile() {
   useEffect(() => {
     if (auth.loading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/");
       return;
     }
     if (user.username === username) {
