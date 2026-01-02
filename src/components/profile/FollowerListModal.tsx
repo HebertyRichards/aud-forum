@@ -6,11 +6,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
-import { UserPreview, FollowListModalProps } from "@/types/profile";
+import { UserPreview } from "@/schema/user";
 import { Button } from "../ui/button";
 import { useRemoveFollower } from "@/hooks/useRemoveFollower";
 import { toast } from "sonner";
 import { getRoleColor } from "@/utils/colors";
+
+interface FollowListModalProps {
+  username: string;
+  listType: "followers" | "following";
+  onClose: () => void;
+  isOwnProfile: boolean;
+}
 
 const fetchModalUsers = async (
   username: string,

@@ -12,8 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { ProfileUpdateFormProps } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
 import { toast } from "sonner";
+
+interface ProfileUpdateFormProps {
+  profile: Partial<UserProfile>;
+  onSuccess: () => void;
+}
 
 export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;

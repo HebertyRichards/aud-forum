@@ -4,8 +4,12 @@ import { useState, useRef } from "react";
 import { useAuth } from "@/services/auth";
 import imageCompression from "browser-image-compression";
 import { Loader2, Camera, Trash2 } from "lucide-react";
-import { UpdateAvatarProps } from "@/types/profile";
 import { toast } from "sonner";
+
+interface UpdateAvatarProps {
+  onSuccess: () => void;
+  currentAvatarUrl?: string | null;
+}
 
 export function UpdateAvatar({
   currentAvatarUrl,

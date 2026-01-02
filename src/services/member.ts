@@ -1,4 +1,4 @@
-import { UserProfile } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
 import { Member } from "@/schema/forum";
 
 type ApiMember = Pick<

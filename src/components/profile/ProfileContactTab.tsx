@@ -5,20 +5,41 @@ import { Globe, Facebook, Instagram } from "lucide-react";
 import { FaDiscord, FaSteam } from "react-icons/fa";
 import { UpdateContacts } from "./UpdateContacts";
 import { formatUrl } from "@/utils/urlUtils";
-import type { ProfileContactTabProps } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
+
+type ProfileTabCommonProps = {
+  profile: UserProfile | null;
+  isOwnProfile: boolean;
+  onSuccessUpdate: () => void;
+};
 
 export function ProfileContactTab({
   profile,
   isOwnProfile,
   onSuccessUpdate,
-}: ProfileContactTabProps) {
+}: ProfileTabCommonProps) {
   return (
     <TabsContent value="contato" className="mt-4">
       <Card className="border-slate-700 bg-slate-800 text-white">
         <CardHeader>
           <CardTitle>Contatos</CardTitle>
           {isOwnProfile && profile && (
-            <UpdateContacts profile={profile} onSuccess={onSuccessUpdate} />
+            <UpdateContacts
+              profile={{
+                ...profile,
+                avatar_url: profile.avatar_url ?? undefined,
+                gender: profile.gender ?? undefined,
+                birthdate: profile.birthdate ?? undefined,
+                location: profile.location ?? undefined,
+                website: profile.website ?? undefined,
+                facebook: profile.facebook ?? undefined,
+                instagram: profile.instagram ?? undefined,
+                discord: profile.discord ?? undefined,
+                steam: profile.steam ?? undefined,
+                last_login: profile.last_login ?? undefined,
+              }}
+              onSuccess={onSuccessUpdate}
+            />
           )}
         </CardHeader>
         <CardContent className="space-y-4">

@@ -1,4 +1,4 @@
-import { UserStats } from "@/types/profile";
+import { UserStats } from "@/schema/user";
 import { TopicSummary } from "@/schema/forum";
 
 export async function getUserStats(username: string): Promise<UserStats> {

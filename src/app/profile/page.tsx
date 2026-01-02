@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UserProfile, FollowStats } from "@/types/profile";
+import { UserProfile, FollowStats } from "@/schema/user";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";

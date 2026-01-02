@@ -3,7 +3,12 @@
 import { useFollow } from "@/hooks/useFollow";
 import { Button } from "@/components/ui/button";
 import { Loader2, UserPlus, UserMinus } from "lucide-react";
-import { FollowButtonProps } from "@/types/profile";
+
+interface FollowButtonProps {
+  profileUsername: string;
+  isFollowing: boolean;
+  followersCount: number;
+}
 
 export function FollowButton({
   profileUsername,

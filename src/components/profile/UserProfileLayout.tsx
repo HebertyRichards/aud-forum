@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertTriangle, ChevronDown } from "lucide-react";
-import { UserProfileLayoutProps } from "@/types/profile";
+import { UserProfile, FollowState } from "@/schema/user";
 import { FollowListModal } from "./FollowerListModal";
 import { StatisticsTab } from "./StatisticsTab";
 import { TopicsTab } from "./TopicsTab";
@@ -19,6 +19,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileContactTab } from "./ProfileContactTab";
 import { ProfileInfoTab } from "./ProfileInfoTab";
 import { UserProfileSidebar } from "./UserProfileSidebar";
+
+interface UserProfileLayoutProps {
+  profile: UserProfile | null;
+  isLoading: boolean;
+  isUpdating?: boolean;
+  error: string | null;
+  isOwnProfile: boolean;
+  onSuccessUpdate: () => void;
+  followState: FollowState;
+}
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false);
@@ -167,7 +177,23 @@ export function UserProfileLayout({
             <div className="mt-4">
               {activeTab === "perfil" && (
                 <ProfileInfoTab
-                  profile={profile}
+                  profile={
+                    profile
+                      ? {
+                          ...profile,
+                          avatar_url: profile.avatar_url ?? undefined,
+                          gender: profile.gender ?? undefined,
+                          birthdate: profile.birthdate ?? undefined,
+                          location: profile.location ?? undefined,
+                          website: profile.website ?? undefined,
+                          facebook: profile.facebook ?? undefined,
+                          instagram: profile.instagram ?? undefined,
+                          discord: profile.discord ?? undefined,
+                          steam: profile.steam ?? undefined,
+                          last_login: profile.last_login ?? "",
+                        }
+                      : null
+                  }
                   isOwnProfile={isOwnProfile}
                   isUpdating={isUpdating}
                   onSuccessUpdate={onSuccessUpdate}

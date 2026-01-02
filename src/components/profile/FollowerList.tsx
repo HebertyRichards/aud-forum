@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { UserPreview, FollowerListProps } from "@/types/profile";
+import { UserPreview } from "@/schema/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
+
+interface FollowerListProps {
+  username: string;
+  type: "followers" | "following";
+}
 
 const fetchFollowList = async (
   username: string,

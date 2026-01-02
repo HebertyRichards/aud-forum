@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getUserStats } from '@/services/profile';
-import type { UserStats } from '@/types/profile'; 
+import { UserStats } from '@/schema/user';
 
 export function useUserStats(username?: string) {
   const { 

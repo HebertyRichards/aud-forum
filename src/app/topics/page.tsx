@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ApiCategory } from "@/types/post";
 import { Button } from "@/components/ui/button";
 import { categoryDetailsMap } from "@/utils/utilities";
 import { useCategory } from "@/hooks/useCategory";
 import { Folder, ChevronRight, ArrowLeft, Loader2 } from "lucide-react";
+
+interface ApiCategory {
+  slug: string;
+  name: string;
+  description?: string;
+}
 
 export default function TopicsIndexPage() {
   const { data, isLoading, error } = useCategory();
