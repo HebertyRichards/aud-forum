@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getTopicsByAuthor } from '@/services/profile';
-import { TopicSummary } from '@/types/post';
+import { TopicSummary } from '@/schema/forum';
 
 export function useUserTopics(username?: string) {
   const {

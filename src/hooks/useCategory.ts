@@ -1,10 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApiCategory } from "@/types/post";
-import axios from "axios";
 
 const fetchCategory = async (): Promise<ApiCategory[]> => {
-  const response = await axios.get("/api/categories");
-  return response.data ?? [];
+  const response = await fetch("/api/categories", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+  const data = await response.json();
+  return data ?? [];
 };
 
 export const useCategory = () => {

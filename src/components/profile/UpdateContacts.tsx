@@ -14,7 +14,6 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { ProfileUpdateFormProps } from "@/types/profile";
 import { toast } from "sonner";
-import axios from "axios";
 
 export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;
@@ -52,19 +51,22 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
     try {
       const payload = { ...form, id: user?.id };
 
-      await axios.put(`/api/profile/update`, payload, {
-        withCredentials: true,
+      const res = await fetch(`/api/profile/update`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        credentials: "include",
       });
-
-      toast.success("Perfil atualizado com sucesso!", { id: toastId });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao atualizar os contatos.");
+      }
+      const data = await res.json();
+      toast.success("Contatos atualizados com sucesso!", { id: toastId });
       if (onSuccess) onSuccess();
       setOpen(false);
     } catch (error: unknown) {
       let errorMessage = "Ocorreu um erro inesperado";
-      if (axios.isAxiosError(error)) {
-        errorMessage =
-          error.response?.data?.error || "Erro ao atualizar o perfil";
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         errorMessage = error.message;
       }
       setError(errorMessage);

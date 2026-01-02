@@ -9,7 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MembersFiltersProps } from "@/types/users";
+
+interface MembersFiltersProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  sortBy: string;
+  setSortBy: (value: string) => void;
+  sortOrder: string;
+  setSortOrder: (value: string) => void;
+}
 
 export function MembersFilters({
   searchTerm,

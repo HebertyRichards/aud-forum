@@ -213,6 +213,7 @@ export function UserProfileLayout({
           </Tabs>
         </main>
         <UserProfileSidebar
+          isLoading={isLoading}
           profile={profile}
           isOwnProfile={isOwnProfile}
           followState={followState}

@@ -1,8 +1,13 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { RawOnlineUser, WebSocketPayload } from "@/types/users";
 import { useAuth } from "@/services/auth";
+import { RawOnlineUser, OnlineUser } from "@/schema/forum";
+
+interface WebSocketPayload {
+  type: "UPDATE_LIST";
+  users: RawOnlineUser[];
+}
 
 interface OnlineContextType {
   onlineUsers: RawOnlineUser[];

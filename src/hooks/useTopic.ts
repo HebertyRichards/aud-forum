@@ -17,7 +17,7 @@ import {
   deleteComment,
   updateComment,
 } from "@/services/topic";
-import { NewCommentData, TopicDetails, UpdateTopicData } from "@/types/post";
+import { NewComment, TopicDetails, UpdateTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
 
@@ -59,7 +59,7 @@ export function useTopicPage() {
   const totalComments = data?.totalComments ?? 0;
 
   const createCommentMutation = useMutation({
-    mutationFn: (variables: { commentData: NewCommentData; images: File[] }) =>
+    mutationFn: (variables: { commentData: NewComment; images: File[] }) =>
       createComment(variables.commentData, variables.images),
     onSuccess: () => {
       toast.success("Comentário publicado com sucesso!");
@@ -102,7 +102,7 @@ export function useTopicPage() {
   });
 
   const updateTopicMutation = useMutation({
-    mutationFn: (variables: { topicId: number; editData: UpdateTopicData }) =>
+    mutationFn: (variables: { topicId: number; editData: UpdateTopic }) =>
       updateTopic(variables.topicId, variables.editData),
     onSuccess: () => {
       toast.success("Tópico atualizado com sucesso!");
@@ -121,7 +121,7 @@ export function useTopicPage() {
       handleCommentSubmit: () => {
         if (!canCreateComment) return toast.error("Você não tem permissão para comentar.");
         if (!topic || !newCommentContent.trim()) return;
-        const commentData: NewCommentData = { content: newCommentContent, topicId: topic.id };
+        const commentData: NewComment = { content: newCommentContent, topicId: topic.id };
         createCommentMutation.mutate({ commentData, images: commentImages });
       },
       handleDeleteComment: (commentId: number) => {
@@ -137,7 +137,7 @@ export function useTopicPage() {
           deleteTopicMutation.mutate(topic.id);
         }
       },
-      handleUpdateTopic: (editData: UpdateTopicData) => {
+      handleUpdateTopic: (editData: UpdateTopic) => {
         if (!topic) return;
         updateTopicMutation.mutate({ topicId: topic.id, editData });
       },

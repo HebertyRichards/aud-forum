@@ -39,8 +39,9 @@ export default function MembersList() {
           break;
         case "ultima-visita":
         default:
-          compareResult =
-            new Date(b.last_login).getTime() - new Date(a.last_login).getTime();
+          const aTime = a.last_login ? new Date(a.last_login).getTime() : 0;
+          const bTime = b.last_login ? new Date(b.last_login).getTime() : 0;
+          compareResult = bTime - aTime;
           break;
       }
       return sortOrder === "crescente" ? compareResult : -compareResult;

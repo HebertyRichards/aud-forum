@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 export const useFollow = (
   profileUsername: string,
@@ -27,16 +26,23 @@ export const useFollow = (
     setFollowersCount((prev) => prev + 1);
 
     try {
-      await axios.post(
-        `/api/follow/${profileUsername}/follow`,
-        {},
-        { withCredentials: true }
-      );
+      const res = await fetch(`/api/follow/${profileUsername}/follow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao seguir o usuário.");
+      }
     } catch (error: unknown) {
       setIsFollowing(false);
       setFollowersCount((prev) => prev - 1);
-      if (axios.isAxiosError(error)) {
-        setError(error.response?.data?.message || "Falha ao seguir o usuário.");
+      if (error instanceof Error) {
+        setError(error.message);
       } else {
         setError("Ocorreu um erro ao tentar seguir o usuário.");
       }
@@ -52,16 +58,21 @@ export const useFollow = (
     setFollowersCount((prev) => Math.max(0, prev - 1));
 
     try {
-      await axios.delete(`/api/follow/${profileUsername}/follow`, {
-        withCredentials: true,
+      const res = await fetch(`/api/follow/${profileUsername}/follow`, {
+        method: "DELETE",
+        credentials: "include",
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Falha ao deixar de seguir o usuário."
+        );
+      }
     } catch (error: unknown) {
       setIsFollowing(true);
       setFollowersCount((prev) => prev + 1);
-      if (axios.isAxiosError(error)) {
-        setError(
-          error.response?.data?.message || "Falha ao deixar de seguir o usuário."
-        );
+      if (error instanceof Error) {
+        setError(error.message);
       } else {
         setError("Ocorreu um erro ao deixar de seguir o usuário.");
       }

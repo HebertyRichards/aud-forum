@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createTopic } from "@/services/topic";
-import { NewTopicData } from "@/types/post";
+import { NewTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/services/auth";
@@ -38,7 +38,7 @@ export function useCreateTopic(category: string) {
     setError(null);
 
     try {
-      const topicData: NewTopicData = {
+      const topicData: NewTopic = {
         title,
         content,
         category,

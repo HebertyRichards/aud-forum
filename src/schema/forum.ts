@@ -1,5 +1,45 @@
 import { z } from "zod";
 
+export const MemberSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  role: z.string(),
+  avatar_url: z.string().nullish(),
+  joined_at: z.string(),
+  last_login: z.string().nullish(),
+  mensagens_count: z.number().optional(),
+  messages: z.number(),
+  rowNumber: z.number(),
+});
+
+export const OnlineUserSchema = z.object({
+  username: z.string(),
+  role: z.string(),
+  avatar_url: z.string().nullish(),
+});
+
+export const RawOnlineUserSchema = z.object({
+  last_seen_at: z.string(),
+  profiles: OnlineUserSchema,
+});
+
+export const newTopicSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+  category: z.string(),
+});
+
+export const updateTopicSchema = z.object({
+  title: z.string().optional(),
+  content: z.string().optional(),
+});
+
+export const NewCommentSchema = z.object({
+  content: z.string().optional(),
+  topicId: z.number().optional(),
+});
+
+
 export const recentPostsSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -13,7 +53,7 @@ export const recentPostsSchema = z.object({
   role: z.string(),
 });
 
-export const TopcSChema = z.object({
+export const TopicSummarySchema = z.object({
   id: z.number(),
   title: z.string(),
   slug: z.string(),
@@ -69,13 +109,22 @@ export const DashboardSchema = z.object({
     activeMembers: z.number(),
     totalPosts: z.number(),
     totalTopics: z.number(),
-    newestMember : (ForumMemberSchema),
+    newestMember: ForumMemberSchema,
   }),
+  recentPosts: z.array(recentPostsSchema),
+  lastUser: ForumMemberSchema.nullish(),
+  onlineUsers: z.array(RawOnlineUserSchema),
 });
 
 export type RecentPost = z.infer<typeof recentPostsSchema>;
-export type TopicSummary = z.infer<typeof TopcSChema>;
+export type TopicSummary = z.infer<typeof TopicSummarySchema>;
 export type Comment = z.infer<typeof CommentSchema>;
 export type TopicDetails = z.infer<typeof TopicDetailsSchema>;
 export type ForumMember = z.infer<typeof ForumMemberSchema>;
 export type DashboardData = z.infer<typeof DashboardSchema>;
+export type NewTopic = z.infer<typeof newTopicSchema>;
+export type UpdateTopic = z.infer<typeof updateTopicSchema>;
+export type NewComment = z.infer<typeof NewCommentSchema>;
+export type OnlineUser = z.infer<typeof OnlineUserSchema>;
+export type RawOnlineUser = z.infer<typeof RawOnlineUserSchema>;
+export type Member = z.infer<typeof MemberSchema>;

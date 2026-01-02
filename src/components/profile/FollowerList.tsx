@@ -3,7 +3,6 @@ import { UserPreview, FollowerListProps } from "@/types/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
 import { getRoleColor } from "@/utils/colors";
 
 const fetchFollowList = async (
@@ -11,13 +10,18 @@ const fetchFollowList = async (
   type: "followers" | "following"
 ) => {
   try {
-    const { data } = await axios.get<UserPreview[]>(
-      `/api/follow/${username}/${type}`
-    );
+    const res = await fetch(`/api/follow/${username}/${type}`, {
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Falha ao carregar a lista.");
+    }
+    const data = await res.json();
     return data;
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err) && err.response?.data?.message) {
-      throw new Error(err.response.data.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
     }
     throw new Error("Não foi possível carregar a lista.");
   }

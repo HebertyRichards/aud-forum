@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, AlertTriangle } from "lucide-react";
 import { UserPreview, FollowListModalProps } from "@/types/profile";
-import axios from "axios";
 import { Button } from "../ui/button";
 import { useRemoveFollower } from "@/hooks/useRemoveFollower";
 import { toast } from "sonner";
@@ -18,15 +17,20 @@ const fetchModalUsers = async (
   listType: "followers" | "following"
 ) => {
   try {
-    const { data } = await axios.get<UserPreview[]>(
-      `/api/follow/${username}/${listType}`
-    );
-    return data;
-  } catch (err) {
-    if (axios.isAxiosError(err) && err.response?.data?.message) {
-      throw new Error(err.response.data.message);
+    const res = await fetch(`/api/follow/${username}/${listType}`, {
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Falha ao carregar a lista.");
     }
-    throw new Error("Falha ao carregar a lista de usuários.");
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Não foi possível carregar a lista de usuários.");
   }
 };
 
@@ -50,17 +54,22 @@ export function FollowListModal({
   const { mutate: unfollowUser } = useMutation({
     mutationFn: async (usernameToUnfollow: string) => {
       setMutatingUsername(usernameToUnfollow);
-      await axios.delete(`/api/follow/${usernameToUnfollow}/follow`, {
-        withCredentials: true,
+      const res = await fetch(`/api/follow/${usernameToUnfollow}/follow`, {
+        method: "DELETE",
+        credentials: "include",
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao deixar de seguir o usuário.");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["followModalList"] });
     },
     onError: (error) => {
       let errorMessage = "Ocorreu um erro ao deixar de seguir o usuário.";
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error instanceof Error) {
+        errorMessage = error.message;
       }
       toast.error(errorMessage);
     },

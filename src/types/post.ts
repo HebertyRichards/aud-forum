@@ -1,69 +1,10 @@
 import { ReactElement } from "react";
-import { OnlineUser } from "./users";
 import { type LucideIcon } from "lucide-react";
 
 export interface ApiCategory {
   slug: string;
   name: string;
   description?: string;
-}
-
-export interface TopicSummary {
-  id: number;
-  title: string;
-  slug: string;
-  category: string;
-  created_in: string;
-  profiles: {
-    username: string;
-    avatar_url: string | null;
-  };
-  comentarios: [{ count: number }];
-}
-
-export interface Comment {
-  id: number;
-  content: string;
-  created_in: string;
-  updated_in?: string | null;
-  author_id: string;
-  profiles: {
-    username: string;
-    avatar_url: string | null;
-    role: string;
-  };
-}
-
-export interface TopicDetails {
-  id: number;
-  title: string;
-  content: string;
-  category: string;
-  created_in: string;
-  updated_in?: string | null;
-  author_id: string;
-  profiles: {
-    username: string;
-    avatar_url: string | null;
-    role: string;
-  };
-  comentarios: Comment[];
-}
-
-export interface NewTopicData {
-  title: string;
-  content: string;
-  category: string;
-}
-
-export interface UpdateTopicData {
-  title?: string;
-  content?: string;
-}
-
-export interface NewCommentData {
-  content: string;
-  topicId: number;
 }
 
 export interface UiCategory {
@@ -120,48 +61,8 @@ export interface CommentHandlers {
   handleUpdateComment: (commentId: number, content: string) => void;
 }
 
-export interface TopicHandlers {
-  handleDeleteTopic: () => void;
-  handleUpdateTopic: (editData: UpdateTopicData) => void;
-}
-
-export interface RecentPost {
-  id: number;
-  title: string;
-  topic_slug: string;
-  created_in: string;
-  category_name: string;
-  category_slug: string;
-  author_username: string;
-  author_avatar: string | null;
-  comment_count: number;
-  role: string;
-}
-
-export interface PaginationControlsProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-export interface RawOnlineUser {
-  last_seen_at: string;
-  profiles: OnlineUser;
-}
-
 interface ForumMember {
   username: string;
   role: string;
 }
 
-export interface DashboardData {
-  stats: {
-    activeMembers: number;
-    totalPosts: number;
-    totalTopics: number;
-    newestMember: ForumMember | null;
-  };
-  recentPosts: RecentPost[];
-  lastUser: ForumMember | null;
-  onlineUsers: RawOnlineUser[];
-}

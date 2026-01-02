@@ -4,23 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Loader2, UserCheck, UserPlus } from "lucide-react";
 import { UpdateAvatar } from "./UpdateAvatar";
 import { getRoleColor } from "@/utils/colors";
-import { UserProfileLayoutProps } from "@/types/profile";
+import { UserProfile } from "@/schema/user";
+import { FollowState } from "@/schema/user";
 
-type UserProfileSidebarProps = Pick<
-  UserProfileLayoutProps,
-  "profile" | "isOwnProfile" | "followState"
-> & {
-  onOpenModal: (listType: "followers" | "following") => void;
-};
+interface UserProfileLayoutProps {
+  profile?: UserProfile | null;
+  isLoading: boolean;
+  isUpdating?: boolean;
+  error?: string | null;
+  isOwnProfile?: boolean;
+  onSuccessUpdate?: () => void;
+  followState?: FollowState;
+  onOpenModal?: (listType: "followers" | "following") => void;
+}
 
 export function UserProfileSidebar({
   profile,
   isOwnProfile,
   followState,
   onOpenModal,
-}: UserProfileSidebarProps) {
+}: UserProfileLayoutProps) {
   const { stats, isFollowing, isFollowLoading, onFollow, onUnfollow } =
-    followState;
+    followState || {};
 
   return (
     <aside className="space-y-6">
@@ -85,14 +90,14 @@ export function UserProfileSidebar({
         </CardHeader>
         <CardContent className="flex justify-around text-center">
           <button
-            onClick={() => onOpenModal("followers")}
+            onClick={() => onOpenModal?.("followers")}
             className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.followers_count ?? 0}</p>
             <p className="text-sm text-gray-400">Seguidores</p>
           </button>
           <button
-            onClick={() => onOpenModal("following")}
+            onClick={() => onOpenModal?.("following")}
             className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.following_count ?? 0}</p>
