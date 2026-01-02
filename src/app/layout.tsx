@@ -3,7 +3,6 @@ import Header from "@/templates/Header";
 import Footer from "@/templates/Footer";
 import "./globals.css";
 import { AuthProvider } from "@/services/auth";
-import { UserActivityTracker } from "@/services/activity";
 import { OnlineUserProvider } from "@/services/online";
 import { Providers } from "./providers";
 
@@ -62,7 +61,6 @@ export default function RootLayout({
         <div className="min-h-screen bg-slate-900">
           <AuthProvider>
             <OnlineUserProvider>
-              <UserActivityTracker />
               <Header />
               <Providers>{children}</Providers>
               <Footer />

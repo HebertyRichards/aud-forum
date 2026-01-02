@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/services/auth";
-import { RawOnlineUser, OnlineUser } from "@/schema/forum";
+import { RawOnlineUser } from "@/schema/forum";
 
 interface WebSocketPayload {
   type: "UPDATE_LIST";
