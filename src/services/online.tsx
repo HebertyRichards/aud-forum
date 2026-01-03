@@ -4,11 +4,6 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/services/auth";
 import { RawOnlineUser } from "@/schema/forum";
 
-interface WebSocketPayload {
-  type: "UPDATE_LIST";
-  users: RawOnlineUser[];
-}
-
 interface OnlineContextType {
   onlineUsers: RawOnlineUser[];
   isConnected: boolean;
@@ -48,13 +43,18 @@ export function OnlineUserProvider({
     let shouldReconnect = true;
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 5;
+    let isIntentionallyClosing = false;
 
     const connect = () => {
       if (isConnectingRef.current) return;
 
       if (socketRef.current) {
+        isIntentionallyClosing = true;
+        socketRef.current.onerror = null;
+        socketRef.current.onclose = null;
         socketRef.current.close();
         socketRef.current = null;
+        isIntentionallyClosing = false;
       }
 
       if (reconnectTimeoutRef.current) {
@@ -86,23 +86,61 @@ export function OnlineUserProvider({
 
         ws.onmessage = (event) => {
           try {
-            const data = JSON.parse(event.data) as WebSocketPayload;
+            const rawData = event.data;
 
-            if (data.type === "UPDATE_LIST" && Array.isArray(data.users)) {
-              const validUsers = data.users.filter((u) => {
-                return (
-                  u &&
-                  typeof u === "object" &&
-                  u.profiles &&
-                  typeof u.profiles === "object" &&
-                  u.profiles.username
-                );
+            if (!rawData || rawData.trim() === "") {
+              return;
+            }
+
+            const parsed = JSON.parse(rawData);
+            if (
+              typeof parsed === "object" &&
+              parsed !== null &&
+              "type" in parsed &&
+              parsed.type === "UPDATE_LIST" &&
+              "users" in parsed &&
+              Array.isArray(parsed.users)
+            ) {
+              const validUsers: RawOnlineUser[] = parsed.users.filter(
+                (u: unknown) => {
+                  return (
+                    typeof u === "object" &&
+                    u !== null &&
+                    "profiles" in u &&
+                    typeof u.profiles === "object" &&
+                    u.profiles !== null &&
+                    "username" in u.profiles &&
+                    typeof u.profiles.username === "string" &&
+                    u.profiles.username.trim() !== ""
+                  );
+                }
+              );
+
+              setOnlineUsers((prevUsers) => {
+                if (validUsers.length === 0 && prevUsers.length > 0) {
+                  const isUserLoggedIn = !!user?.username;
+                  if (isUserLoggedIn) {
+                    return prevUsers;
+                  }
+
+                  return validUsers;
+                }
+                return validUsers;
               });
-              setOnlineUsers(validUsers);
             }
           } catch (error) {
-            console.error("Erro ao processar mensagem WS:", error);
+            console.error(
+              "Erro ao processar mensagem WS:",
+              error,
+              "Raw data:",
+              event.data
+            );
           }
+        };
+
+        ws.onerror = (error) => {
+          isConnectingRef.current = false;
+          setIsConnected(false);
         };
 
         ws.onclose = (event) => {
@@ -114,7 +152,11 @@ export function OnlineUserProvider({
             intervalRef.current = null;
           }
 
-          if (shouldReconnect && event.code !== 1000) {
+          if (
+            shouldReconnect &&
+            !isIntentionallyClosing &&
+            event.code !== 1000
+          ) {
             reconnectAttempts++;
             if (reconnectAttempts <= maxReconnectAttempts) {
               const delay = Math.min(3000 * reconnectAttempts, 30000);
@@ -146,6 +188,7 @@ export function OnlineUserProvider({
     return () => {
       shouldReconnect = false;
       isConnectingRef.current = false;
+      isIntentionallyClosing = true;
 
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
@@ -156,9 +199,14 @@ export function OnlineUserProvider({
         intervalRef.current = null;
       }
       if (socketRef.current) {
-        socketRef.current.close();
+        socketRef.current.onerror = null;
+        socketRef.current.onclose = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onopen = null;
+        socketRef.current.close(1000, "Component unmounting");
         socketRef.current = null;
       }
+      isIntentionallyClosing = false;
     };
   }, [user?.username, auth.loading]);
 
