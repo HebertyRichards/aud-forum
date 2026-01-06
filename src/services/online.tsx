@@ -9,10 +9,38 @@ interface OnlineContextType {
   isConnected: boolean;
 }
 
+interface WebSocketUserProfile {
+  username?: unknown;
+  role?: unknown;
+  avatar_url?: unknown;
+}
+
+interface WebSocketUserItem {
+  profiles?: WebSocketUserProfile;
+  last_seen_at?: unknown;
+}
+
+interface WebSocketMessage {
+  type: string;
+  users: WebSocketUserItem[];
+}
+
 const OnlineContext = createContext<OnlineContextType>({
   onlineUsers: [],
   isConnected: false,
 });
+
+function isValidWebSocketMessage(data: unknown): data is WebSocketMessage {
+  if (typeof data !== "object" || data === null) return false;
+
+  const msg = data as Record<string, unknown>;
+
+  if (typeof msg.type !== "string") return false;
+
+  if (!Array.isArray(msg.users)) return false;
+
+  return true;
+}
 
 export function OnlineUserProvider({
   children,
@@ -25,7 +53,10 @@ export function OnlineUserProvider({
   const auth = useAuth();
   const user = auth?.user;
 
-  const token = user?.access_token;
+  const token =
+    user && "access_token" in user && typeof user.access_token === "string"
+      ? user.access_token
+      : undefined;
 
   const socketRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -35,6 +66,8 @@ export function OnlineUserProvider({
   useEffect(() => {
     if (auth.loading) return;
 
+    if (user && !token) return;
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     if (!apiUrl) {
@@ -42,8 +75,7 @@ export function OnlineUserProvider({
       return;
     }
 
-    const cleanApiUrl = apiUrl?.trim().replace(/\/$/, "");
-
+    const cleanApiUrl = apiUrl.trim().replace(/\/$/, "");
     const isBrowser = typeof window !== "undefined";
     const isHttps = isBrowser && window.location.protocol === "https:";
     const isProduction = process.env.NODE_ENV === "production" || isHttps;
@@ -52,12 +84,9 @@ export function OnlineUserProvider({
     if (cleanApiUrl.startsWith("https://")) {
       wsBaseUrl = cleanApiUrl.replace(/^https:\/\//, "wss://");
     } else if (cleanApiUrl.startsWith("http://")) {
-      if (isHttps) {
-        const hostname = cleanApiUrl.replace(/^http:\/\//, "");
-        wsBaseUrl = `wss://${hostname}`;
-      } else {
-        wsBaseUrl = cleanApiUrl.replace(/^http:\/\//, "ws://");
-      }
+      wsBaseUrl = isHttps
+        ? `wss://${cleanApiUrl.replace(/^http:\/\//, "")}`
+        : cleanApiUrl.replace(/^http:\/\//, "ws://");
     } else {
       wsBaseUrl =
         isProduction || isHttps
@@ -112,52 +141,58 @@ export function OnlineUserProvider({
             if (ws.readyState === WebSocket.OPEN) {
               ws.send("ping");
             }
-          }, 60000);
+          }, 30000);
         };
 
         ws.onmessage = (event) => {
           try {
             const rawData = event.data;
-
-            if (!rawData || rawData.trim() === "") return;
-            const parsed = JSON.parse(rawData);
-
             if (
-              typeof parsed === "object" &&
-              parsed !== null &&
-              "type" in parsed &&
-              parsed.type === "UPDATE_LIST"
-            ) {
-              if (!("users" in parsed)) return;
+              !rawData ||
+              typeof rawData !== "string" ||
+              rawData.trim() === ""
+            )
+              return;
 
-              if (!Array.isArray(parsed.users)) return;
+            const parsed: unknown = JSON.parse(rawData);
+
+            if (isValidWebSocketMessage(parsed)) {
+              if (parsed.type !== "UPDATE_LIST") return;
 
               const validUsers: RawOnlineUser[] = parsed.users
-                .map((u: unknown): RawOnlineUser | null => {
+                .map((u): RawOnlineUser | null => {
+                  const profiles = u.profiles;
                   if (
-                    typeof u !== "object" ||
-                    u === null ||
-                    !("profiles" in u) ||
-                    typeof u.profiles !== "object" ||
-                    u.profiles === null ||
-                    !("username" in u.profiles) ||
-                    typeof u.profiles.username !== "string" ||
-                    u.profiles.username.trim() === ""
-                  )
+                    !profiles ||
+                    typeof profiles !== "object" ||
+                    typeof profiles.username !== "string" ||
+                    !profiles.username
+                  ) {
                     return null;
+                  }
 
-                  const user = u as Partial<RawOnlineUser>;
-                  const lastSeenAt =
-                    user.last_seen_at || new Date().toISOString();
+                  const avatar =
+                    typeof profiles.avatar_url === "string"
+                      ? profiles.avatar_url
+                      : null;
+                  const role =
+                    typeof profiles.role === "string" ? profiles.role : "user";
+                  const lastSeen =
+                    typeof u.last_seen_at === "string"
+                      ? u.last_seen_at
+                      : new Date().toISOString();
 
                   return {
-                    ...(u as RawOnlineUser),
-                    last_seen_at: lastSeenAt,
+                    profiles: {
+                      username: profiles.username,
+                      role: role,
+                      avatar_url: avatar,
+                    },
+                    last_seen_at: lastSeen,
                   };
                 })
-                .filter(
-                  (u: RawOnlineUser | null): u is RawOnlineUser => u !== null
-                );
+                .filter((u): u is RawOnlineUser => u !== null);
+
               setOnlineUsers(validUsers);
             }
           } catch (error) {
@@ -189,9 +224,7 @@ export function OnlineUserProvider({
             if (reconnectAttempts <= maxReconnectAttempts) {
               const delay = Math.min(3000 * reconnectAttempts, 30000);
               reconnectTimeoutRef.current = setTimeout(() => {
-                if (shouldReconnect) {
-                  connect();
-                }
+                if (shouldReconnect) connect();
               }, delay);
             }
           }
@@ -199,14 +232,10 @@ export function OnlineUserProvider({
 
         socketRef.current = ws;
       } catch (error) {
+        console.error(error);
         isConnectingRef.current = false;
         if (shouldReconnect && reconnectAttempts < maxReconnectAttempts) {
-          reconnectAttempts++;
-          reconnectTimeoutRef.current = setTimeout(() => {
-            if (shouldReconnect) {
-              connect();
-            }
-          }, 3000);
+          reconnectTimeoutRef.current = setTimeout(connect, 3000);
         }
       }
     };
@@ -218,23 +247,15 @@ export function OnlineUserProvider({
       isConnectingRef.current = false;
       isIntentionallyClosing = true;
 
-      if (reconnectTimeoutRef.current) {
+      if (reconnectTimeoutRef.current)
         clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
+
       if (socketRef.current) {
-        socketRef.current.onerror = null;
         socketRef.current.onclose = null;
-        socketRef.current.onmessage = null;
-        socketRef.current.onopen = null;
-        socketRef.current.close(1000, "Component unmounting");
+        socketRef.current.close(1000, "Unmount");
         socketRef.current = null;
       }
-      isIntentionallyClosing = false;
     };
   }, [user?.username, auth.loading, token]);
 
