@@ -38,13 +38,11 @@ export function OnlineUserProvider({
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     if (!apiUrl) {
-      console.error(
-        "[WS] NEXT_PUBLIC_API_URL não está definida. WebSocket não será conectado."
-      );
+      console.error("API não configurada");
       return;
     }
 
-    const cleanApiUrl = apiUrl.trim().replace(/\/$/, "");
+    const cleanApiUrl = apiUrl?.trim().replace(/\/$/, "");
 
     const isBrowser = typeof window !== "undefined";
     const isHttps = isBrowser && window.location.protocol === "https:";
@@ -68,13 +66,6 @@ export function OnlineUserProvider({
     }
 
     let wsUrl = `${wsBaseUrl}/forum/ws/online`;
-    console.log("[WS] Configuração:", {
-      apiUrl: cleanApiUrl,
-      wsUrl,
-      isProduction,
-      isHttps,
-      nodeEnv: process.env.NODE_ENV,
-    });
 
     if (token) {
       wsUrl += `?token=${token}`;
@@ -108,7 +99,6 @@ export function OnlineUserProvider({
         const ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
-          console.log("[WS] ✅ Conexão estabelecida com sucesso:", wsUrl);
           isConnectingRef.current = false;
           reconnectAttempts = 0;
           setIsConnected(true);
@@ -129,15 +119,7 @@ export function OnlineUserProvider({
           try {
             const rawData = event.data;
 
-            if (!rawData || rawData.trim() === "") {
-              console.warn("[WS] Mensagem vazia recebida");
-              return;
-            }
-            console.log("[WS] Mensagem recebida:", {
-              length: rawData.length,
-              preview: rawData.substring(0, 100),
-            });
-
+            if (!rawData || rawData.trim() === "") return;
             const parsed = JSON.parse(rawData);
 
             if (
@@ -146,27 +128,12 @@ export function OnlineUserProvider({
               "type" in parsed &&
               parsed.type === "UPDATE_LIST"
             ) {
-              console.log("[WS] UPDATE_LIST recebido");
+              if (!("users" in parsed)) return;
 
-              if (!("users" in parsed)) {
-                console.warn("[WS] UPDATE_LIST sem campo 'users'");
-                return;
-              }
-
-              if (!Array.isArray(parsed.users)) {
-                console.warn(
-                  "[WS] Campo 'users' não é um array:",
-                  typeof parsed.users
-                );
-                return;
-              }
-
-              console.log(
-                `[WS] Processando ${parsed.users.length} usuário(s) recebido(s)`
-              );
+              if (!Array.isArray(parsed.users)) return;
 
               const validUsers: RawOnlineUser[] = parsed.users
-                .map((u: unknown, index: number): RawOnlineUser | null => {
+                .map((u: unknown): RawOnlineUser | null => {
                   if (
                     typeof u !== "object" ||
                     u === null ||
@@ -176,13 +143,8 @@ export function OnlineUserProvider({
                     !("username" in u.profiles) ||
                     typeof u.profiles.username !== "string" ||
                     u.profiles.username.trim() === ""
-                  ) {
-                    console.warn(
-                      `[WS] Usuário inválido no índice ${index}:`,
-                      u
-                    );
+                  )
                     return null;
-                  }
 
                   const user = u as Partial<RawOnlineUser>;
                   const lastSeenAt =
@@ -196,42 +158,20 @@ export function OnlineUserProvider({
                 .filter(
                   (u: RawOnlineUser | null): u is RawOnlineUser => u !== null
                 );
-
-              console.log(
-                `[WS] ${validUsers.length} usuário(s) válido(s) de ${parsed.users.length} recebido(s)`
-              );
-
               setOnlineUsers(validUsers);
-            } else {
-              console.log(
-                "[WS] Mensagem de tipo diferente:",
-                parsed.type || "desconhecido"
-              );
             }
           } catch (error) {
-            console.error("[WS] Erro ao processar mensagem:", error, {
-              data: event.data,
-            });
+            console.error(error);
           }
         };
 
         ws.onerror = (error) => {
-          console.error("[WS] Erro na conexão WebSocket:", {
-            error,
-            url: wsUrl,
-            readyState: ws.readyState,
-          });
+          console.error(error);
           isConnectingRef.current = false;
           setIsConnected(false);
         };
 
         ws.onclose = (event) => {
-          console.log("[WS] ❌ Conexão fechada:", {
-            code: event.code,
-            reason: event.reason || "sem motivo",
-            wasClean: event.wasClean,
-            url: wsUrl,
-          });
           isConnectingRef.current = false;
           setIsConnected(false);
 
@@ -248,18 +188,11 @@ export function OnlineUserProvider({
             reconnectAttempts++;
             if (reconnectAttempts <= maxReconnectAttempts) {
               const delay = Math.min(3000 * reconnectAttempts, 30000);
-              console.log(
-                `[WS] 🔄 Tentando reconectar em ${delay}ms (${reconnectAttempts}/${maxReconnectAttempts})`
-              );
               reconnectTimeoutRef.current = setTimeout(() => {
                 if (shouldReconnect) {
                   connect();
                 }
               }, delay);
-            } else {
-              console.error(
-                "[WS] ❌ Número máximo de tentativas de reconexão atingido"
-              );
             }
           }
         };
