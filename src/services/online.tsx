@@ -25,6 +25,8 @@ export function OnlineUserProvider({
   const auth = useAuth();
   const user = auth?.user;
 
+  const token = user?.access_token;
+
   const socketRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -65,7 +67,7 @@ export function OnlineUserProvider({
           : `ws://${cleanApiUrl}`;
     }
 
-    const wsUrl = `${wsBaseUrl}/forum/ws/online`;
+    let wsUrl = `${wsBaseUrl}/forum/ws/online`;
     console.log("[WS] Configuração:", {
       apiUrl: cleanApiUrl,
       wsUrl,
@@ -73,6 +75,10 @@ export function OnlineUserProvider({
       isHttps,
       nodeEnv: process.env.NODE_ENV,
     });
+
+    if (token) {
+      wsUrl += `?token=${token}`;
+    }
 
     let shouldReconnect = true;
     let reconnectAttempts = 0;
@@ -297,7 +303,7 @@ export function OnlineUserProvider({
       }
       isIntentionallyClosing = false;
     };
-  }, [user?.username, auth.loading]);
+  }, [user?.username, auth.loading, token]);
 
   return (
     <OnlineContext.Provider value={{ onlineUsers, isConnected }}>
