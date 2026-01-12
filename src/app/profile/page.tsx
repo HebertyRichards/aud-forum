@@ -7,6 +7,7 @@ import { UserProfile, FollowStats } from "@/schema/user";
 import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { handleApiError } from "@/utils/apiErrors";
 
 export default function Profile() {
   const auth = useAuth();
@@ -26,15 +27,13 @@ export default function Profile() {
       ]);
 
       const profileData: UserProfile = await res.json();
-      const statsData: FollowStats | null = statsRes ? await statsRes.json() : null;
+      const statsData: FollowStats | null = statsRes
+        ? await statsRes.json()
+        : null;
 
       return { profile: profileData, stats: statsData };
-    } catch (error: unknown) {
-      let errorMessage = "Não foi possível carregar os dados do seu perfil.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      throw new Error(errorMessage || "Ocorreu uma falha inesperada.");
+    } catch (error) {
+      handleApiError(error, "Não foi possível carregar os dados do seu perfil");
     }
   };
 

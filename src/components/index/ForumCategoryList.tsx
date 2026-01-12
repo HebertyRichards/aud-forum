@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
-import { UserProfile } from "@/schema/user";
+import { handleApiError } from "@/utils/apiErrors";
+import { UserProfile, RolesAuthorizedSchema } from "@/schema/user";
 
 const fetchUserProfile = async (
   username: string
@@ -23,8 +24,9 @@ const fetchUserProfile = async (
       throw new Error("Falha ao carregar o perfil do usuário.");
     }
     return await res.json();
-  } catch {
-    throw new Error("Falha ao carregar o perfil do usuário.");
+  } catch (error) {
+    handleApiError(error, "Falha ao carregar o perfil do usuário.");
+    return null;
   }
 };
 
@@ -39,18 +41,13 @@ export function ForumCategoryList() {
   });
 
   const userRole = userProfile?.role;
-  const allowedRolesForHiddenArea = [
-    "Leader",
-    "Desenvolvedor",
-    "Fundador",
-    "Auditore",
-  ];
 
   const filteredForumStructure = forumStructure.filter((category) => {
     if (category.id !== "area-oculta") {
       return true;
     }
-    return userRole && allowedRolesForHiddenArea.includes(userRole);
+
+    return RolesAuthorizedSchema.safeParse(userRole).success;
   });
 
   const defaultOpenCategories = filteredForumStructure.map(
@@ -70,7 +67,7 @@ export function ForumCategoryList() {
             value={category.id}
             className="border-none rounded-md overflow-hidden shadow-md bg-slate-800"
           >
-            <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full, bg-blue-500">
+            <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full bg-blue-500">
               {category.title}
             </AccordionTrigger>
             <AccordionContent className="p-0">

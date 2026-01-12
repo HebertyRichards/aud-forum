@@ -10,6 +10,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export type SubItem = {
   title: string;
   href: string;
@@ -27,31 +29,31 @@ export const forumStructure: ForumCategory[] = [
     id: "area-oculta",
     title: "Área Oculta",
     subItems: [
-      { 
-        icon: Annoyed, 
-        title: "Regras", 
-        href: "/rules" 
-      }
+      {
+        icon: Annoyed,
+        title: "Regras",
+        href: "/rules",
+      },
     ],
   },
   {
     id: "auditore",
     title: "Auditore",
     subItems: [
-      { 
-        icon: Bell, 
-        title: "Atualizações", 
-        href: "/topics/updates" 
+      {
+        icon: Bell,
+        title: "Atualizações",
+        href: "/topics/updates",
       },
-      { 
-        icon: Pencil, 
-        title: "Inscreva-se", 
-        href: "/topics/subscribes" 
+      {
+        icon: Pencil,
+        title: "Inscreva-se",
+        href: "/topics/subscribes",
       },
-      { 
-        icon: Album, 
-        title: "Sobre", 
-        href: "/about" 
+      {
+        icon: Album,
+        title: "Sobre",
+        href: "/about",
       },
     ],
   },
@@ -59,25 +61,25 @@ export const forumStructure: ForumCategory[] = [
     id: "info-gerais",
     title: "Informações Gerais",
     subItems: [
-      { 
-        icon: Users, 
-        title: "Membros", 
-        href: "/topics/members" 
+      {
+        icon: Users,
+        title: "Membros",
+        href: "/topics/members",
       },
       {
         icon: MessagesSquare,
         title: "Discussões Gerais",
         href: "/topics/general-discussions",
       },
-      { 
-        icon: FileText, 
-        title: "Manuais", 
-        href: "/topics/manuals" 
+      {
+        icon: FileText,
+        title: "Manuais",
+        href: "/topics/manuals",
       },
-      { 
-        icon: Download, 
-        title: "Downloads", 
-        href: "/topics/downloads" 
+      {
+        icon: Download,
+        title: "Downloads",
+        href: "/topics/downloads",
       },
     ],
   },

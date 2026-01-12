@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-
-const ALLOWED_ROLES = ["Auditore", "Leader", "Fundador", "Desenvolvedor"];
+import { RolesAuthorized } from "@/schema/user";
 
 const fetchUserProfile = async (userId: string | undefined) => {
   if (!userId) {
@@ -38,7 +37,7 @@ export default function Rules() {
     refetchOnWindowFocus: false,
   });
 
-  const hasPermission = profileData && ALLOWED_ROLES.includes(profileData.role);
+  const hasPermission: RolesAuthorized | false = profileData;
 
   useEffect(() => {
     if (authLoading || isProfileLoading) {

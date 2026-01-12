@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { handleApiError } from "@/utils/apiErrors";
 
 export function DangerZoneCard() {
   const [step, setStep] = useState<"initial" | "confirmPassword">("initial");
@@ -58,19 +59,20 @@ export function DangerZoneCard() {
       });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.message || "Falha ao deletar a conta.");
+        throw new Error("Falha ao deletar a conta.", {
+          cause: errorData.error,
+        });
       }
 
       toast.success("Conta deletada com sucesso. Você será redirecionado.");
       setTimeout(() => {
         window.location.href = "/";
       }, 2000);
-    } catch (error: unknown) {
-      let errorMessage = "Ocorreu uma falha desconhecida.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
+    } catch (error) {
+      handleApiError(error, "Falha ao deletar a conta.");
+      toast.error(
+        "Falha ao deletar a conta. Verifique sua senha e tente novamente."
+      );
     } finally {
       setIsLoading(false);
     }

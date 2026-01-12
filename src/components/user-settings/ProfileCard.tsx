@@ -15,11 +15,12 @@ import {
 import { toast } from "sonner";
 import type { UserWithProfile } from "@/types/autentication";
 import { X } from "lucide-react";
+import { handleApiError } from "@/utils/apiErrors";
 
-interface ProfileCardProps {
+type ProfileCardProps = {
   user: UserWithProfile;
   onClose: () => void;
-}
+};
 
 export function ProfileCard({ user, onClose }: ProfileCardProps) {
   const [username, setUsername] = useState(user.username ?? "");
@@ -41,7 +42,9 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Falha ao atualizar o perfil.");
+        throw new Error("Falha ao atualizar o perfil.", {
+          cause: errorData.error,
+        });
       }
 
       toast.success("Perfil atualizado com sucesso!");
@@ -49,12 +52,9 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
       setTimeout(() => {
         window.location.reload();
       }, 1500);
-    } catch (error: unknown) {
-      let errorMessage = "Falha ao atualizar o perfil.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
+    } catch (error) {
+      handleApiError(error, "Falha ao atualizar o perfil.");
+      toast.error("Falha ao atualizar o perfil.");
     } finally {
       setIsLoading(false);
     }

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-interface ApiCategory {
+type ApiCategory = {
   slug: string;
   name: string;
   description?: string;
-}
+};
 
 const fetchCategory = async (): Promise<ApiCategory[]> => {
   const response = await fetch("/api/categories", {

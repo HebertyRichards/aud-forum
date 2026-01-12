@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import { API_URL } from "@/utils/forum-structure";
 
 export async function generateMetadata({
   params,
-  
 }: {
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
@@ -10,10 +10,9 @@ export async function generateMetadata({
   const username = resolvedParams.username;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/profile/user/${username}`,
-      { cache: "no-store" }
-    );
+    const res = await fetch(`${API_URL}/profile/user/${username}`, {
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       return {
@@ -22,7 +21,7 @@ export async function generateMetadata({
         robots: {
           index: false,
           follow: false,
-        }
+        },
       };
     }
 
@@ -30,10 +29,11 @@ export async function generateMetadata({
 
     return {
       title: `Auditore Family - perfil de ${data.username}`,
-      description: `Veja informações, conquistas e atividades de ${data.username} na comunidade Auditore Family.`,      robots: {
+      description: `Veja informações, conquistas e atividades de ${data.username} na comunidade Auditore Family.`,
+      robots: {
         index: false,
         follow: false,
-      }
+      },
     };
   } catch {
     return {
@@ -42,7 +42,7 @@ export async function generateMetadata({
       robots: {
         index: false,
         follow: false,
-      }
+      },
     };
   }
 }

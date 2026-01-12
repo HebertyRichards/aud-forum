@@ -1,5 +1,6 @@
 import { UserProfile } from "@/schema/user";
 import { Member } from "@/schema/forum";
+import { handleApiError } from "@/utils/apiErrors";
 
 type ApiMember = Pick<
   UserProfile,
@@ -38,7 +39,7 @@ export async function getAllMembers(
     }));
 
     return { members: transformedData, totalCount };
-  } catch (error: unknown) {
-    throw error;
+  } catch (error) {
+    throw handleApiError(error, "Falha ao buscar os membros.");
   }
 }

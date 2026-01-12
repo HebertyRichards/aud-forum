@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/services/auth";
 import { RawOnlineUser } from "@/schema/forum";
+import { API_URL } from "@/utils/forum-structure";
 
 interface OnlineContextType {
   onlineUsers: RawOnlineUser[];
@@ -68,22 +69,15 @@ export function OnlineUserProvider({
 
     if (user && !token) return;
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    if (!apiUrl) {
-      console.error("API não configurada");
-      return;
-    }
-
-    const cleanApiUrl = apiUrl.trim().replace(/\/$/, "");
+    const cleanApiUrl = API_URL?.trim().replace(/\/$/, "");
     const isBrowser = typeof window !== "undefined";
     const isHttps = isBrowser && window.location.protocol === "https:";
     const isProduction = process.env.NODE_ENV === "production" || isHttps;
 
     let wsBaseUrl: string;
-    if (cleanApiUrl.startsWith("https://")) {
+    if (cleanApiUrl?.startsWith("https://")) {
       wsBaseUrl = cleanApiUrl.replace(/^https:\/\//, "wss://");
-    } else if (cleanApiUrl.startsWith("http://")) {
+    } else if (cleanApiUrl?.startsWith("http://")) {
       wsBaseUrl = isHttps
         ? `wss://${cleanApiUrl.replace(/^http:\/\//, "")}`
         : cleanApiUrl.replace(/^http:\/\//, "ws://");

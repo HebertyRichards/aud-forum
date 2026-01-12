@@ -1,5 +1,6 @@
 import { UserStats } from "@/schema/user";
 import { TopicSummary } from "@/schema/forum";
+import { handleApiError } from "@/utils/apiErrors";
 
 export async function getUserStats(username: string): Promise<UserStats> {
   try {
@@ -10,12 +11,14 @@ export async function getUserStats(username: string): Promise<UserStats> {
       throw new Error("Falha ao buscar as estatísticas do usuário.");
     }
     return await response.json();
-  } catch {
-    throw new Error("Falha ao buscar as estatísticas do usuário.");
+  } catch (error) {
+    throw handleApiError(error, "Falha ao buscar as estatísticas do usuário.");
   }
 }
 
-export async function getTopicsByAuthor(username: string): Promise<TopicSummary[]> {
+export async function getTopicsByAuthor(
+  username: string
+): Promise<TopicSummary[]> {
   try {
     const response = await fetch(`/api/statistic/profile/${username}/topics`, {
       credentials: "include",
@@ -24,7 +27,8 @@ export async function getTopicsByAuthor(username: string): Promise<TopicSummary[
       throw new Error("Falha ao buscar os tópicos do usuário.");
     }
     return await response.json();
-  } catch {
-    throw new Error("Falha ao buscar os tópicos do usuário.");
+  } catch (error) {
+    handleApiError(error, "Falha ao buscar os tópicos do usuário.");
+    return [];
   }
 }

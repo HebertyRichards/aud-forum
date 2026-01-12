@@ -25,8 +25,7 @@ import { LogOut, Settings, UserCircle } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { User } from "lucide-react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from "@/utils/forum-structure";
 
 export function HeaderDesktop() {
   const auth = useAuth();
@@ -216,7 +215,7 @@ export function HeaderDesktop() {
                       Entrar
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[400px] bg-slate-800 text-white border-slate-700">
+                  <DialogContent className="sm:max-w-100 bg-slate-800 text-white border-slate-700">
                     <DialogHeader>
                       <DialogTitle className="text-center text-xl">
                         Bem-vindo de volta
@@ -225,7 +224,10 @@ export function HeaderDesktop() {
                         Acesse sua conta para continuar
                       </DialogDescription>
                     </DialogHeader>
-                    <LoginForm onSuccess={() => setIsLoginOpen(false)} onSwitchToRegister={openRegister}/>
+                    <LoginForm
+                      onSuccess={() => setIsLoginOpen(false)}
+                      onSwitchToRegister={openRegister}
+                    />
                   </DialogContent>
                 </Dialog>
                 <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
@@ -237,7 +239,7 @@ export function HeaderDesktop() {
                       Registrar
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[400px] bg-slate-800 text-white border-slate-700">
+                  <DialogContent className="sm:max-w-100 bg-slate-800 text-white border-slate-700">
                     <DialogHeader>
                       <DialogTitle className="text-center text-xl">
                         Crie sua conta

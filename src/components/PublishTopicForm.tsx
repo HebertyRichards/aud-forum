@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "./RichTextEditor";
 
-export interface PublishFormProps<T extends "topic" | "comment"> {
+interface PublishFormProps<T extends "topic" | "comment"> {
   type: T;
   onSubmit: () => void;
   isSubmitting?: boolean;

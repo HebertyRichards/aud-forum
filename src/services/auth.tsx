@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContextType, UserWithProfile } from "@/types/autentication";
-import { handleAuthError } from "@/utils/errorsAuth";
+import { handleApiError } from "@/utils/apiErrors";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -49,8 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(errorData.message);
       }
       await checkUserSession();
-    } catch (error: unknown) {
-      throw handleAuthError(error, "Não foi possível fazer o login.");
+    } catch (error) {
+      throw handleApiError(error, "Não foi possível fazer o login.");
     }
   };
 
@@ -75,8 +75,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message);
       }
-    } catch (error: unknown) {
-      throw handleAuthError(error, "Não foi possível completar o registro.");
+    } catch (error) {
+      throw handleApiError(error, "Não foi possível completar o registro.");
     }
   };
 
@@ -94,8 +94,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message);
       }
-    } catch (error: unknown) {
-      throw handleAuthError(error, "Não foi possível fazer o logout.");
+    } catch (error) {
+      throw handleApiError(error, "Não foi possível fazer o logout.");
     } finally {
       setUser(null);
     }
@@ -117,8 +117,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       const data = await res.json();
       return data;
-    } catch (error: unknown) {
-      throw handleAuthError(error, "Não foi possível atualizar a senha.");
+    } catch (error) {
+      throw handleApiError(error, "Não foi possível atualizar a senha.");
     }
   };
 
@@ -139,8 +139,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       const data = await res.json();
       return data;
-    } catch (error: unknown) {
-      throw handleAuthError(
+    } catch (error) {
+      throw handleApiError(
         error,
         "Não foi possível enviar o e-mail de recuperação."
       );

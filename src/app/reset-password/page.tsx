@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/services/auth";
+import { toast } from "sonner";
+import { handleApiError } from "@/utils/apiErrors";
 
 export default function NewPasswordForm() {
   const [novaSenha, setNovaSenha] = useState("");
@@ -55,7 +57,7 @@ export default function NewPasswordForm() {
     }
 
     if (novaSenha !== confirmacaoSenha) {
-      setError("As senhas não coincidem.");
+      toast.error("As senhas não coincidem.");
       return;
     }
     setError("");
@@ -67,7 +69,7 @@ export default function NewPasswordForm() {
         "Senha atualizada com sucesso! Redirecionando para o login..."
       );
       router.push("/");
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }

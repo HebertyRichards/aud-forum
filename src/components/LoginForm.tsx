@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { handleApiError } from "@/utils/apiErrors";
+import { toast } from "sonner";
 
-interface LoginFormProps {
+type LoginFormProps = {
   onSuccess?: () => void;
   onSwitchToRegister?: () => void;
-}
+};
 
 export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const [email, setEmail] = useState("");
@@ -27,10 +29,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth) {
-      setError("Erro de autenticação. Tente recarregar a página.");
-      return;
-    }
+
     if (!email || !password) {
       setError("Por favor, preencha todos os campos.");
       return;
@@ -38,18 +37,15 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
     setError(null);
     setLoading(true);
     try {
-      await auth.login(email, password, keepLoggedIn);
+      await auth?.login(email, password, keepLoggedIn);
       if (onSuccess) {
         onSuccess();
       } else {
         router.push("/");
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu uma falha inesperada.");
-      }
+    } catch (error) {
+      handleApiError(error, "Ocorreu uma falha inesperada.");
+      toast.error("Ocorreu um erro durante o login.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +54,9 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   return (
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="grid gap-2">
-        <Label htmlFor="email" className="text-white">Email</Label>
+        <Label htmlFor="email" className="text-white">
+          Email
+        </Label>
         <Input
           id="email"
           type="email"
@@ -74,7 +72,9 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
       </div>
       <div className="grid gap-2">
         <div className="flex items-center">
-          <Label htmlFor="password" className="text-white">Senha</Label>
+          <Label htmlFor="password" className="text-white">
+            Senha
+          </Label>
           <Link
             href="/recovery-password"
             className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-slate-400 hover:text-white"
@@ -125,9 +125,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           Mantenha-me conectado
         </Label>
       </div>
-      {error && (
-        <p className="text-sm text-red-500 text-center">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-500 text-center">{error}</p>}
       <div className="flex flex-col gap-4 pt-2">
         <Button
           type="submit"
@@ -136,7 +134,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
         >
           {loading ? "Entrando..." : "Entrar"}
         </Button>
-          <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-slate-400">
           Não tem uma conta?{" "}
           <Button
             type="button"

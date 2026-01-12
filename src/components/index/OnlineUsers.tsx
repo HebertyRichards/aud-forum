@@ -14,10 +14,11 @@ export function OnlineUsers() {
   const auth = useAuth();
   const currentUser = auth?.user || null;
 
+  //  que seu hook retorna 'any' ou 'unknown' em onlineUsers
   const { onlineUsers, isConnected } = useOnlineUsers();
 
-  const users: OnlineUser[] = onlineUsers
-    ? (onlineUsers as RawOnlineUser[]).map((item) => item.profiles)
+  const users: OnlineUser[] = Array.isArray(onlineUsers)
+    ? onlineUsers.map((item: RawOnlineUser) => item.profiles)
     : [];
 
   const userCount = users.length;

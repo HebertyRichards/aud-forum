@@ -14,10 +14,11 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { handleApiError } from "@/utils/apiErrors";
 
-interface PasswordCardProps {
+type PasswordCardProps = {
   onClose: () => void;
-}
+};
 
 export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
@@ -44,21 +45,18 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          errorData.error || errorData.message || "Falha ao alterar a senha."
-        );
+        throw new Error("Falha ao alterar a senha.", {
+          cause: errorData.error,
+        });
       }
 
       toast.success("Senha alterada com sucesso!");
       setTimeout(() => {
         onClose();
       }, 1500);
-    } catch (error: unknown) {
-      let errorMessage = "Falha ao alterar a senha.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
+    } catch (error) {
+      handleApiError(error, "Falha ao alterar a senha.");
+      toast.error("Falha ao alterar a senha.");
     } finally {
       setIsLoading(false);
     }

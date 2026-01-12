@@ -25,8 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from "@/utils/forum-structure";
 
 export function HeaderMobile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -108,7 +107,7 @@ export function HeaderMobile() {
       className="sticky top-0 z-50 w-full 
              border-b shadow-sm 
             bg-slate-800/80 
-             backdrop-blur supports-[backdrop-filter]:bg-slate-800/60 border-slate-700"
+             backdrop-blur supports-backdrop-filter:bg-slate-800/60 border-slate-700"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -171,7 +170,7 @@ export function HeaderMobile() {
                   <DropdownMenuSeparator className="bg-slate-700" />
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="cursor-pointer text-red-500 data-[highlighted]:bg-red-900/50 data-[highlighted]:text-red-400"
+                    className="cursor-pointer text-red-500 data-highlighted:bg-red-900/50 data-highlighted:text-red-400"
                   >
                     Sair
                   </DropdownMenuItem>

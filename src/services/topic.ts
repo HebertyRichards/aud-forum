@@ -1,15 +1,6 @@
 import { NewTopic, UpdateTopic, NewComment } from "@/schema/forum";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-const getErrorMessage = async (response: Response): Promise<string> => {
-  try {
-    const data = await response.json();
-    return data.message || "Ocorreu um erro desconhecido.";
-  } catch {
-    return "Ocorreu um erro desconhecido.";
-  }
-};
+import { handleApiError } from "@/utils/apiErrors";
+import { API_URL } from "@/utils/forum-structure";
 
 export async function getTopicsByCategory(
   category: string,
@@ -25,16 +16,12 @@ export async function getTopicsByCategory(
     );
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao buscar os tópicos da categoria.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao buscar os tópicos da categoria.");
   }
 }
 
@@ -45,17 +32,13 @@ export async function getTopicBySlug(slug: string) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao buscar o tópico.");
     }
 
     const data = await response.json();
     return data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao buscar o tópico.");
   }
 }
 
@@ -73,16 +56,12 @@ export async function getTopicBySlugWithComments(
     );
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao buscar o tópico com comentários.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao buscar o tópico com comentários.");
   }
 }
 
@@ -103,15 +82,12 @@ export async function createTopic(data: NewTopic, images: File[]) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao criar o tópico.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
+  } catch (error) {
+    handleApiError(error, "Falha ao criar o tópico.");
     throw new Error("Ocorreu um erro desconhecido.");
   }
 }
@@ -128,16 +104,12 @@ export async function updateTopic(topicId: number, data: UpdateTopic) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao atualizar o tópico.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao atualizar o tópico.");
   }
 }
 
@@ -149,14 +121,10 @@ export async function deleteTopic(topicId: number) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao deletar o tópico.");
     }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao deletar o tópico.");
   }
 }
 
@@ -168,14 +136,10 @@ export async function deleteComment(commentId: number) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao deletar o comentário.");
     }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao deletar o comentário.");
   }
 }
 
@@ -191,16 +155,12 @@ export async function updateComment(commentId: number, content: string) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao atualizar o comentário.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao atualizar o comentário.");
   }
 }
 
@@ -221,16 +181,12 @@ export async function createComment(data: NewComment, images: File[]) {
     });
 
     if (!response.ok) {
-      const errorMessage = await getErrorMessage(response);
-      throw new Error(errorMessage);
+      throw new Error("Falha ao criar o comentário.");
     }
 
     return await response.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Ocorreu um erro desconhecido.");
+  } catch (error) {
+    handleApiError(error, "Falha ao criar o comentário.");
   }
 }
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
 interface ForumTopicRowProps {
   id: number;
@@ -15,7 +15,7 @@ interface ForumTopicRowProps {
 export function ForumTopicRow({
   icon: Icon,
   title,
-  route, 
+  route,
   lastPostInfo,
   author,
   authorColorClass,
@@ -23,7 +23,7 @@ export function ForumTopicRow({
 }: ForumTopicRowProps) {
   return (
     <div className="flex items-center px-4 py-3">
-      <div className="flex items-center grow space-x-3">
+      <div className="flex items-center flex-grow space-x-3">
         <Icon className="h-5 w-5 text-primary" />
         <Link href={route} passHref>
           <h3 className="text-sm font-semibold text-primary hover:underline cursor-pointer">

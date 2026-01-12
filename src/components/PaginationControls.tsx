@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface PaginationControlsProps {
+type PaginationControlsProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}
+};
 
 export const PaginationControls = ({
   currentPage,

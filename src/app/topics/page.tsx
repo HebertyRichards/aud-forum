@@ -7,7 +7,7 @@ import { categoryDetailsMap } from "@/utils/utilities";
 import { useCategory } from "@/hooks/useCategory";
 import { Folder, ChevronRight, ArrowLeft, Loader2 } from "lucide-react";
 
-interface ApiCategory {
+type ApiCategory = {
   slug: string;
   name: string;
   description?: string;

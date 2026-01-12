@@ -39,7 +39,6 @@ export function RecentPosts() {
     );
   }
 
-  
   if (error) {
     return (
       <Card className="bg-slate-800 border-slate-700 text-white">
