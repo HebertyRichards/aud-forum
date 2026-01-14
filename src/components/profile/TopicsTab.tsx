@@ -7,7 +7,7 @@ import { UserProfile } from "@/schema/user";
 
 export type StatisticsTabProps = Pick<UserProfile, "username">;
 export function TopicsTab({ username }: StatisticsTabProps) {
-  const { topics, isLoading, error } = useUserTopics(username);
+  const { data: topics, isLoading, error } = useUserTopics(username);
 
   if (isLoading)
     return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
@@ -15,7 +15,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
     return (
       <p className="text-red-500 flex items-center gap-2">
         <AlertTriangle size={16} />
-        {error}
+        {error.message}
       </p>
     );
 
@@ -25,7 +25,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
         <CardTitle>Tópicos Recentes</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {topics.length > 0 ? (
+        {topics && topics.length > 0 ? (
           <ul className="space-y-4">
             {topics.map((topic) => (
               <li

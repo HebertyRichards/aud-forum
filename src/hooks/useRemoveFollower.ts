@@ -2,24 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
-type RemoveFollowerVars = {
-  followerUsername: string;
-  profileOwnerUsername: string;
-};
-
-const removeFollowerFn = async ({ followerUsername }: RemoveFollowerVars) => {
-  const res = await fetch(`/api/follow/followers/${followerUsername}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.error || "Não foi possível remover o seguidor.");
-  }
-  const data = await res.json();
-  return data;
-};
+import { removeFollowerFn } from "@/app/api/endpoints/followers";
 
 export const useRemoveFollower = () => {
   const queryClient = useQueryClient();

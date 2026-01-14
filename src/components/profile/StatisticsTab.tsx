@@ -8,17 +8,19 @@ import { UserProfile } from "@/schema/user";
 export type StatisticsTabProps = Pick<UserProfile, "username">;
 
 export function StatisticsTab({ username }: StatisticsTabProps) {
-  const { stats, isLoading, error } = useUserStats(username);
+  const { data: stats, isLoading, error } = useUserStats(username);
 
-  if (isLoading)
-    return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
-  if (error)
+  if (error) {
     return (
       <p className="text-red-500 flex items-center gap-2">
         <AlertTriangle size={16} />
-        {error}
+        {error.message}
       </p>
     );
+  }
+
+  if (isLoading)
+    return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
   if (!stats) return null;
 
   return (

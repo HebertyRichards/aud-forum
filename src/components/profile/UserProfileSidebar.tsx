@@ -51,7 +51,6 @@ export function UserProfileSidebar({
             </Avatar>
             {isOwnProfile && (
               <UpdateAvatar
-                onSuccess={() => {}}
                 currentAvatarUrl={profile?.avatar_url}
               />
             )}

@@ -22,7 +22,6 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const [password, setPassword] = useState("");
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const auth = useAuth();
   const router = useRouter();
@@ -31,10 +30,9 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
     e.preventDefault();
 
     if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
+      toast.error("Por favor, preencha todos os campos.");
       return;
     }
-    setError(null);
     setLoading(true);
     try {
       await auth?.login(email, password, keepLoggedIn);
@@ -125,7 +123,6 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           Mantenha-me conectado
         </Label>
       </div>
-      {error && <p className="text-sm text-red-500 text-center">{error}</p>}
       <div className="flex flex-col gap-4 pt-2">
         <Button
           type="submit"

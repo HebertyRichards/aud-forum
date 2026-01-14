@@ -7,19 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { RolesAuthorized } from "@/schema/user";
-
-const fetchUserProfile = async (userId: string | undefined) => {
-  if (!userId) {
-    throw new Error("User ID is required");
-  }
-  const res = await fetch(`/api/profile/${userId}`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    throw new Error("Falha ao carregar o perfil do usuário.");
-  }
-  return await res.json();
-};
+import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 
 export default function Rules() {
   const { user, loading: authLoading } = useAuth();
@@ -31,13 +19,19 @@ export default function Rules() {
     isError: isProfileError,
   } = useQuery({
     queryKey: ["userProfilePermission", user?.id],
-    queryFn: () => fetchUserProfile(user?.id),
-    enabled: !!user,
+    queryFn: async () => {
+      if (!user?.id) {
+        throw new Error("User ID is required");
+      }
+      return useFetchUserProfile(user.id);
+    },
+    enabled: !!user?.id,
     retry: false,
     refetchOnWindowFocus: false,
   });
 
-  const hasPermission: RolesAuthorized | false = profileData;
+  const hasPermission: RolesAuthorized | false =
+    profileData?.data?.profile?.role || false;
 
   useEffect(() => {
     if (authLoading || isProfileLoading) {

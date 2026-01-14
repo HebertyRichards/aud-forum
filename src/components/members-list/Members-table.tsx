@@ -39,8 +39,8 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="border-slate-700 hover:bg-slate-800">
-            <TableHead className="w-[50px] text-white">#</TableHead>
-            <TableHead className="min-w-[200px] text-white">
+            <TableHead className="w-12.5 text-white">#</TableHead>
+            <TableHead className="min-w-50 text-white">
               Avatar - Nome de usuário
             </TableHead>
             <TableHead className="text-white">Data de inscrição</TableHead>

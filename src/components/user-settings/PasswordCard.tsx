@@ -14,7 +14,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { handleApiError } from "@/utils/apiErrors";
+import { useUpdatePassword } from "@/hooks/useUpdatePassword";
 
 type PasswordCardProps = {
   onClose: () => void;
@@ -23,43 +23,17 @@ type PasswordCardProps = {
 export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const { mutate, isPending } = useUpdatePassword(onClose);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (newPassword !== confirmPassword) {
       toast.error("As senhas não coincidem.");
       return;
     }
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/auth/update-password`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ newPassword }),
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error("Falha ao alterar a senha.", {
-          cause: errorData.error,
-        });
-      }
-
-      toast.success("Senha alterada com sucesso!");
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (error) {
-      handleApiError(error, "Falha ao alterar a senha.");
-      toast.error("Falha ao alterar a senha.");
-    } finally {
-      setIsLoading(false);
-    }
+    mutate(newPassword);
   };
 
   return (
@@ -81,6 +55,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="bg-slate-700 border-slate-600 pr-10"
+                disabled={isPending}
               />
               <Button
                 type="button"
@@ -88,6 +63,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 size="icon"
                 className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 text-slate-400 hover:bg-slate-600 hover:text-white"
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={isPending}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -103,20 +79,22 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="max-w-sm bg-slate-700 border-slate-600"
+              disabled={isPending}
             />
           </CardContent>
           <CardFooter className="gap-2">
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isPending}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              {isLoading ? "Alterando..." : "Alterar Senha"}
+              {isPending ? "Alterando..." : "Alterar Senha"}
             </Button>
             <Button
               type="button"
               className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
               onClick={onClose}
+              disabled={isPending}
             >
               Cancelar
             </Button>

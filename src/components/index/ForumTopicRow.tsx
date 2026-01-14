@@ -23,7 +23,7 @@ export function ForumTopicRow({
 }: ForumTopicRowProps) {
   return (
     <div className="flex items-center px-4 py-3">
-      <div className="flex items-center flex-grow space-x-3">
+      <div className="flex items-center grow space-x-3">
         <Icon className="h-5 w-5 text-primary" />
         <Link href={route} passHref>
           <h3 className="text-sm font-semibold text-primary hover:underline cursor-pointer">

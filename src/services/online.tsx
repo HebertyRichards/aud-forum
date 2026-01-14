@@ -5,26 +5,26 @@ import { useAuth } from "@/services/auth";
 import { RawOnlineUser } from "@/schema/forum";
 import { API_URL } from "@/utils/forum-structure";
 
-interface OnlineContextType {
+type OnlineContextType = {
   onlineUsers: RawOnlineUser[];
   isConnected: boolean;
-}
+};
 
-interface WebSocketUserProfile {
+type WebSocketUserProfile = {
   username?: unknown;
   role?: unknown;
   avatar_url?: unknown;
-}
+};
 
-interface WebSocketUserItem {
+type WebSocketUserItem = {
   profiles?: WebSocketUserProfile;
   last_seen_at?: unknown;
-}
+};
 
-interface WebSocketMessage {
+type WebSocketMessage = {
   type: string;
   users: WebSocketUserItem[];
-}
+};
 
 const OnlineContext = createContext<OnlineContextType>({
   onlineUsers: [],

@@ -30,7 +30,7 @@ export function MembersFilters({
   return (
     <div className="rounded-md border bg-slate-800 p-4 border-slate-700">
       <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
-        <div className="w-full sm:flex-1 sm:min-w-[200px]">
+        <div className="w-full sm:flex-1 sm:min-w-50">
           <Input
             type="text"
             placeholder="Nome de usuário"
@@ -50,7 +50,7 @@ export function MembersFilters({
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger
                 id="sort-by"
-                className="w-full sm:w-[180px] border-slate-600 bg-slate-700"
+                className="w-full sm:w-45 border-slate-600 bg-slate-700"
                 aria-label="Ordenar por"
               >
                 <SelectValue placeholder="Selecione" />
@@ -67,7 +67,7 @@ export function MembersFilters({
           </div>
           <div className="w-full sm:w-auto flex items-center gap-2">
             <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger className="w-full sm:w-[150px] bg-slate-700 border-slate-600">
+              <SelectTrigger className="w-full sm:w-37.5 bg-slate-700 border-slate-600">
                 <SelectValue placeholder="Ordem" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 text-white border-slate-600">

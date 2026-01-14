@@ -10,25 +10,8 @@ import {
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
 import { useAuth } from "@/services/auth";
-import { handleApiError } from "@/utils/apiErrors";
 import { UserProfile, RolesAuthorizedSchema } from "@/schema/user";
-
-const fetchUserProfile = async (
-  username: string
-): Promise<UserProfile | null> => {
-  try {
-    const res = await fetch(`/api/profile/${username}`, {
-      credentials: "include",
-    });
-    if (!res.ok) {
-      throw new Error("Falha ao carregar o perfil do usuário.");
-    }
-    return await res.json();
-  } catch (error) {
-    handleApiError(error, "Falha ao carregar o perfil do usuário.");
-    return null;
-  }
-};
+import { searchUserProfile } from "@/app/api/endpoints/followers";
 
 export function ForumCategoryList() {
   const auth = useAuth();
@@ -36,7 +19,7 @@ export function ForumCategoryList() {
 
   const { data: userProfile } = useQuery<UserProfile | null>({
     queryKey: ["userProfile", username],
-    queryFn: () => fetchUserProfile(username!),
+    queryFn: () => searchUserProfile(username!),
     enabled: !!username,
   });
 

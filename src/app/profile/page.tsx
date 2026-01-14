@@ -1,59 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
-import { UserProfile, FollowStats } from "@/schema/user";
-import { useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { handleApiError } from "@/utils/apiErrors";
+import { useFetchOwnProfile } from "@/hooks/useFetchOwnProfile";
 
 export default function Profile() {
   const auth = useAuth();
-  const user = auth?.user;
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const fetchOwnProfile = async (username: string) => {
-    try {
-      const [res, statsRes] = await Promise.all([
-        fetch(`/api/profile/${username}`, {
-          credentials: "include",
-        }),
-        fetch(`/api/follow/${username}/stats`, {
-          credentials: "include",
-        }),
-      ]);
-
-      const profileData: UserProfile = await res.json();
-      const statsData: FollowStats | null = statsRes
-        ? await statsRes.json()
-        : null;
-
-      return { profile: profileData, stats: statsData };
-    } catch (error) {
-      handleApiError(error, "Não foi possível carregar os dados do seu perfil");
-    }
-  };
-
-  const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: ["ownProfile", user?.username],
-    queryFn: () => fetchOwnProfile(user?.username as string),
-    enabled: !!user?.username && !!user.username,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  useEffect(() => {
-    if (auth.loading) return;
-    if (!user) {
-      router.push("/");
-    }
-  }, [user, auth.loading, router]);
-
-  const handleSuccessUpdate = () => {
-    queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.username] });
-  };
+  const {
+    profile: data,
+    isLoading,
+    isFetching,
+    error,
+    handleSuccessUpdate,
+  } = useFetchOwnProfile();
 
   if (auth.loading || (isLoading && !data)) {
     return (

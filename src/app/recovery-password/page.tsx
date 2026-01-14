@@ -14,11 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/services/auth";
+import { toast } from "sonner";
 
 export default function RecoveryPassword() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [sucesso, setSucesso] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
 
@@ -29,27 +28,25 @@ export default function RecoveryPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      setError("Erro de autenticação. Tente recarregar a página.");
+      toast.error("Erro de autenticação. Tente recarregar a página.");
       return;
     }
 
     if (!email || !isValidEmail(email)) {
-      setError("Informe um e-mail válido.");
+      toast.error("Informe um e-mail válido.");
       return;
     }
 
-    setError("");
-    setSucesso("");
     setLoading(true);
 
     try {
       await auth.forgotPassword(email.trim());
-      setSucesso("Enviamos a alteração para o seu email, confira!");
-    } catch (error: unknown) {
+      toast.success("Enviamos a alteração para o seu email, confira!");
+    } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
       } else {
-        setError("Ocorreu uma falha inesperada");
+        toast.error("Ocorreu uma falha inesperada");
       }
       setLoading(false);
     }
@@ -83,8 +80,6 @@ export default function RecoveryPassword() {
                   className="bg-slate-700 border-slate-600 "
                 />
               </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              {sucesso && <p className="text-green-500 text-sm">{sucesso}</p>}
             </form>
           </CardContent>
           <CardFooter className="flex flex-col gap-4 pt-4">

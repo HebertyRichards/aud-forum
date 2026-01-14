@@ -5,50 +5,16 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
-import { useFollow } from "@/hooks/useFollow";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFollowHook } from "@/hooks/useFollow";
+import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 
 export default function OtherProfile() {
   const auth = useAuth();
   const user = auth?.user;
   const router = useRouter();
   const { username } = useParams<{ username: string }>();
-  const queryClient = useQueryClient();
-
-  const fetchUserProfile = async (profileUsername: string) => {
-    try {
-      const [profileRes, statsRes, isFollowingRes] = await Promise.all([
-        fetch(`/api/profile/user/${profileUsername}`, {
-          credentials: "include",
-        }),
-        fetch(`/api/follow/${profileUsername}/stats`, {
-          credentials: "include",
-        }),
-        fetch(`/api/follow/${profileUsername}/is-following`, {
-          credentials: "include",
-        }),
-      ]);
-
-      return {
-        profile: await profileRes.json(),
-        stats: await statsRes.json(),
-        isFollowing: await isFollowingRes.json(),
-      };
-    } catch (error: unknown) {
-      let errorMessage = "Ocorreu uma falha inesperada ao carregar o perfil.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      throw new Error(errorMessage);
-    }
-  };
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["userProfile", username],
-    queryFn: () => fetchUserProfile(username),
-    enabled: !!username && !!user && user.username !== username,
-    staleTime: 5 * 60 * 1000,
-  });
+  const { data, isLoading, error, handleSuccessUpdate } =
+    useFetchUserProfile(username);
 
   const profile = data?.profile;
   const initialStats = data?.stats;
@@ -60,7 +26,7 @@ export default function OtherProfile() {
     isLoading: isFollowLoading,
     handleFollow,
     handleUnfollow,
-  } = useFollow(
+  } = useFollowHook(
     username,
     initialIsFollowing ?? false,
     initialStats?.followers_count ?? 0
@@ -76,10 +42,6 @@ export default function OtherProfile() {
       router.push("/profile");
     }
   }, [user, auth.loading, router, username]);
-
-  const handleSuccessUpdate = () => {
-    queryClient.invalidateQueries({ queryKey: ["userProfile", username] });
-  };
 
   if (auth.loading || (isLoading && !data)) {
     return (

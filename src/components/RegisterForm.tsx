@@ -7,29 +7,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
 }
 
-export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
+export function RegisterForm({
+  onSuccess,
+  onSwitchToLogin,
+}: RegisterFormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const auth = useAuth();
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
 
     if (!username || !email || !password) {
-      setError("Preencha todos os campos.");
+      toast.error("Preencha todos os campos.");
       return;
     }
 
@@ -41,12 +43,11 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
       setTimeout(() => {
         router.push("/verification");
       }, 1000);
-      
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
       } else {
-        setError("Ocorreu uma falha inesperada.");
+        toast.error("Ocorreu uma falha inesperada.");
       }
     } finally {
       setLoading(false);
@@ -103,17 +104,16 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
           </Button>
         </div>
       </div>
-      {error && (
-        <p className="text-sm text-red-500 text-center bg-red-950/30 p-2 rounded border border-red-900">
-          {error}
-        </p>
-      )}
       <Button
         type="submit"
         className="w-full bg-blue-600 hover:bg-blue-500 mt-2"
         disabled={loading}
       >
-        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Criar Conta"}
+        {loading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          "Criar Conta"
+        )}
       </Button>
       <div className="text-center text-sm text-slate-400 mt-4">
         Já tem uma conta?{" "}

@@ -12,10 +12,9 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { toast } from "sonner";
 import type { UserWithProfile } from "@/types/autentication";
 import { X } from "lucide-react";
-import { handleApiError } from "@/utils/apiErrors";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 
 type ProfileCardProps = {
   user: UserWithProfile;
@@ -25,39 +24,15 @@ type ProfileCardProps = {
 export function ProfileCard({ user, onClose }: ProfileCardProps) {
   const [username, setUsername] = useState(user.username ?? "");
   const [email, setEmail] = useState(user.email ?? "");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/profile/update-data`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, newEmail: email }),
-        credentials: "include",
-      });
+  const { mutate, isPending } = useUpdateProfile();
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error("Falha ao atualizar o perfil.", {
-          cause: errorData.error,
-        });
-      }
-
-      toast.success("Perfil atualizado com sucesso!");
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    } catch (error) {
-      handleApiError(error, "Falha ao atualizar o perfil.");
-      toast.error("Falha ao atualizar o perfil.");
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutate({
+      username,
+      newEmail: email,
+    });
   };
 
   return (
@@ -86,6 +61,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-slate-700 border-slate-600"
+                disabled={isPending}
               />
             </div>
             <div className="space-y-2">
@@ -96,6 +72,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-slate-700 border-slate-600"
+                disabled={isPending}
               />
             </div>
           </CardContent>
@@ -103,14 +80,15 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
             <Button
               type="submit"
               className="bg-blue-500 border border-blue-400 hover:bg-blue-400"
-              disabled={isLoading}
+              disabled={isPending}
             >
-              {isLoading ? "Salvando..." : "Salvar Alterações"}
+              {isPending ? "Salvando..." : "Salvar Alterações"}
             </Button>
             <Button
               type="button"
               className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
               onClick={onClose}
+              disabled={isPending}
             >
               Cancelar
             </Button>

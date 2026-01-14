@@ -16,20 +16,22 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/services/auth";
 import { Loader2 } from "lucide-react";
 import { formatDateForInput } from "@/utils/dateUtils";
-import { toast } from "sonner";
 import { UserProfile } from "@/schema/user";
+import { useUpdateProfileData } from "@/hooks/useUpdateProfileData";
 
 interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     username: profile.username || "",
     gender: profile.gender || "",
@@ -37,9 +39,10 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     location: profile.location || "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate, isPending, error } = useUpdateProfileData(() => {
+    setOpen(false);
+    if (onSuccess) onSuccess();
+  });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -50,89 +53,80 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     setForm((prev) => ({ ...prev, gender: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    const toastId = toast.loading("Salvando alterações...");
-
-    try {
-      const payload = { ...form, id: user?.id };
-
-      const res = await fetch(`/api/profile/update`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Falha ao atualizar o perfil.");
-      }
-      const data = await res.json();
-      toast.success("Perfil atualizado com sucesso!", { id: toastId });
-      if (onSuccess) onSuccess();
-      setOpen(false);
-    } catch (error: unknown) {
-      let errorMessage = "Ocorreu um erro inesperado";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage, { id: toastId });
-    } finally {
-      setLoading(false);
-    }
+    mutate({ ...form, id: user?.id });
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
-          <DialogTitle>Atualizar Perfil</DialogTitle>
+          Atualizar Perfil
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Label htmlFor="gender">Gênero</Label>
-          <Select value={form.gender} onValueChange={handleSelectChange}>
-            <SelectTrigger
-              id="gender"
-              className="flex h-9 w-full min-w-0 rounded-md border border-slate-600 bg-slate-700"
+        <DialogHeader>
+          <DialogTitle>Editar Informações Pessoais</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <div className="space-y-1">
+            <Label htmlFor="gender">Gênero</Label>
+            <Select
+              value={form.gender}
+              onValueChange={handleSelectChange}
+              disabled={isPending}
             >
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-800 text-white border border-slate-700">
-              <SelectItem value="Masculino">Masculino</SelectItem>
-              <SelectItem value="Feminino">Feminino</SelectItem>
-            </SelectContent>
-          </Select>
-          <Label htmlFor="birthdate">Nascimento</Label>
-          <Input
-            id="birthdate"
-            name="birthdate"
-            type="date"
-            value={form.birthdate}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          <Label htmlFor="location">Localização</Label>
-          <Input
-            id="location"
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+              <SelectTrigger
+                id="gender"
+                className="w-full border-slate-600 bg-slate-700 text-white"
+              >
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 text-white border-slate-700">
+                <SelectItem value="Masculino">Masculino</SelectItem>
+                <SelectItem value="Feminino">Feminino</SelectItem>
+                <SelectItem value="Outro">Outro</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="birthdate">Nascimento</Label>
+            <Input
+              id="birthdate"
+              name="birthdate"
+              type="date"
+              value={form.birthdate}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border-slate-600 text-white"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="location">Localização</Label>
+            <Input
+              id="location"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              disabled={isPending}
+              placeholder="Ex: São Paulo, Brasil"
+              className="bg-slate-700 border-slate-600 text-white"
+            />
+          </div>
           <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-4"
+            disabled={isPending}
+            className="w-full bg-blue-600 hover:bg-blue-500 mt-4"
           >
-            {loading ? (
-              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            ) : null}
-            Salvar alterações
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                Salvando...
+              </>
+            ) : (
+              "Salvar alterações"
+            )}
           </Button>
         </form>
       </DialogContent>

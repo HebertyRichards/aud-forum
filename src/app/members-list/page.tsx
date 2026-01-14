@@ -31,8 +31,9 @@ export default function MembersList() {
           compareResult = a.username.localeCompare(b.username);
           break;
         case "data-inscricao":
-          compareResult =
-            new Date(a.joined_at).getTime() - new Date(b.joined_at).getTime();
+          const aJoined = a.joined_at ? new Date(a.joined_at).getTime() : 0;
+          const bJoined = b.joined_at ? new Date(b.joined_at).getTime() : 0;
+          compareResult = aJoined - bJoined;
           break;
         case "mensagens":
           compareResult = a.messages - b.messages;

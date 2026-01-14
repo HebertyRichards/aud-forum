@@ -9,14 +9,11 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/services/auth";
 import { toast } from "sonner";
-import { handleApiError } from "@/utils/apiErrors";
 
 export default function NewPasswordForm() {
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [sucesso, setSucesso] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
@@ -31,7 +28,7 @@ export default function NewPasswordForm() {
     if (token) {
       setAccessToken(token);
     } else {
-      setError(
+      toast.error(
         "Token de recuperação não encontrado na URL. Por favor, use o link enviado para o seu e-mail."
       );
     }
@@ -40,19 +37,19 @@ export default function NewPasswordForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      setError("Erro de autenticação. Tente recarregar a página.");
+      toast.error("Erro de autenticação. Tente recarregar a página.");
       return;
     }
 
     if (!accessToken) {
-      setError(
+      toast.error(
         "Token de recuperação inválido. Por favor, solicite um novo link."
       );
       return;
     }
 
     if (!novaSenha || !confirmacaoSenha) {
-      setError("Preencha todos os campos.");
+      toast.error("Preencha todos os campos.");
       return;
     }
 
@@ -60,20 +57,20 @@ export default function NewPasswordForm() {
       toast.error("As senhas não coincidem.");
       return;
     }
-    setError("");
     setLoading(true);
 
     try {
       await auth.updatePassword(novaSenha, accessToken);
-      setSucesso(
+      toast.success(
         "Senha atualizada com sucesso! Redirecionando para o login..."
       );
       router.push("/");
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu uma falha inesperada");
       }
-      setError("Ocorreu uma falha inesperada");
       setLoading(false);
     }
   };
@@ -109,8 +106,6 @@ export default function NewPasswordForm() {
               onChange={(e) => setConfirmacaoSenha(e.target.value)}
               className="bg-slate-700 border-slate-600"
             />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            {sucesso && <p className="text-green-600 text-sm">{sucesso}</p>}
             <Button
               type="submit"
               className="w-full mt-4 border border-slate-600 bg-slate-700 hover:bg-slate-600"

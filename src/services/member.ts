@@ -1,21 +1,9 @@
-import { UserProfile } from "@/schema/user";
 import { Member } from "@/schema/forum";
 import { handleApiError } from "@/utils/apiErrors";
 
-type ApiMember = Pick<
-  UserProfile,
-  | "id"
-  | "username"
-  | "role"
-  | "joined_at"
-  | "last_login"
-  | "avatar_url"
-  | "mensagens_count"
->;
-
 export async function getAllMembers(
   page: number
-): Promise<{ members: Member[]; totalCount: number }> {
+): Promise<{ members: Member[]; totalCount: number } | undefined> {
   const limit = 20;
   try {
     const res = await fetch(`/api/user/user/all?page=${page}&limit=${limit}`, {
@@ -24,7 +12,7 @@ export async function getAllMembers(
     if (!res.ok) {
       throw new Error("Falha ao buscar os membros.");
     }
-    const { data, totalCount }: { data: ApiMember[]; totalCount: number } =
+    const { data, totalCount }: { data: Member[]; totalCount: number } =
       await res.json();
 
     const transformedData: Member[] = data.map((apiMember, index) => ({
@@ -40,6 +28,6 @@ export async function getAllMembers(
 
     return { members: transformedData, totalCount };
   } catch (error) {
-    throw handleApiError(error, "Falha ao buscar os membros.");
+    handleApiError(error, "Falha ao buscar os membros.");
   }
 }

@@ -15,23 +15,23 @@ import {
   PlusCircle,
   ArrowLeft,
   MessageSquare,
-  AlertTriangle,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatPostTimestamp } from "@/utils/dateUtils";
 import { useAuth } from "@/services/auth";
 import { getTopicsByCategory } from "@/services/topic";
 import { usePermissions } from "@/hooks/usePermissions";
 import { TopicSummary } from "@/schema/forum";
+import { toast } from "sonner";
 
-interface PaginationControlsProps {
+type PaginationControlsProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}
+};
 
 const PaginationControls = ({
   currentPage,
@@ -117,37 +117,15 @@ const PaginationControls = ({
   );
 };
 
-const MessageCard = ({ message }: { message: string }) => (
-  <Card className="border-yellow-500/50 bg-slate-800 my-4">
-    <CardContent className="p-6 flex items-center gap-4">
-      <AlertTriangle className="h-8 w-8 text-yellow-500" />
-      <p className="text-yellow-700 dark:text-yellow-300 font-medium">
-        {message}
-      </p>
-    </CardContent>
-  </Card>
-);
-
-const categoryTitles: { [key: string]: string } = {
-  downloads: "Downloads",
-  manuals: "Manuais",
-  "general-discussions": "Discussões Gerais",
-  members: "Área dos Membros",
-  subscribes: "Inscrições",
-  updates: "Atualizações",
-};
-
 export default function CategoryTopicPage() {
   const params = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
-  const isCategoryValid =
-    !!category && Object.keys(categoryTitles).includes(category);
+  const isCategoryValid = Object.keys(category).includes(category);
   const [currentPage, setCurrentPage] = useState(1);
   const [view, setView] = useState<"list" | "create">("list");
-  const [authMessage, setAuthMessage] = useState<string | null>(null);
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
   const TOPICS_PER_PAGE = 10;
@@ -158,7 +136,7 @@ export default function CategoryTopicPage() {
   >({
     queryKey: ["topics", category, currentPage],
     queryFn: () => getTopicsByCategory(category, currentPage, TOPICS_PER_PAGE),
-    enabled: isCategoryValid && view === "list",
+    enabled: true && view === "list",
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });
@@ -166,7 +144,7 @@ export default function CategoryTopicPage() {
   const topics = data?.data ?? [];
   const totalTopics = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalTopics / TOPICS_PER_PAGE);
-  const pageTitle = categoryTitles[category] || "Tópicos";
+  const pageTitle = category ?? "Tópicos";
 
   useEffect(() => {
     if (user && category) {
@@ -198,15 +176,13 @@ export default function CategoryTopicPage() {
   };
 
   const handleNewTopicClick = () => {
-    setAuthMessage(null);
-
     if (!user) {
-      setAuthMessage("É necessário estar logado para criar um tópico.");
+      toast.error("É necessário estar logado para criar um tópico.");
       return;
     }
     if (canCreateTopic === false) {
-      setAuthMessage(
-        "Você não tem permissão para criar um tópico nesta seção."
+      toast.error(
+        "Você não tem permissão para criar um tópico nesta categoria."
       );
       return;
     }
@@ -217,7 +193,6 @@ export default function CategoryTopicPage() {
 
   const handleBackToList = () => {
     setView("list");
-    setAuthMessage(null);
   };
 
   const renderHeader = () => (
@@ -330,7 +305,6 @@ export default function CategoryTopicPage() {
           </Button>
         </div>
         {renderHeader()}
-        {authMessage && <MessageCard message={authMessage} />}
         {renderMainContent()}
       </div>
     </div>

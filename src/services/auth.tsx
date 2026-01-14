@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       await checkUserSession();
     } catch (error) {
-      throw handleApiError(error, "Não foi possível fazer o login.");
+      handleApiError(error, "Não foi possível fazer o login.");
     }
   };
 
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(errorData.message);
       }
     } catch (error) {
-      throw handleApiError(error, "Não foi possível completar o registro.");
+      handleApiError(error, "Não foi possível completar o registro.");
     }
   };
 
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(errorData.message);
       }
     } catch (error) {
-      throw handleApiError(error, "Não foi possível fazer o logout.");
+      handleApiError(error, "Não foi possível fazer o logout.");
     } finally {
       setUser(null);
     }
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await res.json();
       return data;
     } catch (error) {
-      throw handleApiError(error, "Não foi possível atualizar a senha.");
+      handleApiError(error, "Não foi possível atualizar a senha.");
     }
   };
 

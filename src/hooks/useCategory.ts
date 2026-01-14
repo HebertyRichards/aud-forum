@@ -1,23 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { fetchCategory } from "@/app/api/endpoints/category";
 
 type ApiCategory = {
   slug: string;
   name: string;
   description?: string;
-};
-
-const fetchCategory = async (): Promise<ApiCategory[]> => {
-  const response = await fetch("/api/categories", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
-  }
-  const data = await response.json();
-  return data ?? [];
 };
 
 export const useCategory = () => {

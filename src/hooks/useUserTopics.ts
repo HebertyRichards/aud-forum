@@ -1,24 +1,11 @@
-"use client";
+import { useQuery } from "@tanstack/react-query";
+import { getTopicsByAuthorApi } from "@/app/api/endpoints/profiles";
 
-import { useQuery } from '@tanstack/react-query';
-import { getTopicsByAuthor } from '@/services/profile';
-import { TopicSummary } from '@/schema/forum';
-
-export function useUserTopics(username?: string) {
-  const {
-    data: topics, 
-    isLoading,
-    error,
-    isError,
-  } = useQuery<TopicSummary[], Error>({
-    queryKey: ['userTopics', username],
-    queryFn: () => getTopicsByAuthor(username!),
+export const useUserTopics = (username: string) => {
+  return useQuery({
+    queryKey: ["userTopics", username],
+    queryFn: () => getTopicsByAuthorApi(username),
     enabled: !!username,
+    staleTime: 1000 * 60 * 2,
   });
-
-  return {
-    topics: topics ?? [],
-    isLoading,
-    error: isError ? error.message : null,
-  };
-}
+};
