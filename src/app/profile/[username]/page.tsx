@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { useParams, useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useFollowHook } from "@/hooks/useFollow";

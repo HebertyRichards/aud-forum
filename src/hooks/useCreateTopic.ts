@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createTopic } from "@/services/topic";
+import { createTopic } from "@/app/api/endpoints/topic";
 import { NewTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { handleApiError } from "@/utils/apiErrors";
 
 export function useCreateTopic(category: string) {

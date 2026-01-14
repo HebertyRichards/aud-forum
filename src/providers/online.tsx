@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { RawOnlineUser } from "@/schema/forum";
 import { API_URL } from "@/utils/forum-structure";
 

@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { UserProfile, RolesAuthorizedSchema } from "@/schema/user";
 import { searchUserProfile } from "@/app/api/endpoints/followers";
 

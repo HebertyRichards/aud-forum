@@ -21,8 +21,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatPostTimestamp } from "@/utils/dateUtils";
-import { useAuth } from "@/services/auth";
-import { getTopicsByCategory } from "@/services/topic";
+import { useAuth } from "@/providers/auth";
+import { getTopicsByCategory } from "@/app/api/endpoints/topic";
 import { usePermissions } from "@/hooks/usePermissions";
 import { TopicSummary } from "@/schema/forum";
 import { toast } from "sonner";

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import {
   useQuery,
   useMutation,
@@ -10,13 +10,13 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import {
-  getTopicBySlugWithComments, 
+  getTopicBySlugWithComments,
   createComment,
   deleteTopic,
   updateTopic,
   deleteComment,
   updateComment,
-} from "@/services/topic";
+} from "@/app/api/endpoints/topic";
 import { NewComment, TopicDetails, UpdateTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -28,7 +28,8 @@ export function useTopicPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { canCreateComment, isCheckingComment, checkCommentPermission } = usePermissions(); 
+  const { canCreateComment, isCheckingComment, checkCommentPermission } =
+    usePermissions();
 
   const slug = params.slug as string;
   const category = params.categories as string;
@@ -36,14 +37,15 @@ export function useTopicPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [newCommentContent, setNewCommentContent] = useState("");
-  const [commentImages, setCommentImages] = useState<File[]>([]); 
+  const [commentImages, setCommentImages] = useState<File[]>([]);
 
   const { data, isLoading, error } = useQuery<
     { data: TopicDetails; totalComments: number },
     Error
   >({
     queryKey: ["topic", slug, currentPage],
-    queryFn: () => getTopicBySlugWithComments(slug, currentPage, COMMENTS_PER_PAGE),
+    queryFn: () =>
+      getTopicBySlugWithComments(slug, currentPage, COMMENTS_PER_PAGE),
     enabled: !!slug,
     placeholderData: keepPreviousData,
   });
@@ -53,7 +55,6 @@ export function useTopicPage() {
       checkCommentPermission(data.data.id);
     }
   }, [data, user, checkCommentPermission]);
-
 
   const topic = data?.data ?? null;
   const totalComments = data?.totalComments ?? 0;
@@ -79,9 +80,10 @@ export function useTopicPage() {
       toast.success("Comentário deletado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["topic", slug, currentPage] });
     },
-    onError: (err: Error) => toast.error(err.message || "Falha ao deletar o comentário."),
+    onError: (err: Error) =>
+      toast.error(err.message || "Falha ao deletar o comentário."),
   });
-  
+
   const updateCommentMutation = useMutation({
     mutationFn: (variables: { commentId: number; content: string }) =>
       updateComment(variables.commentId, variables.content),
@@ -98,7 +100,8 @@ export function useTopicPage() {
       toast.success("Tópico deletado com sucesso!");
       router.push(`/topics/${category}`);
     },
-    onError: () => toast.error("Falha ao deletar o tópico. Por favor, tente novamente."),
+    onError: () =>
+      toast.error("Falha ao deletar o tópico. Por favor, tente novamente."),
   });
 
   const updateTopicMutation = useMutation({
@@ -119,9 +122,13 @@ export function useTopicPage() {
   const handlers = useMemo(
     () => ({
       handleCommentSubmit: () => {
-        if (!canCreateComment) return toast.error("Você não tem permissão para comentar.");
+        if (!canCreateComment)
+          return toast.error("Você não tem permissão para comentar.");
         if (!topic || !newCommentContent.trim()) return;
-        const commentData: NewComment = { content: newCommentContent, topicId: topic.id };
+        const commentData: NewComment = {
+          content: newCommentContent,
+          topicId: topic.id,
+        };
         createCommentMutation.mutate({ commentData, images: commentImages });
       },
       handleDeleteComment: (commentId: number) => {
@@ -133,7 +140,10 @@ export function useTopicPage() {
         updateCommentMutation.mutate({ commentId, content });
       },
       handleDeleteTopic: () => {
-        if (topic && window.confirm("Tem certeza que deseja deletar este tópico?")) {
+        if (
+          topic &&
+          window.confirm("Tem certeza que deseja deletar este tópico?")
+        ) {
           deleteTopicMutation.mutate(topic.id);
         }
       },
@@ -143,12 +153,18 @@ export function useTopicPage() {
       },
     }),
     [
-      topic, newCommentContent, commentImages, canCreateComment,
-      createCommentMutation, deleteCommentMutation, updateCommentMutation,
-      deleteTopicMutation, updateTopicMutation,
+      topic,
+      newCommentContent,
+      commentImages,
+      canCreateComment,
+      createCommentMutation,
+      deleteCommentMutation,
+      updateCommentMutation,
+      deleteTopicMutation,
+      updateTopicMutation,
     ]
   );
-  
+
   const handlePageChange = (newPage: number) => {
     if (newPage !== currentPage && newPage > 0) {
       setCurrentPage(newPage);

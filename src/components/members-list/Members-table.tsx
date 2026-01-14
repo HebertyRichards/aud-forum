@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatLastLogin, formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { Member } from "@/schema/forum";
 
 type MembersTableProps = {

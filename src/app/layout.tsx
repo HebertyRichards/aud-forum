@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import Header from "@/templates/Header";
 import Footer from "@/templates/Footer";
 import "./globals.css";
-import { AuthProvider } from "@/services/auth";
-import { OnlineUserProvider } from "@/services/online";
-import { Providers } from "./providers";
+import { AuthProvider } from "@/providers/auth";
+import { OnlineUserProvider } from "@/providers/online";
+import { Providers } from "../providers/providers";
 
 export const metadata: Metadata = {
   title: {
@@ -59,13 +59,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <div className="min-h-screen bg-slate-900">
-          <AuthProvider>
-            <OnlineUserProvider>
-              <Header />
-              <Providers>{children}</Providers>
-              <Footer />
-            </OnlineUserProvider>
-          </AuthProvider>
+          <Providers>
+            <AuthProvider>
+              <OnlineUserProvider>
+                <Header />
+                {children}
+                <Footer />
+              </OnlineUserProvider>
+            </AuthProvider>
+          </Providers>
         </div>
       </body>
     </html>

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { uploadAvatarApi, deleteAvatarApi } from "@/app/api/endpoints/profiles";
 import { toast } from "sonner";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 
 export const useAvatarActions = () => {
   const { updateUserAvatar } = useAuth();

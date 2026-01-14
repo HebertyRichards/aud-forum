@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { OnlineUser, RawOnlineUser } from "@/schema/forum";
 import Link from "next/link";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { getRoleColor } from "@/utils/colors";
-import { useOnlineUsers } from "@/services/online";
+import { useOnlineUsers } from "@/providers/online";
 
 export function OnlineUsers() {
   const auth = useAuth();

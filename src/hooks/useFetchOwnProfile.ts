@@ -3,38 +3,38 @@
 import { useEffect } from "react";
 import { fetchOwnProfile } from "@/app/api/endpoints/followers";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { useRouter } from "next/navigation";
 
 export const useFetchOwnProfile = () => {
-    const auth = useAuth();
-    const user = auth?.user;
-    const router = useRouter();
-    const queryClient = useQueryClient();
-    
-    const { data, isLoading, isFetching, error } = useQuery({
-        queryKey: ["ownProfile", user?.username],
-        queryFn: () => fetchOwnProfile(user?.username as string),
-        enabled: !!user?.username,
-        staleTime: 5 * 60 * 1000,
-    });
+  const auth = useAuth();
+  const user = auth?.user;
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-    useEffect(() => {
-        if (auth.loading) return;
-        if (!user) {
-            router.push("/");
-        }
-    }, [user, auth.loading, router]);
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["ownProfile", user?.username],
+    queryFn: () => fetchOwnProfile(user?.username as string),
+    enabled: !!user?.username,
+    staleTime: 5 * 60 * 1000,
+  });
 
-    const handleSuccessUpdate = () => {
-        queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.username] });
-    };
+  useEffect(() => {
+    if (auth.loading) return;
+    if (!user) {
+      router.push("/");
+    }
+  }, [user, auth.loading, router]);
 
-    return {
-        profile: data,
-        isLoading,
-        isFetching,
-        error,
-        handleSuccessUpdate,
-    };
+  const handleSuccessUpdate = () => {
+    queryClient.invalidateQueries({ queryKey: ["ownProfile", user?.username] });
+  };
+
+  return {
+    profile: data,
+    isLoading,
+    isFetching,
+    error,
+    handleSuccessUpdate,
+  };
 };

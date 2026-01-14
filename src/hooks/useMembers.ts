@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { getAllMembers } from "@/services/member";
+import { getAllMembers } from "@/app/api/endpoints/member";
 
 export function useMembers(page: number) {
   return useQuery({

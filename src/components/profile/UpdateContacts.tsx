@@ -12,7 +12,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { UserProfile } from "@/schema/user";
 import { useUpdateContacts } from "@/hooks/useUpdateContacts";
 

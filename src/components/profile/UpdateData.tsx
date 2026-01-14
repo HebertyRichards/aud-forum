@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogHeader,
 } from "@/components/ui/dialog";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { Loader2 } from "lucide-react";
 import { formatDateForInput } from "@/utils/dateUtils";
 import { UserProfile } from "@/schema/user";

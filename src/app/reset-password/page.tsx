@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { toast } from "sonner";
 
 export default function NewPasswordForm() {

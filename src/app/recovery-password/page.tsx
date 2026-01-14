@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { toast } from "sonner";
 
 export default function RecoveryPassword() {

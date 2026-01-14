@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {

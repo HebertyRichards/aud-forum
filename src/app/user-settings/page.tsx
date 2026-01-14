@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Toaster } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { ProfileCard } from "@/components/user-settings/ProfileCard";
 import { PasswordCard } from "@/components/user-settings/PasswordCard";
 import { DangerZoneCard } from "@/components/user-settings/DangerZoneCard";

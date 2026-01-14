@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useFetchOwnProfile } from "@/hooks/useFetchOwnProfile";
 
