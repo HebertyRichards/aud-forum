@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
+import { version } from "../../package.json";
 
 export default function Footer() {
   return (
@@ -106,7 +107,7 @@ export default function Footer() {
         <Separator className="my-8" />
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-gray-500">
-            <p>&copy; 2025 Auditore. Todos os direitos reservados.</p>
+            <p>&copy; 2025 Auditore. Todos os direitos reservados. <span className="text-gray-600 ml-2">v{version}</span></p>
           </div>
           <div className="flex items-center space-x-6 text-sm text-gray-500">
             <span>
