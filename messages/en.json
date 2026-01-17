@@ -1,0 +1,68 @@
+{
+  "header": {
+    "home": "Home",
+    "members": "Members",
+    "subscribe": "Subscribe",
+    "downloads": "Downloads",
+    "categories": "Categories",
+    "rules": "Rules",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "welcomeBack": "Welcome back",
+    "accessAccount": "Access your account to continue",
+    "createAccount": "Create your account",
+    "fillData": "Fill in the details below to get started",
+    "cancel": "Cancel"
+  },
+  "language": {
+    "switchLanguage": "Switch Language",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back",
+    "submit": "Submit",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View"
+  },
+  "footer": {
+    "slogan": "One of the most respected families on SA-MP, building legacy and tradition for over 5 years.",
+    "quickLinks": "Quick Links",
+    "home": "Home Page",
+    "membersList": "Members List",
+    "categories": "Categories",
+    "recruitment": "Recruitment",
+    "downloads": "Downloads",
+    "generalDiscussions": "General Discussions",
+    "familyHistory": "Family History",
+    "manuals": "Manuals",
+    "allRightsReserved": "All rights reserved.",
+    "developedBy": "Developed by",
+    "auditore": "Auditore",
+    "since": "Since 2020"
+  },
+  "Index": {
+    "recentPosts": "Recent Posts",
+    "forumStats": "Forum Stats",
+    "onlineUsers": "Online Users",
+    "by": "by",
+    "in": "in",
+    "viewMostPosts": "View Most Posts",
+    "noOnlineUsers": "No users online at the moment.",
+    "loading": "Loading...",
+    "stats": "Stats",
+    "members": "Members",
+    "totalPosts": "Total Posts",
+    "totalTopics": "Total Topics",
+    "lastUser": "Last User",
+    "noUsers": "No users"
+  }
+}

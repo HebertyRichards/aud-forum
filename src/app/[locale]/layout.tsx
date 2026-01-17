@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import Header from "@/templates/Header";
 import Footer from "@/templates/Footer";
 import "./globals.css";
 import { AuthProvider } from "@/providers/auth";
 import { OnlineUserProvider } from "@/providers/online";
-import { Providers } from "../providers/providers";
+import { Providers } from "@/providers/providers";
+import { routing, Locale } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title: {
@@ -50,26 +53,38 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+type RootLayoutProps = {
   children: React.ReactNode;
-}>) {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function RootLayout({ children, params }: RootLayoutProps) {
+  const { locale: requestedLocale } = await params;
+
+  const locale: Locale = routing.locales.includes(requestedLocale as Locale)
+    ? (requestedLocale as Locale)
+    : routing.defaultLocale;
+
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body>
         <div className="min-h-screen bg-slate-900">
-          <Providers>
-            <AuthProvider>
-              <OnlineUserProvider>
-                <Header />
-                {children}
-                <Footer />
-              </OnlineUserProvider>
-            </AuthProvider>
-          </Providers>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <Providers>
+              <AuthProvider>
+                <OnlineUserProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                </OnlineUserProvider>
+              </AuthProvider>
+            </Providers>
+          </NextIntlClientProvider>
         </div>
       </body>
     </html>
   );
 }
+

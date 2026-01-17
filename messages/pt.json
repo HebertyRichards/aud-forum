@@ -1,0 +1,69 @@
+{
+  "header": {
+    "home": "Início",
+    "members": "Membros",
+    "subscribe": "Inscreva-se",
+    "downloads": "Downloads",
+    "categories": "Categorias",
+    "rules": "Regras",
+    "login": "Entrar",
+    "register": "Registrar",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "logout": "Sair",
+    "welcomeBack": "Bem-vindo de volta",
+    "accessAccount": "Acesse sua conta para continuar",
+    "createAccount": "Crie sua conta",
+    "fillData": "Preencha os dados abaixo para começar",
+    "cancel": "Cancelar"
+  },
+  "language": {
+    "switchLanguage": "Mudar Idioma",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "back": "Voltar",
+    "submit": "Enviar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Visualizar"
+  },
+  "footer": {
+    "slogan": "Uma das famílias mais respeitadas do SA-MP, construindo legado e tradição há mais de 5 anos.",
+    "quickLinks": "Links Rápidos",
+    "home": "Página Inicial",
+    "membersList": "Lista de Membros",
+    "categories": "Categorias",
+    "recruitment": "Recrutamento",
+    "downloads": "Downloads",
+    "generalDiscussions": "Discussões Gerais",
+    "familyHistory": "História da Família",
+    "manuals": "Manuais",
+    "allRightsReserved": "Todos os direitos reservados.",
+    "developedBy": "Desenvolvido por",
+    "auditore": "Auditore",
+    "since": "Desde 2020"
+  },
+  "Index": {
+    "recentPosts": "Posts Recentes",
+    "forumStats": "Estatísticas do Fórum",
+    "onlineUsers": "Usuários Online",
+    "by": "por",
+    "in": "em",
+    "viewMostPosts": "Visualizar Mais Posts",
+    "noOnlineUsers": "Nenhum usuário online no momento.",
+    "onlineUsersCount": "Usuários Online",
+    "loading": "Carregando...",
+    "stats": "Estatísticas",
+    "members": "Membros",
+    "totalPosts": "Posts Totais",
+    "totalTopics": "Tópicos Totais",
+    "lastUser": "Último Registrado",
+    "noUsers": "Nenhum"
+  }
+}

@@ -9,11 +9,12 @@ import Link from "next/link";
 import { useAuth } from "@/providers/auth";
 import { getRoleColor } from "@/utils/colors";
 import { useOnlineUsers } from "@/providers/online";
+import { useTranslations } from "next-intl";
 
 export function OnlineUsers() {
   const auth = useAuth();
   const currentUser = auth?.user || null;
-
+const t = useTranslations("Index");
   const { onlineUsers, isConnected } = useOnlineUsers();
 
   const users: OnlineUser[] = Array.isArray(onlineUsers)
@@ -27,7 +28,7 @@ export function OnlineUsers() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />
-          <span>Usuários Online</span>
+          <span>{t("onlineUsers")}</span>
           <Badge className="ml-auto bg-slate-700">{userCount}</Badge>
         </CardTitle>
       </CardHeader>
@@ -35,11 +36,11 @@ export function OnlineUsers() {
         <div className="space-y-3">
           {!isConnected ? (
             <p className="text-sm text-slate-400 text-center py-2 animate-pulse">
-              Carregando...
+              {t("loading")}
             </p>
           ) : users.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-2">
-              Nenhum usuário online no momento.
+              {t("noOnlineUsers")}
             </p>
           ) : (
             users.map((user) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useAuth } from "@/providers/auth";
 import { Button } from "@/components/ui/button";
@@ -26,11 +26,14 @@ import { User, LogOut, Settings, UserCircle, Menu, X } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { API_URL } from "@/utils/forum-structure";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const t = useTranslations("header");
 
   const auth = useAuth();
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -93,12 +96,12 @@ export default function Header() {
   };
 
   const menuLinks = [
-    { href: "/", label: "Início" },
-    { href: "/members-list", label: "Membros" },
-    { href: "/topics/subscribes", label: "Inscreva-se" },
-    { href: "/topics/downloads", label: "Downloads" },
-    { href: "/topics", label: "Categorias" },
-    ...(canViewRules ? [{ href: "/rules", label: "Regras" }] : []),
+    { href: "/", label: "home" },
+    { href: "/members-list", label: "members" },
+    { href: "/topics/subscribes", label: "subscribe" },
+    { href: "/topics/downloads", label: "downloads" },
+    { href: "/topics", label: "categories" },
+    ...(canViewRules ? [{ href: "/rules", label: "rules" }] : []),
   ];
 
   const fullScreenModalClasses =
@@ -126,9 +129,10 @@ export default function Header() {
                 href={link.href}
                 className="text-gray-300 hover:text-blue-400 transition-colors text-xs lg:text-sm"
               >
-                {link.label}
+                {t(link.label)}
               </Link>
             ))}
+            <LanguageSwitcher />
           </nav>
           <div className="flex items-center space-x-3">
             {auth?.loading ? (
@@ -155,12 +159,12 @@ export default function Header() {
                   <DropdownMenuSeparator className="bg-slate-700" />
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer flex items-center">
-                      <UserCircle className="mr-2 h-4 w-4" /> Perfil
+                      <UserCircle className="mr-2 h-4 w-4" /> {t("profile")}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/user-settings" className="cursor-pointer flex items-center">
-                      <Settings className="mr-2 h-4 w-4" /> Configurações
+                      <Settings className="mr-2 h-4 w-4" /> {t("settings")}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-slate-700" />
@@ -168,7 +172,7 @@ export default function Header() {
                     onClick={handleLogout}
                     className="cursor-pointer text-red-500 data-highlighted:bg-red-900/50 data-highlighted:text-red-400"
                   >
-                    <LogOut className="mr-2 h-4 w-4" /> Sair
+                    <LogOut className="mr-2 h-4 w-4" /> {t("logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -181,18 +185,18 @@ export default function Header() {
                       variant="outline"
                       className="bg-blue-600 border-blue-500 text-white hover:bg-blue-500 hover:text-white"
                     >
-                      Entrar
+                      {t("login")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:rounded-lg md:border md:border-slate-700 md:bg-slate-800 md:p-6`}>
                     <div className="w-full max-w-md px-6 md:px-0">
                       <DialogHeader className="mb-6">
-                        <DialogTitle className="text-center text-2xl text-white">Bem-vindo de volta</DialogTitle>
-                        <DialogDescription className="text-center text-slate-400">Acesse sua conta para continuar</DialogDescription>
+                        <DialogTitle className="text-center text-2xl text-white">{t("welcomeBack")}</DialogTitle>
+                        <DialogDescription className="text-center text-slate-400">{t("accessAccount")}</DialogDescription>
                       </DialogHeader>
                       <LoginForm onSuccess={() => setIsLoginOpen(false)} onSwitchToRegister={openRegister} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsLoginOpen(false)}>
-                        Cancelar
+                        {t("cancel")}
                       </Button>
                     </div>
                   </DialogContent>
@@ -204,18 +208,18 @@ export default function Header() {
                       variant="ghost"
                       className="text-slate-300 hover:text-white hover:bg-slate-700 hidden md:flex"
                     >
-                      Registrar
+                      {t("register")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:max-h-[85vh] md:rounded-lg md:border md:border-slate-700 md:bg-slate-800 md:p-6 md:overflow-y-auto`}>
                     <div className="w-full max-w-md px-6 md:px-0 flex flex-col items-center">
                       <DialogHeader className="mb-6 w-full">
-                        <DialogTitle className="text-center text-2xl text-white">Crie sua conta</DialogTitle>
-                        <DialogDescription className="text-center text-slate-400">Preencha os dados abaixo para começar</DialogDescription>
+                        <DialogTitle className="text-center text-2xl text-white">{t("createAccount")}</DialogTitle>
+                        <DialogDescription className="text-center text-slate-400">{t("fillData")}</DialogDescription>
                       </DialogHeader>
                       <RegisterForm onSuccess={() => { }} onSwitchToLogin={openLogin} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsRegisterOpen(false)}>
-                        Cancelar
+                        {t("cancel")}
                       </Button>
                     </div>
                   </DialogContent>
@@ -226,7 +230,7 @@ export default function Header() {
                   className="bg-slate-700 border border-slate-600 hover:bg-slate-600 text-white md:hidden"
                   onClick={openRegister}
                 >
-                  Registrar
+                      {t("register")}
                 </Button>
               </div>
             )}
@@ -250,7 +254,7 @@ export default function Header() {
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-slate-700 transition-colors"
                 onClick={closeNav}
               >
-                {link.label}
+                {t(link.label)}
               </Link>
             ))}
           </div>
