@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { deleteAccount } from "@/app/api/endpoints/profiles";
+import { profileService } from "@/services";
 import { toast } from "sonner";
 import { handleApiError } from "@/utils/apiErrors";
 
 export const useDeleteAccount = () => {
   return useMutation({
-    mutationFn: deleteAccount,
+    mutationFn: profileService.deleteAccount,
     onSuccess: () => {
       toast.success("Conta deletada com sucesso. Você será redirecionado.");
       setTimeout(() => {

@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
-  useQuery,
   useQueryClient,
-  keepPreviousData,
 } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/NoTopic";
@@ -22,8 +20,9 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatPostTimestamp } from "@/utils/dateUtils";
 import { useAuth } from "@/providers/auth";
-import { getTopicsByCategory } from "@/app/api/endpoints/topic";
 import { usePermissions } from "@/hooks/usePermissions";
+import { topicService } from "@/services";
+import { useGetTopicsByCategory } from "@/hooks/useGetTopicsByCategory";
 import { TopicSummary } from "@/schema/forum";
 import { toast } from "sonner";
 
@@ -128,18 +127,12 @@ export default function CategoryTopicPage() {
   const [view, setView] = useState<"list" | "create">("list");
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
-  const TOPICS_PER_PAGE = 10;
 
-  const { isLoading, data, isFetching } = useQuery<
-    { data: TopicSummary[]; totalCount: number },
-    Error
-  >({
-    queryKey: ["topics", category, currentPage],
-    queryFn: () => getTopicsByCategory(category, currentPage, TOPICS_PER_PAGE),
-    enabled: true && view === "list",
-    placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 5,
-  });
+  const { isLoading, data, isFetching, TOPICS_PER_PAGE } = useGetTopicsByCategory(
+    category,
+    currentPage,
+    view === "list"
+  );
 
   const topics = data?.data ?? [];
   const totalTopics = data?.totalCount ?? 0;
@@ -163,7 +156,7 @@ export default function CategoryTopicPage() {
       queryClient.prefetchQuery({
         queryKey: ["topics", category, currentPage + 1],
         queryFn: () =>
-          getTopicsByCategory(category, currentPage + 1, TOPICS_PER_PAGE),
+          topicService.getTopicsByCategory(category, currentPage + 1, TOPICS_PER_PAGE),
       });
     }
   }, [currentPage, totalPages, category, isCategoryValid, queryClient]);
@@ -245,8 +238,8 @@ export default function CategoryTopicPage() {
     <>
       <div className={`space-y-4 ${isFetching ? "opacity-70" : ""}`}>
         {topics
-          .filter((topic) => !!topic.slug)
-          .map((topic) => (
+          .filter((topic: TopicSummary) => !!topic.slug)
+          .map((topic: TopicSummary) => (
             <Link
               href={`/topics/${category}/${topic.slug}`}
               key={topic.slug}

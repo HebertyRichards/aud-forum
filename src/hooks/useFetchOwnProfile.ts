@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { fetchOwnProfile } from "@/app/api/endpoints/followers";
+import { followService } from "@/services";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/providers/auth";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ export const useFetchOwnProfile = () => {
 
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["ownProfile", user?.username],
-    queryFn: () => fetchOwnProfile(user?.username as string),
+    queryFn: () => followService.getOwnProfile(user?.username as string),
     enabled: !!user?.username,
     staleTime: 5 * 60 * 1000,
   });

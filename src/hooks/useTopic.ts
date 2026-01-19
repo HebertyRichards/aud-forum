@@ -10,13 +10,8 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import {
-  getTopicBySlugWithComments,
-  createComment,
-  deleteTopic,
-  updateTopic,
-  deleteComment,
-  updateComment,
-} from "@/app/api/endpoints/topic";
+  topicService,
+} from "@/services";
 import { NewComment, TopicDetails, UpdateTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -45,7 +40,7 @@ export function useTopicPage() {
   >({
     queryKey: ["topic", slug, currentPage],
     queryFn: () =>
-      getTopicBySlugWithComments(slug, currentPage, COMMENTS_PER_PAGE),
+      topicService.getTopicBySlugWithComments(slug, currentPage, COMMENTS_PER_PAGE),
     enabled: !!slug,
     placeholderData: keepPreviousData,
   });
@@ -61,7 +56,7 @@ export function useTopicPage() {
 
   const createCommentMutation = useMutation({
     mutationFn: (variables: { commentData: NewComment; images: File[] }) =>
-      createComment(variables.commentData, variables.images),
+      topicService.createComment(variables.commentData, variables.images),
     onSuccess: () => {
       toast.success("Comentário publicado com sucesso!");
       setNewCommentContent("");
@@ -75,7 +70,7 @@ export function useTopicPage() {
   });
 
   const deleteCommentMutation = useMutation({
-    mutationFn: (commentId: number) => deleteComment(commentId),
+    mutationFn: (commentId: number) => topicService.deleteComment(commentId),
     onSuccess: () => {
       toast.success("Comentário deletado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["topic", slug, currentPage] });
@@ -86,7 +81,7 @@ export function useTopicPage() {
 
   const updateCommentMutation = useMutation({
     mutationFn: (variables: { commentId: number; content: string }) =>
-      updateComment(variables.commentId, variables.content),
+      topicService.updateComment(variables.commentId, variables.content),
     onSuccess: () => {
       toast.success("Comentário atualizado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["topic", slug, currentPage] });
@@ -95,7 +90,7 @@ export function useTopicPage() {
   });
 
   const deleteTopicMutation = useMutation({
-    mutationFn: (topicId: number) => deleteTopic(topicId),
+    mutationFn: (topicId: number) => topicService.deleteTopic(topicId),
     onSuccess: () => {
       toast.success("Tópico deletado com sucesso!");
       router.push(`/topics/${category}`);
@@ -106,7 +101,7 @@ export function useTopicPage() {
 
   const updateTopicMutation = useMutation({
     mutationFn: (variables: { topicId: number; editData: UpdateTopic }) =>
-      updateTopic(variables.topicId, variables.editData),
+      topicService.updateTopic(variables.topicId, variables.editData),
     onSuccess: () => {
       toast.success("Tópico atualizado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["topic", slug, currentPage] });

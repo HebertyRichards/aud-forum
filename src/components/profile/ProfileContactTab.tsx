@@ -6,6 +6,7 @@ import { FaDiscord, FaSteam } from "react-icons/fa";
 import { UpdateContacts } from "./UpdateContacts";
 import { formatUrl } from "@/utils/urlUtils";
 import { UserProfile } from "@/schema/user";
+import { useTranslations } from "next-intl";
 
 type ProfileTabCommonProps = {
   profile: UserProfile | null;
@@ -18,11 +19,13 @@ export function ProfileContactTab({
   isOwnProfile,
   onSuccessUpdate,
 }: ProfileTabCommonProps) {
+  const t = useTranslations("profile");
+
   return (
     <TabsContent value="contato" className="mt-4">
       <Card className="border-slate-700 bg-slate-800 text-white">
         <CardHeader>
-          <CardTitle>Contatos</CardTitle>
+          <CardTitle>{t("contacts")}</CardTitle>
           {isOwnProfile && profile && (
             <UpdateContacts
               profile={{
@@ -44,7 +47,7 @@ export function ProfileContactTab({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between py-3 items-center">
-            <span className="font-semibold">Website:</span>
+            <span className="font-semibold">{t("website")}:</span>
             {profile?.website ? (
               <a
                 href={formatUrl(profile.website)}
@@ -60,7 +63,7 @@ export function ProfileContactTab({
           </div>
           <Separator className="bg-slate-600" />
           <div className="flex justify-between py-3 items-center">
-            <span className="font-semibold">Facebook:</span>
+            <span className="font-semibold">{t("facebook")}:</span>
             {profile?.facebook ? (
               <a
                 href={formatUrl(profile.facebook)}
@@ -76,7 +79,7 @@ export function ProfileContactTab({
           </div>
           <Separator className="bg-slate-600" />
           <div className="flex justify-between py-3 items-center">
-            <span className="font-semibold">Instagram:</span>
+            <span className="font-semibold">{t("instagram")}:</span>
             {profile?.instagram ? (
               <a
                 href={formatUrl(profile.instagram)}
@@ -92,7 +95,7 @@ export function ProfileContactTab({
           </div>
           <Separator className="bg-slate-600" />
           <div className="flex justify-between py-3 items-center">
-            <span className="font-semibold">Discord:</span>
+            <span className="font-semibold">{t("discord")}:</span>
             {profile?.discord ? (
               <a
                 href={formatUrl(profile.discord)}
@@ -108,7 +111,7 @@ export function ProfileContactTab({
           </div>
           <Separator className="bg-slate-600" />
           <div className="flex justify-between py-3 items-center">
-            <span className="font-semibold">Steam:</span>
+            <span className="font-semibold">{t("steam")}:</span>
             {profile?.steam ? (
               <a
                 href={formatUrl(profile.steam)}

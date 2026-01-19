@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createTopic } from "@/app/api/endpoints/topic";
+import { topicService } from "@/services";
 import { NewTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -42,7 +42,7 @@ export function useCreateTopic(category: string) {
         content,
         category,
       };
-      const newTopic = await createTopic(topicData, images);
+      const newTopic = await topicService.createTopic(topicData, images);
 
       toast.success("Tópico criado com sucesso!");
       await queryClient.invalidateQueries({

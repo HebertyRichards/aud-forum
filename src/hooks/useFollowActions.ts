@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getModalUsers, unfollowUserApi } from "@/app/api/endpoints/followers";
+import { followService } from "@/services";
 import { toast } from "sonner";
 import { UserPreview } from "@/schema/user";
 
@@ -9,7 +9,7 @@ export const useFollowModalData = (
 ) => {
   return useQuery<UserPreview[], Error>({
     queryKey: ["followModalList", username, listType],
-    queryFn: () => getModalUsers(username, listType),
+    queryFn: () => followService.getFollowList(username, listType),
     enabled: !!username,
   });
 };
@@ -18,7 +18,7 @@ export const useUnfollowMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: unfollowUserApi,
+    mutationFn: followService.unfollowUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["followModalList"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });

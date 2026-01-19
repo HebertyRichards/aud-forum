@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { updateProfile } from "@/app/api/endpoints/profiles";
+import { profileService } from "@/services";
 import { toast } from "sonner";
 import { handleApiError } from "@/utils/apiErrors";
 
 export const useUpdateProfile = () => {
   return useMutation({
-    mutationFn: updateProfile,
+    mutationFn: profileService.updateProfile,
     onSuccess: () => {
       toast.success("Perfil atualizado com sucesso!");
       setTimeout(() => {

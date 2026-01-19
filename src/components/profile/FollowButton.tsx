@@ -3,6 +3,7 @@
 import { useFollowHook } from "@/hooks/useFollow";
 import { Button } from "@/components/ui/button";
 import { Loader2, UserPlus, UserMinus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface FollowButtonProps {
   profileUsername: string;
@@ -17,7 +18,7 @@ export function FollowButton({
 }: FollowButtonProps) {
   const { isFollowing, isLoading, handleFollow, handleUnfollow } =
     useFollowHook(profileUsername, initialIsFollowing, initialFollowersCount);
-
+  const t = useTranslations("profile");
   const handleClick = () => {
     if (isFollowing) {
       handleUnfollow();
@@ -41,11 +42,11 @@ export function FollowButton({
           <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         ) : isFollowing ? (
           <>
-            <UserMinus className="mr-2 h-4 w-4" /> Deixar de Seguir
+            <UserMinus className="mr-2 h-4 w-4" /> {t("unfollow")}
           </>
         ) : (
           <>
-            <UserPlus className="mr-2 h-4 w-4" /> Seguir
+            <UserPlus className="mr-2 h-4 w-4" /> {t("follow")}
           </>
         )}
       </Button>

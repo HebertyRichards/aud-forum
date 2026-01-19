@@ -65,5 +65,32 @@
     "totalTopics": "Tópicos Totais",
     "lastUser": "Último Registrado",
     "noUsers": "Nenhum"
+  },
+  "forum": {
+  "orderBY": "Ordenar por",
+  "latestVisit": "Última Visita",	
+  "nameOfUser": "Nome de Usuário",
+  "dateOfSubscribed": "Data de Inscrição",
+  "descending": "Decrescente",
+  "ascending": "Crescente",
+  "messages": "Mensagens",
+  "posts": "Posts",
+  "avatarOfNameOfUser": "Avatar - Nome de Usuário"
+  },
+  "profile": {
+    "follow": "Seguir",
+    "unfollow": "Deixar de Seguir",
+    "noUsersToShow": "Nenhum usuário para mostrar.",
+    "followers": "Seguidores",
+    "following": "Seguindo",
+    "removeFollower": "Remover Seguidor",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "instagram": "Instagram",
+    "steam": "Steam",
+    "discord": "Discord",
+    "website": "Website",
+    "contacts": "Contatos",
+    "dateOfSubscribed": "Data de Inscrição"
   }
 }

@@ -1,16 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchCategory } from "@/app/api/endpoints/category";
+import { categoryService, ApiCategory } from "@/services";
 
-type ApiCategory = {
-  slug: string;
-  name: string;
-  description?: string;
-};
+
 
 export const useCategory = () => {
   return useQuery<ApiCategory[], Error>({
     queryKey: ["categories"],
-    queryFn: fetchCategory,
+    queryFn: categoryService.getCategories,
     staleTime: 60 * 60 * 1000,
   });
 };

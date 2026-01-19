@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 
 interface MembersFiltersProps {
   searchTerm: string;
@@ -27,6 +28,8 @@ export function MembersFilters({
   sortOrder,
   setSortOrder,
 }: MembersFiltersProps) {
+  const t = useTranslations("forum");
+
   return (
     <div className="rounded-md border bg-slate-800 p-4 border-slate-700">
       <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
@@ -45,7 +48,7 @@ export function MembersFilters({
               htmlFor="sort-by"
               className="text-sm font-medium text-slate-700"
             >
-              Ordenar por
+              {t("orderBY")}
             </Label>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger
@@ -56,12 +59,14 @@ export function MembersFilters({
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600 text-white">
-                <SelectItem value="ultima-visita">Última visita</SelectItem>
-                <SelectItem value="data-inscricao">
-                  Data de inscrição
+                <SelectItem value="ultima-visita">
+                  {t("latestVisit")}
                 </SelectItem>
-                <SelectItem value="mensagens">Mensagens</SelectItem>
-                <SelectItem value="nome-usuario">Nome de usuário</SelectItem>
+                <SelectItem value="data-inscricao">
+                  {t("dateOfSubscribed")}
+                </SelectItem>
+                <SelectItem value="mensagens">{t("messages")}</SelectItem>
+                <SelectItem value="nome-usuario">{t("nameOfUser")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -72,9 +77,9 @@ export function MembersFilters({
               </SelectTrigger>
               <SelectContent className="bg-slate-700 text-white border-slate-600">
                 <SelectItem value="decrescente" className="bg-slate-600">
-                  Decrescente
+                  {t("descending")}
                 </SelectItem>
-                <SelectItem value="crescente">Crescente</SelectItem>
+                <SelectItem value="crescente">{t("ascending")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

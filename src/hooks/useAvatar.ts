@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { uploadAvatarApi, deleteAvatarApi } from "@/app/api/endpoints/profiles";
+import { profileService } from "@/services";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/auth";
 
@@ -7,7 +7,7 @@ export const useAvatarActions = () => {
   const { updateUserAvatar } = useAuth();
 
   const uploadMutation = useMutation({
-    mutationFn: uploadAvatarApi,
+    mutationFn: profileService.uploadAvatar,
     onMutate: () =>
       toast.loading("Atualizando avatar...", { id: "avatar-toast" }),
     onSuccess: (data) => {
@@ -21,7 +21,7 @@ export const useAvatarActions = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteAvatarApi,
+    mutationFn: profileService.deleteAvatar,
     onMutate: () =>
       toast.loading("Removendo avatar...", { id: "avatar-toast" }),
     onSuccess: (data) => {

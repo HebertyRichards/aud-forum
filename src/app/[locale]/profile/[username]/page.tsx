@@ -70,7 +70,7 @@ export default function OtherProfile() {
     <div className="min-h-screen font-sans text-white">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
         <UserProfileLayout
-          profile={profile}
+          profile={profile ?? null}
           isLoading={isLoading && !data}
           error={error ? errorMessage : null}
           isOwnProfile={false}

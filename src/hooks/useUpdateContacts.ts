@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateContactsApi } from "@/app/api/endpoints/profiles";
+import { profileService } from "@/services";
 import { toast } from "sonner";
 
 export const useUpdateContacts = (onSuccessCallback?: () => void) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateContactsApi,
+    mutationFn: profileService.updateContacts,
     onMutate: () => {
       toast.loading("Salvando alterações...", { id: "update-contacts" });
     },

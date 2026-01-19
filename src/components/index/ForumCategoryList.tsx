@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
   Accordion,
@@ -9,28 +8,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
-import { useAuth } from "@/providers/auth";
-import { UserProfile, RolesAuthorizedSchema } from "@/schema/user";
-import { searchUserProfile } from "@/app/api/endpoints/followers";
+import { RolesAuthorizedSchema } from "@/schema/user";
+import { useSearchUserProfile } from "@/hooks/useSearchUserProfile";
 
 export function ForumCategoryList() {
-  const auth = useAuth();
-  const username = auth.user?.username;
-
-  const { data: userProfile } = useQuery<UserProfile | null>({
-    queryKey: ["userProfile", username],
-    queryFn: () => searchUserProfile(username!),
-    enabled: !!username,
-  });
-
-  const userRole = userProfile?.role;
+  const { data: userProfile } = useSearchUserProfile();
 
   const filteredForumStructure = forumStructure.filter((category) => {
     if (category.id !== "area-oculta") {
       return true;
     }
 
-    return RolesAuthorizedSchema.safeParse(userRole).success;
+    return RolesAuthorizedSchema.safeParse(userProfile?.role).success;
   });
 
   const defaultOpenCategories = filteredForumStructure.map(

@@ -5,6 +5,7 @@ import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
 import { useFollowList } from "@/hooks/useFollowList";
+import { useTranslations } from "next-intl";
 
 interface FollowerListProps {
   username: string;
@@ -13,7 +14,7 @@ interface FollowerListProps {
 
 export const FollowerList = ({ username, type }: FollowerListProps) => {
   const { data: list, isLoading, error } = useFollowList(username, type);
-
+  const t = useTranslations("profile");
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-24">
@@ -34,7 +35,7 @@ export const FollowerList = ({ username, type }: FollowerListProps) => {
   if (!list || list.length === 0) {
     return (
       <p className="text-center text-sm text-gray-400 py-4">
-        Nenhum usuário para mostrar.
+        {t("noUsersToShow")}
       </p>
     );
   }

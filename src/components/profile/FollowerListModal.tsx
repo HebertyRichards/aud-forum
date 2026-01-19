@@ -11,6 +11,7 @@ import {
   useFollowModalData,
   useUnfollowMutation,
 } from "@/hooks/useFollowActions";
+import { useTranslations } from "next-intl";
 
 interface FollowListModalProps {
   username: string;
@@ -33,13 +34,14 @@ export function FollowListModal({
   const { mutate: unfollow, variables: unfollowingUsername } =
     useUnfollowMutation();
   const { removeFollower, isPending: isRemoving } = useRemoveFollower();
+  const t = useTranslations("profile");
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
       <Card className="w-full max-w-md border-gray-700 bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader className="text-center">
           <CardTitle className="capitalize text-white">
-            {listType === "followers" ? "Seguidores" : "Seguindo"}
+            {listType === "followers" ? t("followers") : t("following")}
           </CardTitle>
           <button
             onClick={onClose}
@@ -119,7 +121,7 @@ export function FollowListModal({
                         {unfollowingUsername === user.username ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          "Deixar de seguir"
+                          t("unfollow")
                         )}
                       </Button>
                     )}
@@ -129,7 +131,7 @@ export function FollowListModal({
             </ul>
           ) : (
             <p className="text-center text-gray-400 py-4">
-              Nenhum usuário encontrado.
+              {t("noUsersToShow")}
             </p>
           )}
         </CardContent>

@@ -12,6 +12,7 @@ import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
 import { useAuth } from "@/providers/auth";
 import { Member } from "@/schema/forum";
+import { useTranslations } from "next-intl";
 
 type MembersTableProps = {
   members: Member[];
@@ -21,6 +22,7 @@ type MembersTableProps = {
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   const { user } = useAuth();
+  const t = useTranslations("forum");
 
   if (isLoading) {
     return <div className="text-center mt-10">Carregando membros...</div>;
@@ -41,14 +43,14 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
           <TableRow className="border-slate-700 hover:bg-slate-800">
             <TableHead className="w-12.5 text-white">#</TableHead>
             <TableHead className="min-w-50 text-white">
-              Avatar - Nome de usuário
+              {t("avatarOfNameOfUser")}
             </TableHead>
-            <TableHead className="text-white">Data de inscrição</TableHead>
+            <TableHead className="text-white">{t("dateOfSubscribed")}</TableHead>
             <TableHead className="hidden md:table-cell text-white">
-              Última visita
+              {t("latestVisit")}
             </TableHead>
             <TableHead className="hidden md:table-cell text-white">
-              Mensagens
+              {t("messages")}
             </TableHead>
           </TableRow>
         </TableHeader>

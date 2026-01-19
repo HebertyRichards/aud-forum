@@ -34,14 +34,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const authContextValue: AuthContextType = {
     user: sessionQuery.data ?? null,
     loading: sessionQuery.isLoading,
-    login: (email: string, password: string, keepLogged: boolean) =>
-      loginMutation.mutateAsync({ email, password, keepLogged }),
-    logout: logoutMutation.mutateAsync,
-    register: (username: string, email: string, password: string) =>
-      registerMutation.mutateAsync({ username, email, password }),
-    updatePassword: (newPassword: string, accessToken: string) =>
-      updatePasswordMutation.mutateAsync({ newPassword, accessToken }),
-    forgotPassword: forgotPasswordMutation.mutateAsync,
+    login: async (email: string, password: string, keepLogged: boolean) => {
+      await loginMutation.mutateAsync({ email, password, keepLogged });
+    },
+    logout: async () => {
+      await logoutMutation.mutateAsync();
+    },
+    register: async (username: string, email: string, password: string) => {
+      await registerMutation.mutateAsync({ username, email, password });
+    },
+    updatePassword: async (newPassword: string, accessToken: string) => {
+      await updatePasswordMutation.mutateAsync({ newPassword, accessToken });
+    },
+    forgotPassword: async (email: string) => {
+      await forgotPasswordMutation.mutateAsync(email);
+    },
     updateUserAvatar,
   };
 

@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import {
-  checkTopicCreationPermission,
-  checkCommentCreationPermission,
-} from "@/app/api/endpoints/topic";
+import { topicService } from "@/services";
 import { toast } from "sonner";
 
 export function usePermissions() {
@@ -19,7 +16,7 @@ export function usePermissions() {
   const checkTopicPermission = useCallback(async (category: string) => {
     setIsCheckingTopic(true);
     try {
-      const allowed = await checkTopicCreationPermission(category);
+      const allowed = await topicService.checkTopicCreationPermission(category);
       setCanCreateTopic(allowed);
       return allowed;
     } catch {
@@ -34,7 +31,7 @@ export function usePermissions() {
   const checkCommentPermission = useCallback(async (topicId: number) => {
     setIsCheckingComment(true);
     try {
-      const allowed = await checkCommentCreationPermission(topicId);
+      const allowed = await topicService.checkCommentCreationPermission(topicId);
       setCanCreateComment(allowed);
       return allowed;
     } catch {

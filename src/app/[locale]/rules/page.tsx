@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { RolesAuthorized } from "@/schema/user";
+import { RolesAuthorizedSchema } from "@/schema/user";
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 
 export default function Rules() {
@@ -30,8 +30,10 @@ export default function Rules() {
     refetchOnWindowFocus: false,
   });
 
-  const hasPermission: RolesAuthorized | false =
-    profileData?.data?.profile?.role || false;
+  const userRole = profileData?.data?.profile?.role;
+  const hasPermission = userRole
+    ? RolesAuthorizedSchema.safeParse(userRole).success
+    : false;
 
   useEffect(() => {
     if (authLoading || isProfileLoading) {
