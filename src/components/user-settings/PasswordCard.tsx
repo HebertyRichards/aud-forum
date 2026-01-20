@@ -14,68 +14,45 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useUpdatePassword } from "@/hooks/useUpdatePassword";
+import { useTranslations } from "next-intl";
 
-interface PasswordCardProps {
+type PasswordCardProps = {
   onClose: () => void;
-}
+};
 
 export function PasswordCard({ onClose }: PasswordCardProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
+
+  const { mutate, isPending } = useUpdatePassword(onClose);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (newPassword !== confirmPassword) {
-      toast.error("As senhas não coincidem.");
+      toast.error(tAuth("passwordsNotMatch"));
       return;
     }
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/auth/update-password`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ newPassword }),
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          errorData.error || errorData.message || "Falha ao alterar a senha."
-        );
-      }
-
-      toast.success("Senha alterada com sucesso!");
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (error: unknown) {
-      let errorMessage = "Falha ao alterar a senha.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    mutate(newPassword);
   };
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
       <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
-          <CardTitle>Alterar Senha</CardTitle>
+          <CardTitle>{t("changePassword")}</CardTitle>
           <CardDescription>
-            Altere sua senha aqui. Recomendamos usar uma senha forte.
+            {t("deleteAccountWarning")}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
-            <Label htmlFor="new-password">Nova Senha</Label>
+            <Label htmlFor="new-password">{t("newPassword")}</Label>
             <div className="relative max-w-sm">
               <Input
                 id="new-password"
@@ -83,6 +60,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="bg-slate-700 border-slate-600 pr-10"
+                disabled={isPending}
               />
               <Button
                 type="button"
@@ -90,6 +68,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 size="icon"
                 className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 text-slate-400 hover:bg-slate-600 hover:text-white"
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={isPending}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -98,29 +77,31 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 )}
               </Button>
             </div>
-            <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
+            <Label htmlFor="confirm-password">{t("confirmNewPassword")}</Label>
             <Input
               id="confirm-password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="max-w-sm bg-slate-700 border-slate-600"
+              disabled={isPending}
             />
           </CardContent>
           <CardFooter className="gap-2">
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isPending}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              {isLoading ? "Alterando..." : "Alterar Senha"}
+              {isPending ? tCommon("loading") : t("updatePassword")}
             </Button>
             <Button
               type="button"
               className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
               onClick={onClose}
+              disabled={isPending}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
           </CardFooter>
         </form>

@@ -2,21 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createTopic } from "@/services/topic";
+import { topicService } from "@/services";
 import { NewTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
+import { handleApiError } from "@/utils/apiErrors";
 
 export function useCreateTopic(category: string) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleTopicSubmit = async (hasPermission: boolean | null) => {
     if (!user) {
@@ -35,7 +35,6 @@ export function useCreateTopic(category: string) {
     }
 
     setIsSubmitting(true);
-    setError(null);
 
     try {
       const topicData: NewTopic = {
@@ -43,17 +42,19 @@ export function useCreateTopic(category: string) {
         content,
         category,
       };
-      const newTopic = await createTopic(topicData, images);
+      const newTopic = await topicService.createTopic(topicData, images);
 
       toast.success("Tópico criado com sucesso!");
-      await queryClient.invalidateQueries({ queryKey: ['userStats', user.username] });
-      await queryClient.invalidateQueries({ queryKey: ['userTopics', user.username] });
+      await queryClient.invalidateQueries({
+        queryKey: ["userStats", user.username],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["userTopics", user.username],
+      });
       router.push(`/topics/${category}/${newTopic.slug}`);
-    } catch (error: unknown) {
-      const errorMessage =
-        (error as Error).message || "Ocorreu um erro desconhecido.";
-      setError(errorMessage);
-      toast.error(`Falha ao criar o tópico: ${errorMessage}`);
+    } catch (error) {
+      handleApiError(error, "Falha ao criar o tópico.");
+      toast.error("Falha ao criar o tópico");
     } finally {
       setIsSubmitting(false);
     }
@@ -69,7 +70,6 @@ export function useCreateTopic(category: string) {
     content,
     setContent,
     isSubmitting,
-    error,
     handleTopicSubmit,
     addImage,
   };

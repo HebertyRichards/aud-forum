@@ -17,10 +17,11 @@ import { ptBR } from "date-fns/locale";
 import Link from "next/link";
 import { RecentPost } from "@/schema/forum";
 import { getRoleColor } from "@/utils/colors";
+import { useTranslations } from "next-intl";
 
 export function RecentPosts() {
   const [visiblePosts, setVisiblePosts] = useState(4);
-
+  const t = useTranslations("Index");
   const { data, isLoading, error } = useForumData();
 
   if (isLoading) {
@@ -29,7 +30,7 @@ export function RecentPosts() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
-            <span>Últimas Publicações</span>
+            <span>{t("recentPosts")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-48">
@@ -39,14 +40,13 @@ export function RecentPosts() {
     );
   }
 
-  
   if (error) {
     return (
       <Card className="bg-slate-800 border-slate-700 text-white">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
-            <span>Últimas Publicações</span>
+            <span>{t("recentPosts")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col text-red-500 justify-center items-center h-48">
@@ -64,7 +64,7 @@ export function RecentPosts() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
-          <span>Últimas Publicações</span>
+          <span>{t("recentPosts")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -97,7 +97,7 @@ export function RecentPosts() {
                 </Link>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
                   <span>
-                    por:{" "}
+                    {t("by")}:{" "}
                     <Link href={`/profile/${post.author_username}`}>
                       <span
                         className={`truncate font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
@@ -110,7 +110,7 @@ export function RecentPosts() {
                     </Link>
                   </span>
                   <span>
-                    em:{" "}
+                    {t("in")}:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
                       <span className="font-medium text-gray-300 hover:underline cursor-pointer">
                         {post.category_name}
@@ -144,7 +144,7 @@ export function RecentPosts() {
               variant="outline"
               className="w-full"
             >
-              Ver mais publicações
+              {t("viewMostPosts")}
             </Button>
           </div>
         )}

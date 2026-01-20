@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,47 +9,43 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { handleApiError } from "@/utils/apiErrors";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
-interface LoginFormProps {
+type LoginFormProps = {
   onSuccess?: () => void;
   onSwitchToRegister?: () => void;
-}
+};
 
 export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const auth = useAuth();
   const router = useRouter();
+  const t = useTranslations("auth");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth) {
-      setError("Erro de autenticação. Tente recarregar a página.");
-      return;
-    }
+
     if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
+      toast.error(t("emailRequired"));
       return;
     }
-    setError(null);
     setLoading(true);
     try {
-      await auth.login(email, password, keepLoggedIn);
+      await auth?.login(email, password, keepLoggedIn);
       if (onSuccess) {
         onSuccess();
       } else {
         router.push("/");
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Ocorreu uma falha inesperada.");
-      }
+    } catch (error) {
+      handleApiError(error, t("loginButton"));
+      toast.error(t("loginButton"));
     } finally {
       setLoading(false);
     }
@@ -58,7 +54,9 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   return (
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="grid gap-2">
-        <Label htmlFor="email" className="text-white">Email</Label>
+        <Label htmlFor="email" className="text-white">
+          {t("email")}
+        </Label>
         <Input
           id="email"
           type="email"
@@ -66,7 +64,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           autoFocus
-          placeholder="seu@email.com"
+          placeholder={t("emailPlaceholder")}
           required
           className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
           disabled={loading}
@@ -74,12 +72,14 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
       </div>
       <div className="grid gap-2">
         <div className="flex items-center">
-          <Label htmlFor="password" className="text-white">Senha</Label>
+          <Label htmlFor="password" className="text-white">
+            {t("password")}
+          </Label>
           <Link
             href="/recovery-password"
             className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-slate-400 hover:text-white"
           >
-            Esqueceu a senha?
+            {t("forgotPassword")}
           </Link>
         </div>
         <div className="relative">
@@ -122,28 +122,25 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           htmlFor="keep-logged-in"
           className="text-sm font-medium leading-none text-white"
         >
-          Mantenha-me conectado
+          {t("rememberMe")}
         </Label>
       </div>
-      {error && (
-        <p className="text-sm text-red-500 text-center">{error}</p>
-      )}
       <div className="flex flex-col gap-4 pt-2">
         <Button
           type="submit"
           className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 text-white"
           disabled={loading}
         >
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? t("loggingIn") : t("loginButton")}
         </Button>
-          <div className="text-center text-sm text-slate-400">
-          Não tem uma conta?{" "}
+        <div className="text-center text-sm text-slate-400">
+          {t("noAccount")}{" "}
           <Button
             type="button"
             onClick={onSwitchToRegister}
             className="text-blue-400 hover:underline hover:text-blue-300 transition-colors bg-transparent hover:bg-transparent"
           >
-            Registre-se
+            {t("registerHere")}
           </Button>
         </div>
       </div>

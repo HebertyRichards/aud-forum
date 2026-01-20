@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
@@ -5,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { UpdateData } from "./UpdateData";
 import { formatDate, formatLastLogin } from "@/utils/dateUtils";
 import { UserProfile } from "@/schema/user";
+import { useTranslations } from "next-intl";
 
 type ProfileTabCommonProps = {
   profile: UserProfile | null;
@@ -19,11 +22,15 @@ export function ProfileInfoTab({
   isUpdating,
   onSuccessUpdate,
 }: ProfileTabCommonProps) {
+  const t = useTranslations("profile");
+  const tCommon = useTranslations("common");
+  const tForum = useTranslations("forum");
+
   return (
     <TabsContent value="perfil" className="mt-4">
       <Card className="border-gray-700 bg-slate-800 text-white">
         <CardHeader>
-          <CardTitle>Sobre</CardTitle>
+          <CardTitle>{t("info")}</CardTitle>
           {isOwnProfile && profile && (
             <UpdateData
               profile={{
@@ -47,36 +54,36 @@ export function ProfileInfoTab({
           {isUpdating && (
             <div className="text-sm text-white flex items-center gap-2 mb-2">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-              Atualizando perfil...
+              {tCommon("loading")}
             </div>
           )}
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Gênero:</span>
+            <span className="font-semibold">{t("gender")}:</span>
             <span>{profile?.gender || "--"}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Mensagens:</span>
+            <span className="font-semibold">{tForum("messages")}:</span>
             <span>{profile?.mensagens_count ?? "--"}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Data de nascimento:</span>
+            <span className="font-semibold">{t("birthdate")}:</span>
             <span>{formatDate(profile?.birthdate)}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Data de inscrição:</span>
+            <span className="font-semibold">{t("dateOfSubscribed")}:</span>
             <span>{formatDate(profile?.joined_at)}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Último login:</span>
+            <span className="font-semibold">{t("lastVisit")}:</span>
             <span>{formatLastLogin(profile?.last_login ?? null)}</span>
           </div>
           <Separator className="bg-gray-600" />
           <div className="flex justify-between py-3">
-            <span className="font-semibold">Localização:</span>
+            <span className="font-semibold">{t("location")}:</span>
             <span>{profile?.location || "--"}</span>
           </div>
         </CardContent>

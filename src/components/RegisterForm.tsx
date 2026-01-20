@@ -1,35 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
 }
 
-export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
+export function RegisterForm({
+  onSuccess,
+  onSwitchToLogin,
+}: RegisterFormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const auth = useAuth();
   const router = useRouter();
+  const t = useTranslations("auth");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
 
     if (!username || !email || !password) {
-      setError("Preencha todos os campos.");
+      toast.error(t("usernameRequired"));
       return;
     }
 
@@ -41,12 +45,11 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
       setTimeout(() => {
         router.push("/verification");
       }, 1000);
-      
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
       } else {
-        setError("Ocorreu uma falha inesperada.");
+        toast.error(t("passwordRequired"));
       }
     } finally {
       setLoading(false);
@@ -56,32 +59,32 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
   return (
     <form onSubmit={handleRegister} className="space-y-4 py-2">
       <div className="space-y-2">
-        <Label htmlFor="username">Nome de usuário</Label>
+        <Label htmlFor="username">{t("username")}</Label>
         <Input
           id="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="SeuNick"
+          placeholder={t("usernamePlaceholder")}
           disabled={loading}
           className="bg-slate-900 border-slate-700"
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="usuario@example.com"
+          placeholder={t("emailPlaceholder")}
           disabled={loading}
           className="bg-slate-900 border-slate-700"
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password">{t("password")}</Label>
         <div className="relative">
           <Input
             id="password"
@@ -103,26 +106,25 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
           </Button>
         </div>
       </div>
-      {error && (
-        <p className="text-sm text-red-500 text-center bg-red-950/30 p-2 rounded border border-red-900">
-          {error}
-        </p>
-      )}
       <Button
         type="submit"
         className="w-full bg-blue-600 hover:bg-blue-500 mt-2"
         disabled={loading}
       >
-        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Criar Conta"}
+        {loading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          t("registerButton")
+        )}
       </Button>
       <div className="text-center text-sm text-slate-400 mt-4">
-        Já tem uma conta?{" "}
+        {t("hasAccount")}{" "}
         <Button
           type="button"
           onClick={onSwitchToLogin}
           className="text-blue-400 hover:underline hover:text-blue-300 transition-colors bg-transparent hover:bg-transparent"
         >
-          Faça login
+          {t("loginHere")}
         </Button>
       </div>
     </form>

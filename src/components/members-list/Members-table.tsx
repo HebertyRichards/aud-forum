@@ -10,8 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatLastLogin, formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { Member } from "@/schema/forum";
+import { useTranslations } from "next-intl";
 
 type MembersTableProps = {
   members: Member[];
@@ -21,9 +22,10 @@ type MembersTableProps = {
 
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   const { user } = useAuth();
+  const t = useTranslations("forum");
 
   if (isLoading) {
-    return <div className="text-center mt-10">Carregando membros...</div>;
+    return <div className="text-center mt-10">{t("loading")}</div>;
   }
 
   if (error) {
@@ -31,7 +33,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   if (members.length === 0) {
-    return <div className="text-center mt-10">Nenhum membro encontrado.</div>;
+    return <div className="text-center mt-10">{t("noMembersFound")}</div>;
   }
 
   return (
@@ -39,16 +41,16 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="border-slate-700 hover:bg-slate-800">
-            <TableHead className="w-[50px] text-white">#</TableHead>
-            <TableHead className="min-w-[200px] text-white">
-              Avatar - Nome de usuário
+            <TableHead className="w-12.5 text-white">#</TableHead>
+            <TableHead className="min-w-50 text-white">
+              {t("avatarOfNameOfUser")}
             </TableHead>
-            <TableHead className="text-white">Data de inscrição</TableHead>
+            <TableHead className="text-white">{t("dateOfSubscribed")}</TableHead>
             <TableHead className="hidden md:table-cell text-white">
-              Última visita
+              {t("latestVisit")}
             </TableHead>
             <TableHead className="hidden md:table-cell text-white">
-              Mensagens
+              {t("messages")}
             </TableHead>
           </TableRow>
         </TableHeader>

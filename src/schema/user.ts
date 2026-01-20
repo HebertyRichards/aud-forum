@@ -19,7 +19,7 @@ export const UserSchema = z.object({
   mensagens_count: z.number().optional(),
 });
 
-export const UserPreview = z.object({
+export const UserPreviewSchema = z.object({
   id: z.string(),
   username: z.string(),
   avatar_url: z.string().nullish(),
@@ -51,8 +51,16 @@ export const FollowStateSchema = z.object({
   stats: FollowStatsSchema.optional().nullish(),
 });
 
+export const RolesAuthorizedSchema = z.enum([
+  "Auditore",
+  "Leader",
+  "Fundador",
+  "Desenvolvedor",
+]);
+
+export type RolesAuthorized = z.infer<typeof RolesAuthorizedSchema>;
 export type UserProfile = z.infer<typeof UserSchema>;
-export type UserPreview = z.infer<typeof UserPreview>;
+export type UserPreview = z.infer<typeof UserPreviewSchema>;
 export type FollowStats = z.infer<typeof FollowStatsSchema>;
 export type UserStats = z.infer<typeof UserStatsSchema>;
 export type FollowState = z.infer<typeof FollowStateSchema> & {

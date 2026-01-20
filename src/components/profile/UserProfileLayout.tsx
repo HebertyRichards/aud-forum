@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileContactTab } from "./ProfileContactTab";
 import { ProfileInfoTab } from "./ProfileInfoTab";
 import { UserProfileSidebar } from "./UserProfileSidebar";
+import { useTranslations } from "next-intl";
 
 interface UserProfileLayoutProps {
   profile: UserProfile | null;
@@ -53,11 +54,12 @@ const ProfileStateDisplay = ({
   isLoading: boolean;
   error: string | null;
 }) => {
+  const tCommon = useTranslations("common");
   if (isLoading) {
     return (
       <div className="text-center py-10">
         <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-        <p>Carregando perfil...</p>
+        <p>{tCommon("loading")}</p>
       </div>
     );
   }
@@ -74,14 +76,6 @@ const ProfileStateDisplay = ({
   return null;
 };
 
-const navItems = [
-  { value: "perfil", label: "Perfil" },
-  { value: "estatisticas", label: "Estatísticas" },
-  { value: "seguidores", label: "Seguidores" },
-  { value: "publicacoes", label: "Tópicos Criados" },
-  { value: "contato", label: "Contato" },
-];
-
 export function UserProfileLayout({
   profile,
   isLoading,
@@ -97,6 +91,16 @@ export function UserProfileLayout({
   }>({ isOpen: false, listType: null });
   const [activeTab, setActiveTab] = useState("perfil");
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const tProfile = useTranslations("profile");
+  const tHeader = useTranslations("header");
+
+  const navItems = [
+    { value: "perfil", label: tProfile("info") },
+    { value: "estatisticas", label: tProfile("statistics") },
+    { value: "seguidores", label: tProfile("followers") },
+    { value: "publicacoes", label: tProfile("topics") },
+    { value: "contato", label: tProfile("contacts") },
+  ];
 
   const openModal = (listType: "followers" | "following") => {
     if (profile?.username) {
@@ -166,7 +170,7 @@ export function UserProfileLayout({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <main className="lg:col-span-2">
           <h1 className="text-2xl font-bold mb-4">
-            Tudo sobre {profile?.username}
+            {tProfile("allAbout", { name: profile?.username ?? "" })}
           </h1>
           <Tabs
             value={activeTab}
@@ -209,7 +213,7 @@ export function UserProfileLayout({
               {activeTab === "seguidores" && (
                 <Card className="border-slate-700 bg-slate-800 text-white">
                   <CardHeader>
-                    <CardTitle>Seguidores</CardTitle>
+                    <CardTitle>{tProfile("followers")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {profile?.username && (

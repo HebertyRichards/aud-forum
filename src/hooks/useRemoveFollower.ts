@@ -2,32 +2,16 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
-type RemoveFollowerVars = {
-  followerUsername: string;
-  profileOwnerUsername: string;
-};
-
-const removeFollowerFn = async ({ followerUsername }: RemoveFollowerVars) => {
-  const res = await fetch(`/api/follow/followers/${followerUsername}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.error || "Não foi possível remover o seguidor.");
-  }
-  const data = await res.json();
-  return data;
-};
+import { followService } from "@/services";
 
 export const useRemoveFollower = () => {
   const queryClient = useQueryClient();
 
   const { mutate: removeFollower, isPending } = useMutation({
-    mutationFn: removeFollowerFn,
-    onSuccess: (data, variables) => {
-      toast.success(data.message || "Seguidor removido com sucesso!");
+    mutationFn: (variables: { followerUsername: string; profileOwnerUsername: string }) =>
+      followService.removeFollower(variables.followerUsername),
+    onSuccess: (_data, variables) => {
+      toast.success("Seguidor removido com sucesso!");
       const { profileOwnerUsername } = variables;
       queryClient.invalidateQueries({
         queryKey: ["followModalList", profileOwnerUsername],

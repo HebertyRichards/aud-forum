@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const API_URL = process.env.API_URL;
+import { API_URL } from '@/utils/forum-structure';
 
 async function handler(req: NextRequest) {
   const path = req.nextUrl.pathname.replace('/api', ''); 

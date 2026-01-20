@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffectEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,100 +23,81 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { useDeleteAccount } from "@/hooks/useDeleteAccount";
+import { useTranslations } from "next-intl";
 
 export function DangerZoneCard() {
   const [step, setStep] = useState<"initial" | "confirmPassword">("initial");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenChange = (open: boolean) => {
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
+
+  const { mutate, isPending } = useDeleteAccount();
+
+  const handleOpenChange = useEffectEvent((open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      setTimeout(() => {
-        setStep("initial");
-        setPassword("");
-      }, 200);
+      setStep("initial");
+      setPassword("");
     }
-  };
+  });
 
-  const handleDeleteAccount = async () => {
+  const handleConfirmDelete = () => {
     if (!password) {
-      toast.error("Por favor, digite sua senha para confirmar.");
+      toast.error(tAuth("passwordRequired"));
       return;
     }
-
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/auth/delete-account`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.message || "Falha ao deletar a conta.");
-      }
-
-      toast.success("Conta deletada com sucesso. Você será redirecionado.");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 2000);
-    } catch (error: unknown) {
-      let errorMessage = "Ocorreu uma falha desconhecida.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    mutate(password);
   };
 
   return (
     <Card className="border-slate-700 bg-slate-800 hover:border-red-500/50 transition-all duration-500">
       <CardHeader>
-        <CardTitle className="text-red-500">Zona de Perigo</CardTitle>
+        <CardTitle className="text-red-500">{t("deleteAccount")}</CardTitle>
         <CardDescription>
-          Ações irreversíveis. Tenha certeza antes de prosseguir.
+          {t("deleteAccountWarning")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">Deletar Conta</Button>
+            <Button variant="destructive">{t("deleteAccount")}</Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-slate-800 text-white border border-slate-700">
             <AlertDialogHeader>
-              <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+              <AlertDialogTitle>{t("deleteAccount")}</AlertDialogTitle>
               <AlertDialogDescription>
-                Esta ação não pode ser desfeita. Isso irá deletar
-                permanentemente sua conta e remover seus dados de nossos
-                servidores.
+                {t("deleteAccountWarning")}
               </AlertDialogDescription>
             </AlertDialogHeader>
+
             {step === "confirmPassword" && (
               <div className="my-4 space-y-2">
                 <Label htmlFor="password-confirm">
-                  Para confirmar, digite sua senha:
+                  {t("confirmDeleteAccount")}
                 </Label>
                 <Input
                   id="password-confirm"
                   type="password"
-                  placeholder="Sua senha..."
+                  placeholder={tAuth("passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isPending}
                   className="bg-slate-700 border border-slate-600 text-white"
                 />
               </div>
             )}
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-slate-700 border border-slate-600 hover:bg-slate-600 cursor-pointer hover:text-white">
-                Cancelar
+              <AlertDialogCancel
+                className="bg-slate-700 border border-slate-600 hover:bg-slate-600 cursor-pointer"
+                disabled={isPending}
+              >
+                {tCommon("cancel")}
               </AlertDialogCancel>
+
               {step === "initial" ? (
                 <AlertDialogAction
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
@@ -125,15 +106,15 @@ export function DangerZoneCard() {
                     setStep("confirmPassword");
                   }}
                 >
-                  Sim, quero deletar
+                  {tCommon("confirm")}
                 </AlertDialogAction>
               ) : (
                 <AlertDialogAction
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/50"
-                  onClick={handleDeleteAccount}
-                  disabled={isLoading}
+                  onClick={handleConfirmDelete}
+                  disabled={isPending}
                 >
-                  {isLoading ? "Excluindo..." : "Confirmar Exclusão"}
+                  {isPending ? tCommon("loading") : tCommon("confirm")}
                 </AlertDialogAction>
               )}
             </AlertDialogFooter>

@@ -8,13 +8,6 @@ import {
   Users,
 } from "lucide-react";
 
-export const ALLOWED_ROLES = [
-  "Auditore",
-  "Leader",
-  "Fundador",
-  "Desenvolvedor",
-];
-
 export const AUTHOR = ["HebertyRichards"];
 
 export const categoryDetailsMap: Record<string, { icon: ReactElement }> = {

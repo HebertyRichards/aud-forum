@@ -1,54 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { UserPreview } from "@/schema/user";
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getRoleColor } from "@/utils/colors";
+import { useFollowList } from "@/hooks/useFollowList";
+import { useTranslations } from "next-intl";
 
 interface FollowerListProps {
   username: string;
   type: "followers" | "following";
 }
 
-const fetchFollowList = async (
-  username: string,
-  type: "followers" | "following"
-) => {
-  try {
-    const res = await fetch(`/api/follow/${username}/${type}`, {
-      credentials: "include",
-    });
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || "Falha ao carregar a lista.");
-    }
-    const data = await res.json();
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error("Não foi possível carregar a lista.");
-  }
-};
-
-export const FollowerList: React.FC<FollowerListProps> = ({
-  username,
-  type,
-}) => {
-  const {
-    data: list,
-    isLoading,
-    error,
-  } = useQuery<UserPreview[], Error>({
-    queryKey: ["followList", username, type],
-    queryFn: () => fetchFollowList(username, type),
-    enabled: !!username,
-  });
-
+export const FollowerList = ({ username, type }: FollowerListProps) => {
+  const { data: list, isLoading, error } = useFollowList(username, type);
+  const t = useTranslations("profile");
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-24 text-white">
+      <div className="flex justify-center items-center h-24">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
       </div>
     );
@@ -66,7 +35,7 @@ export const FollowerList: React.FC<FollowerListProps> = ({
   if (!list || list.length === 0) {
     return (
       <p className="text-center text-sm text-gray-400 py-4">
-        Nenhum usuário para mostrar.
+        {t("noUsersToShow")}
       </p>
     );
   }
@@ -80,16 +49,20 @@ export const FollowerList: React.FC<FollowerListProps> = ({
               src={user.avatar_url || undefined}
               alt={`Avatar de ${user.username}`}
             />
-            <AvatarFallback>
+            <AvatarFallback className="bg-slate-700 text-white">
               {user.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <Link
             href={`/profile/${user.username}`}
-            className={`font-semibold hover:underline ${getRoleColor}`}
+            className="group flex flex-col"
           >
-            <span className="font-semibold truncate hover:underline">
-              <span className={getRoleColor(user.role)}>{user.username}</span>
+            <span
+              className={`font-semibold hover:underline ${getRoleColor(
+                user.role
+              )}`}
+            >
+              {user.username}
             </span>
           </Link>
         </li>

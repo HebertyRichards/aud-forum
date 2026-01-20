@@ -6,18 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { OnlineUser, RawOnlineUser } from "@/schema/forum";
 import Link from "next/link";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { getRoleColor } from "@/utils/colors";
-import { useOnlineUsers } from "@/services/online";
+import { useOnlineUsers } from "@/providers/online";
+import { useTranslations } from "next-intl";
 
 export function OnlineUsers() {
   const auth = useAuth();
   const currentUser = auth?.user || null;
-
+const t = useTranslations("Index");
   const { onlineUsers, isConnected } = useOnlineUsers();
 
-  const users: OnlineUser[] = onlineUsers
-    ? (onlineUsers as RawOnlineUser[]).map((item) => item.profiles)
+  const users: OnlineUser[] = Array.isArray(onlineUsers)
+    ? onlineUsers.map((item: RawOnlineUser) => item.profiles)
     : [];
 
   const userCount = users.length;
@@ -27,19 +28,19 @@ export function OnlineUsers() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />
-          <span>Usuários Online</span>
-          <Badge className="ml-auto bg-slate-700">{userCount}</Badge>
+          <span>{t("onlineUsers")}</span>
+          <Badge className="ml-auto bg-slate-700 text-white">{userCount}</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           {!isConnected ? (
             <p className="text-sm text-slate-400 text-center py-2 animate-pulse">
-              Carregando...
+              {t("loading")}
             </p>
           ) : users.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-2">
-              Nenhum usuário online no momento.
+              {t("noOnlineUsers")}
             </p>
           ) : (
             users.map((user) => {

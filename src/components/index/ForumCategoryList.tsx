@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
   Accordion,
@@ -9,48 +8,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { forumStructure } from "@/utils/forum-structure";
-import { useAuth } from "@/services/auth";
-import { UserProfile } from "@/schema/user";
-
-const fetchUserProfile = async (
-  username: string
-): Promise<UserProfile | null> => {
-  try {
-    const res = await fetch(`/api/profile/${username}`, {
-      credentials: "include",
-    });
-    if (!res.ok) {
-      throw new Error("Falha ao carregar o perfil do usuário.");
-    }
-    return await res.json();
-  } catch {
-    throw new Error("Falha ao carregar o perfil do usuário.");
-  }
-};
+import { RolesAuthorizedSchema } from "@/schema/user";
+import { useSearchUserProfile } from "@/hooks/useSearchUserProfile";
 
 export function ForumCategoryList() {
-  const auth = useAuth();
-  const username = auth.user?.username;
-
-  const { data: userProfile } = useQuery<UserProfile | null>({
-    queryKey: ["userProfile", username],
-    queryFn: () => fetchUserProfile(username!),
-    enabled: !!username,
-  });
-
-  const userRole = userProfile?.role;
-  const allowedRolesForHiddenArea = [
-    "Leader",
-    "Desenvolvedor",
-    "Fundador",
-    "Auditore",
-  ];
+  const { data: userProfile } = useSearchUserProfile();
 
   const filteredForumStructure = forumStructure.filter((category) => {
     if (category.id !== "area-oculta") {
       return true;
     }
-    return userRole && allowedRolesForHiddenArea.includes(userRole);
+
+    return RolesAuthorizedSchema.safeParse(userProfile?.role).success;
   });
 
   const defaultOpenCategories = filteredForumStructure.map(
@@ -70,7 +39,7 @@ export function ForumCategoryList() {
             value={category.id}
             className="border-none rounded-md overflow-hidden shadow-md bg-slate-800"
           >
-            <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full, bg-blue-500">
+            <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full bg-blue-500">
               {category.title}
             </AccordionTrigger>
             <AccordionContent className="p-0">

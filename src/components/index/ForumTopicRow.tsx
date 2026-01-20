@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ForumTopicRowProps {
   id: number;
@@ -15,12 +16,13 @@ interface ForumTopicRowProps {
 export function ForumTopicRow({
   icon: Icon,
   title,
-  route, 
+  route,
   lastPostInfo,
   author,
   authorColorClass,
   postCount,
 }: ForumTopicRowProps) {
+  const t = useTranslations("Index");
   return (
     <div className="flex items-center px-4 py-3">
       <div className="flex items-center grow space-x-3">
@@ -42,7 +44,7 @@ export function ForumTopicRow({
       <div className="w-16 text-right text-sm font-bold text-muted-foreground">
         {postCount}
         <span className="block text-xs font-normal uppercase text-muted-foreground">
-          Posts
+          {t("posts")}
         </span>
       </div>
     </div>

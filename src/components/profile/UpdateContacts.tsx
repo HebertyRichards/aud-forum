@@ -9,19 +9,22 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/services/auth";
+import { useAuth } from "@/providers/auth";
 import { UserProfile } from "@/schema/user";
-import { toast } from "sonner";
+import { useUpdateContacts } from "@/hooks/useUpdateContacts";
+import { useTranslations } from "next-intl";
 
 interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   const { user } = useAuth()!;
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     website: profile.website || "",
     facebook: profile.facebook || "",
@@ -30,114 +33,106 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
     steam: profile.steam || "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const tSettings = useTranslations("settings");
+  const tProfile = useTranslations("profile");
 
-  function handleChange(
-    e:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | { name: string; value: string }
-  ) {
-    if ("target" in e) {
-      const { name, value } = e.target;
-      setForm((prev) => ({ ...prev, [name]: value }));
-    } else {
-      setForm((prev) => ({ ...prev, [e.name]: e.value }));
-    }
+  const { mutate, isPending } = useUpdateContacts(() => {
+    setOpen(false);
+    if (onSuccess) onSuccess();
+  });
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    const toastId = toast.loading("Salvando alterações...");
-
-    try {
-      const payload = { ...form, id: user?.id };
-
-      const res = await fetch(`/api/profile/update`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Falha ao atualizar os contatos.");
-      }
-      const data = await res.json();
-      toast.success("Contatos atualizados com sucesso!", { id: toastId });
-      if (onSuccess) onSuccess();
-      setOpen(false);
-    } catch (error: unknown) {
-      let errorMessage = "Ocorreu um erro inesperado";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage, { id: toastId });
-    } finally {
-      setLoading(false);
-    }
+    mutate({ ...form, id: user?.id });
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
-          <DialogTitle>Atualizar Contatos</DialogTitle>
+          {tSettings("updateContacts")}
         </Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Label htmlFor="website">Website</Label>
-          <Input
-            id="website"
-            name="website"
-            value={form.website}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          <Label htmlFor="facebook">Facebook</Label>
-          <Input
-            id="facebook"
-            name="facebook"
-            value={form.facebook}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          <Label htmlFor="instagram">Instagram</Label>
-          <Input
-            id="instagram"
-            name="instagram"
-            value={form.instagram}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          <Label htmlFor="discord">Discord</Label>
-          <Input
-            id="discord"
-            name="discord"
-            value={form.discord}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          <Label htmlFor="steam">Steam</Label>
-          <Input
-            id="steam"
-            name="steam"
-            value={form.steam}
-            onChange={handleChange}
-            className="bg-slate-700 border border-slate-600 text-white"
-          />
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        <DialogHeader>
+          <DialogTitle>{tSettings("editContacts")}</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <div className="space-y-1">
+            <Label htmlFor="website">{tProfile("website")}</Label>
+            <Input
+              id="website"
+              name="website"
+              value={form.website}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border border-slate-600 text-white"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="facebook">{tProfile("facebook")}</Label>
+            <Input
+              id="facebook"
+              name="facebook"
+              value={form.facebook}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border border-slate-600 text-white"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="instagram">{tProfile("instagram")}</Label>
+            <Input
+              id="instagram"
+              name="instagram"
+              value={form.instagram}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border border-slate-600 text-white"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="discord">{tProfile("discord")}</Label>
+            <Input
+              id="discord"
+              name="discord"
+              value={form.discord}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border border-slate-600 text-white"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="steam">{tProfile("steam")}</Label>
+            <Input
+              id="steam"
+              name="steam"
+              value={form.steam}
+              onChange={handleChange}
+              disabled={isPending}
+              className="bg-slate-700 border border-slate-600 text-white"
+            />
+          </div>
           <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-4"
+            disabled={isPending}
+            className="w-full bg-blue-600 hover:bg-blue-500 mt-4"
           >
-            {loading && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-            Salvar alterações
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                {tSettings("saving")}
+              </>
+            ) : (
+              tSettings("saveChanges")
+            )}
           </Button>
         </form>
       </DialogContent>

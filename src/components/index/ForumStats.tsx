@@ -6,15 +6,18 @@ import { Separator } from "@/components/ui/separator";
 import { getRoleColor } from "@/utils/colors";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function ForumStats() {
   const { data, isLoading } = useForumData();
+
+  const t = useTranslations("Index");
 
   if (isLoading) {
     return (
       <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
-          <CardTitle className="text-lg">Estatísticas</CardTitle>
+          <CardTitle className="text-lg">{t("stats")}</CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-40">
           <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
@@ -28,30 +31,30 @@ export function ForumStats() {
   return (
     <Card className="bg-slate-800 text-white border-slate-700">
       <CardHeader>
-        <CardTitle className="text-lg">Estatísticas</CardTitle>
+        <CardTitle className="text-lg">{t("stats")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">Membros</span>
+          <span className="text-sm text-slate-500">{t("members")}</span>
           <span className="font-semibold">
             {data?.stats?.activeMembers ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">Posts Totais</span>
+          <span className="text-sm text-slate-500">{t("totalPosts")}</span>
           <span className="font-semibold">
             {data?.stats?.totalPosts ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">Tópicos Totais</span>
+          <span className="text-sm text-slate-500">{t("totalTopics")}</span>
           <span className="font-semibold">
             {data?.stats?.totalTopics ?? "..."}
           </span>
         </div>
         <Separator className="bg-slate-600" />
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">Último Registrado</span>
+          <span className="text-sm text-slate-500">{t("lastUser")}</span>
           {lastUser ? (
             <Link href={`/profile/${lastUser.username}`}>
               <span
@@ -63,7 +66,7 @@ export function ForumStats() {
               </span>
             </Link>
           ) : (
-            <span className="font-semibold">Nenhum</span>
+            <span className="font-semibold">{t("noUsers")}</span>
           )}
         </div>
       </CardContent>

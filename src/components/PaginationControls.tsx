@@ -1,17 +1,22 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-interface PaginationControlsProps {
+type PaginationControlsProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}
+};
 
 export const PaginationControls = ({
   currentPage,
   totalPages,
   onPageChange,
 }: PaginationControlsProps) => {
+  const t = useTranslations("pagination");
+
   if (totalPages <= 1) {
     return null;
   }
@@ -25,10 +30,10 @@ export const PaginationControls = ({
         disabled={currentPage === 1}
       >
         <ChevronLeft className="h-4 w-4 mr-2" />
-        Anterior
+        {t("previous")}
       </Button>
       <span className="text-sm font-medium">
-        Página {currentPage} de {totalPages}
+        {t("page")} {currentPage} {t("of")} {totalPages}
       </span>
       <Button
         variant="outline"
@@ -36,7 +41,7 @@ export const PaginationControls = ({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        Próxima
+        {t("next")}
         <ChevronRight className="h-4 w-4 ml-2" />
       </Button>
     </div>
