@@ -29,7 +29,7 @@ const t = useTranslations("Index");
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />
           <span>{t("onlineUsers")}</span>
-          <Badge className="ml-auto bg-slate-700">{userCount}</Badge>
+          <Badge className="ml-auto bg-slate-700 text-white">{userCount}</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>

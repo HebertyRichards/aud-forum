@@ -10,6 +10,7 @@ import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import sanitizeHtml from "sanitize-html";
+import { useTranslations } from "next-intl";
 
 interface CommentItemProps {
   comment: Comment;
@@ -37,6 +38,10 @@ export const CommentItem = ({
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const tTopics = useTranslations("topics");
+  const tCommon = useTranslations("common");
+  const tProfile = useTranslations("profile");
 
   const tagsWithoutEmptyTags = comment.content.replace(
     /<[^/>][^>]*><\/[^>]+>/g,
@@ -66,7 +71,7 @@ export const CommentItem = ({
           <Avatar>
             <AvatarImage
               src={getOptimizedAvatarUrl(comment.profiles.avatar_url, 40)}
-              alt={`Avatar de ${comment.profiles.username}`}
+              alt={tProfile("avatarAlt", { name: comment.profiles.username })}
             />
             <AvatarFallback className="bg-slate-600">
               {comment.profiles.username.charAt(0).toUpperCase()}
@@ -115,14 +120,14 @@ export const CommentItem = ({
               <RichTextEditor content={content} setContent={setContent} />
               <div className="flex items-center gap-2">
                 <Button size="sm" onClick={handleSave} disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : "Salvar"}
+                  {isSubmitting ? tCommon("loading") : tCommon("save")}
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => setIsEditing(false)}
                 >
-                  Cancelar
+                  {tCommon("cancel")}
                 </Button>
               </div>
             </div>
@@ -135,7 +140,7 @@ export const CommentItem = ({
               {comment.updated_in &&
                 new Date(comment.updated_in) > new Date(comment.created_in) && (
                   <p className="text-xs text-slate-400 italic mt-1">
-                    Editado{" "}
+                    {tTopics("edited")}{" "}
                     {formatPostTimestamp(comment.updated_in).toLowerCase()}
                   </p>
                 )}

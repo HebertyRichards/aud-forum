@@ -1,13 +1,18 @@
+"use client";
+
 import { useUserTopics } from "@/hooks/useUserTopics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, MessageSquare, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/dateUtils";
 import { UserProfile } from "@/schema/user";
+import { useTranslations } from "next-intl";
 
 export type StatisticsTabProps = Pick<UserProfile, "username">;
+
 export function TopicsTab({ username }: StatisticsTabProps) {
   const { data: topics, isLoading, error } = useUserTopics(username);
+  const t = useTranslations("profile");
 
   if (isLoading)
     return <Loader2 className="h-8 w-8 animate-spin text-blue-500" />;
@@ -22,7 +27,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
   return (
     <Card className="border-slate-700 bg-slate-800 text-white">
       <CardHeader>
-        <CardTitle>Tópicos Recentes</CardTitle>
+        <CardTitle>{t("topics")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {topics && topics.length > 0 ? (
@@ -49,7 +54,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
             ))}
           </ul>
         ) : (
-          <p>Este usuário ainda não criou nenhum tópico.</p>
+          <p>{t("noTopics")}</p>
         )}
       </CardContent>
     </Card>

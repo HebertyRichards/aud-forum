@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useFetchOwnProfile } from "@/hooks/useFetchOwnProfile";
+import { useTranslations } from "next-intl";
 
 export default function Profile() {
   const auth = useAuth();
@@ -14,20 +15,21 @@ export default function Profile() {
     error,
     handleSuccessUpdate,
   } = useFetchOwnProfile();
+  const t = useTranslations("pages.profile");
 
   if (auth.loading || (isLoading && !data)) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
         <p className="ml-2">
-          {auth.loading ? "Verificando sessão..." : "Carregando perfil..."}
+          {auth.loading ? t("loading") : t("loading")}
         </p>
       </div>
     );
   }
 
   const errorMessage =
-    error instanceof Error ? error.message : "Ocorreu uma falha inesperada.";
+    error instanceof Error ? error.message : t("error");
 
   const followState = {
     stats: data?.stats,

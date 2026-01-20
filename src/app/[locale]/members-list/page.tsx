@@ -5,6 +5,7 @@ import { MembersFilters } from "@/components/members-list/Members-filter";
 import { MembersTable } from "@/components/members-list/Members-table";
 import { PaginationControls } from "@/components/PaginationControls";
 import { useMembers } from "@/hooks/useMembers";
+import { useTranslations } from "next-intl";
 
 export default function MembersList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,6 +13,7 @@ export default function MembersList() {
   const [sortBy, setSortBy] = useState("ultima-visita");
   const [sortOrder, setSortOrder] = useState("decrescente");
   const usersPerPage = 20;
+  const t = useTranslations("pages.membersList");
 
   const { data, isLoading, error } = useMembers(currentPage);
 
@@ -61,7 +63,7 @@ export default function MembersList() {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 text-white">
       <div className="max-w-7xl mx-auto">
         <header className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold">Membros</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t("title")}</h1>
         </header>
         <main>
           <MembersFilters

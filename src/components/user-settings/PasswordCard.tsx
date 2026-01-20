@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useUpdatePassword } from "@/hooks/useUpdatePassword";
+import { useTranslations } from "next-intl";
 
 type PasswordCardProps = {
   onClose: () => void;
@@ -25,12 +26,16 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
+
   const { mutate, isPending } = useUpdatePassword(onClose);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      toast.error("As senhas não coincidem.");
+      toast.error(tAuth("passwordsNotMatch"));
       return;
     }
     mutate(newPassword);
@@ -40,14 +45,14 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
     <div className="flex-1 space-y-8 p-8 pt-6">
       <Card className="bg-slate-800 text-white border-slate-700">
         <CardHeader>
-          <CardTitle>Alterar Senha</CardTitle>
+          <CardTitle>{t("changePassword")}</CardTitle>
           <CardDescription>
-            Altere sua senha aqui. Recomendamos usar uma senha forte.
+            {t("deleteAccountWarning")}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
-            <Label htmlFor="new-password">Nova Senha</Label>
+            <Label htmlFor="new-password">{t("newPassword")}</Label>
             <div className="relative max-w-sm">
               <Input
                 id="new-password"
@@ -72,7 +77,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 )}
               </Button>
             </div>
-            <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
+            <Label htmlFor="confirm-password">{t("confirmNewPassword")}</Label>
             <Input
               id="confirm-password"
               type="password"
@@ -88,7 +93,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               disabled={isPending}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              {isPending ? "Alterando..." : "Alterar Senha"}
+              {isPending ? tCommon("loading") : t("updatePassword")}
             </Button>
             <Button
               type="button"
@@ -96,7 +101,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               onClick={onClose}
               disabled={isPending}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
           </CardFooter>
         </form>

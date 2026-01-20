@@ -24,11 +24,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteAccount } from "@/hooks/useDeleteAccount";
+import { useTranslations } from "next-intl";
 
 export function DangerZoneCard() {
   const [step, setStep] = useState<"initial" | "confirmPassword">("initial");
   const [password, setPassword] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
 
   const { mutate, isPending } = useDeleteAccount();
 
@@ -42,7 +47,7 @@ export function DangerZoneCard() {
 
   const handleConfirmDelete = () => {
     if (!password) {
-      toast.error("Por favor, digite sua senha para confirmar.");
+      toast.error(tAuth("passwordRequired"));
       return;
     }
     mutate(password);
@@ -51,35 +56,33 @@ export function DangerZoneCard() {
   return (
     <Card className="border-slate-700 bg-slate-800 hover:border-red-500/50 transition-all duration-500">
       <CardHeader>
-        <CardTitle className="text-red-500">Zona de Perigo</CardTitle>
+        <CardTitle className="text-red-500">{t("deleteAccount")}</CardTitle>
         <CardDescription>
-          Ações irreversíveis. Tenha certeza antes de prosseguir.
+          {t("deleteAccountWarning")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">Deletar Conta</Button>
+            <Button variant="destructive">{t("deleteAccount")}</Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-slate-800 text-white border border-slate-700">
             <AlertDialogHeader>
-              <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+              <AlertDialogTitle>{t("deleteAccount")}</AlertDialogTitle>
               <AlertDialogDescription>
-                Esta ação não pode ser desfeita. Isso irá deletar
-                permanentemente sua conta e remover seus dados de nossos
-                servidores.
+                {t("deleteAccountWarning")}
               </AlertDialogDescription>
             </AlertDialogHeader>
 
             {step === "confirmPassword" && (
               <div className="my-4 space-y-2">
                 <Label htmlFor="password-confirm">
-                  Para confirmar, digite sua senha:
+                  {t("confirmDeleteAccount")}
                 </Label>
                 <Input
                   id="password-confirm"
                   type="password"
-                  placeholder="Sua senha..."
+                  placeholder={tAuth("passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isPending}
@@ -92,7 +95,7 @@ export function DangerZoneCard() {
                 className="bg-slate-700 border border-slate-600 hover:bg-slate-600 cursor-pointer"
                 disabled={isPending}
               >
-                Cancelar
+                {tCommon("cancel")}
               </AlertDialogCancel>
 
               {step === "initial" ? (
@@ -103,7 +106,7 @@ export function DangerZoneCard() {
                     setStep("confirmPassword");
                   }}
                 >
-                  Sim, quero deletar
+                  {tCommon("confirm")}
                 </AlertDialogAction>
               ) : (
                 <AlertDialogAction
@@ -111,7 +114,7 @@ export function DangerZoneCard() {
                   onClick={handleConfirmDelete}
                   disabled={isPending}
                 >
-                  {isPending ? "Excluindo..." : "Confirmar Exclusão"}
+                  {isPending ? tCommon("loading") : tCommon("confirm")}
                 </AlertDialogAction>
               )}
             </AlertDialogFooter>

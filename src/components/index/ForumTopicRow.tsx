@@ -44,7 +44,7 @@ export function ForumTopicRow({
       <div className="w-16 text-right text-sm font-bold text-muted-foreground">
         {postCount}
         <span className="block text-xs font-normal uppercase text-muted-foreground">
-          Posts
+          {t("posts")}
         </span>
       </div>
     </div>

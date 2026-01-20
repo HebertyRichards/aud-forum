@@ -6,6 +6,7 @@ import { UpdateAvatar } from "./UpdateAvatar";
 import { getRoleColor } from "@/utils/colors";
 import { UserProfile } from "@/schema/user";
 import { FollowState } from "@/schema/user";
+import { useTranslations } from "next-intl";
 
 interface UserProfileLayoutProps {
   profile?: UserProfile | null;
@@ -24,6 +25,7 @@ export function UserProfileSidebar({
   followState,
   onOpenModal,
 }: UserProfileLayoutProps) {
+  const t = useTranslations("profile");
   const { stats, isFollowing, isFollowLoading, onFollow, onUnfollow } =
     followState || {};
 
@@ -72,7 +74,7 @@ export function UserProfileSidebar({
               ) : (
                 <UserPlus className="mr-2 h-4 w-4" />
               )}
-              {isFollowing ? "Seguindo" : "Seguir"}
+              {isFollowing ? t("unfollow") : t("follow")}
             </Button>
           )}
           <div className="text-sm">
@@ -85,7 +87,7 @@ export function UserProfileSidebar({
       </Card>
       <Card className="border-gray-700 bg-slate-800 text-white">
         <CardHeader>
-          <CardTitle className="text-lg text-center">Estatísticas</CardTitle>
+          <CardTitle className="text-lg text-center">{t("statistics")}</CardTitle>
         </CardHeader>
         <CardContent className="flex justify-around text-center">
           <button
@@ -93,14 +95,14 @@ export function UserProfileSidebar({
             className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.followers_count ?? 0}</p>
-            <p className="text-sm text-gray-400">Seguidores</p>
+            <p className="text-sm text-gray-400">{t("followers")}</p>
           </button>
           <button
             onClick={() => onOpenModal?.("following")}
             className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.following_count ?? 0}</p>
-            <p className="text-sm text-gray-400">Seguindo</p>
+            <p className="text-sm text-gray-400">{t("following")}</p>
           </button>
         </CardContent>
       </Card>

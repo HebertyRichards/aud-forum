@@ -1,6 +1,6 @@
 {
   "name": "auditore-forum",
-  "version": "1.2",
+  "version": "1.4",
   "private": true,
   "scripts": {
     "dev": "next dev",

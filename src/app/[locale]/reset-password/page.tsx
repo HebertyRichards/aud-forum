@@ -9,6 +9,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/providers/auth";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function NewPasswordForm() {
   const [novaSenha, setNovaSenha] = useState("");
@@ -19,6 +20,8 @@ export default function NewPasswordForm() {
 
   const auth = useAuth();
   const router = useRouter();
+  const t = useTranslations("pages.resetPassword");
+  const tAuth = useTranslations("auth");
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -28,48 +31,42 @@ export default function NewPasswordForm() {
     if (token) {
       setAccessToken(token);
     } else {
-      toast.error(
-        "Token de recuperação não encontrado na URL. Por favor, use o link enviado para o seu e-mail."
-      );
+      toast.error(t("tokenNotFound"));
     }
-  }, []);
+  }, [t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      toast.error("Erro de autenticação. Tente recarregar a página.");
+      toast.error(t("tokenInvalid"));
       return;
     }
 
     if (!accessToken) {
-      toast.error(
-        "Token de recuperação inválido. Por favor, solicite um novo link."
-      );
+      toast.error(t("tokenInvalid"));
       return;
     }
 
     if (!novaSenha || !confirmacaoSenha) {
-      toast.error("Preencha todos os campos.");
+      toast.error(t("fillAllFields"));
       return;
     }
 
     if (novaSenha !== confirmacaoSenha) {
-      toast.error("As senhas não coincidem.");
+      toast.error(tAuth("passwordsNotMatch"));
       return;
     }
     setLoading(true);
 
     try {
       await auth.updatePassword(novaSenha, accessToken);
-      toast.success(
-        "Senha atualizada com sucesso! Redirecionando para o login..."
-      );
+      toast.success(t("passwordUpdated"));
       router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Ocorreu uma falha inesperada");
+        toast.error(t("tokenInvalid"));
       }
       setLoading(false);
     }
@@ -79,11 +76,11 @@ export default function NewPasswordForm() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md shadow-xl bg-slate-800 border-slate-700 text-white">
         <CardHeader>
-          <CardTitle className="text-center">Redefinir senha</CardTitle>
+          <CardTitle className="text-center">{t("title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Label htmlFor="novaSenha">Nova senha</Label>
+            <Label htmlFor="novaSenha">{t("newPassword")}</Label>
             <Input
               id="novaSenha"
               type={mostrarSenha ? "text" : "password"}
@@ -98,7 +95,7 @@ export default function NewPasswordForm() {
             >
               {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            <Label htmlFor="confirmarSenha">Confirmar senha</Label>
+            <Label htmlFor="confirmarSenha">{t("confirmPassword")}</Label>
             <Input
               id="confirmarSenha"
               type="password"
@@ -111,7 +108,7 @@ export default function NewPasswordForm() {
               className="w-full mt-4 border border-slate-600 bg-slate-700 hover:bg-slate-600"
               disabled={loading || !accessToken}
             >
-              {loading ? "Atualizando..." : "Atualizar senha"}
+              {loading ? t("updating") : t("updatePassword")}
             </Button>
           </form>
         </CardContent>

@@ -15,11 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/providers/auth";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function RecoveryPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
+  const t = useTranslations("pages.recoveryPassword");
+  const tAuth = useTranslations("auth");
 
   function isValidEmail(email: string) {
     return /\S+@\S+\.\S+/.test(email.trim());
@@ -28,12 +31,12 @@ export default function RecoveryPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {
-      toast.error("Erro de autenticação. Tente recarregar a página.");
+      toast.error(t("invalidEmail"));
       return;
     }
 
     if (!email || !isValidEmail(email)) {
-      toast.error("Informe um e-mail válido.");
+      toast.error(t("invalidEmail"));
       return;
     }
 
@@ -41,12 +44,12 @@ export default function RecoveryPassword() {
 
     try {
       await auth.forgotPassword(email.trim());
-      toast.success("Enviamos a alteração para o seu email, confira!");
+      toast.success(t("emailSent"));
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Ocorreu uma falha inesperada");
+        toast.error(t("invalidEmail"));
       }
       setLoading(false);
     }
@@ -58,23 +61,22 @@ export default function RecoveryPassword() {
         <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-slate-800">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">
-              Esqueceu sua senha?
+              {t("title")}
             </CardTitle>
             <CardDescription className="pt-2">
-              Sem problemas. Digite seu e-mail abaixo e enviaremos um link para
-              você criar uma nova senha.
+              {t("description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="email" className="text-gray-300">
-                  Email
+                  {tAuth("email")}
                 </Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={tAuth("emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-slate-700 border-slate-600 "
@@ -88,11 +90,11 @@ export default function RecoveryPassword() {
               disabled={loading}
               className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
             >
-              {loading ? "Enviando..." : "Enviar link de recuperação"}
+              {loading ? t("sending") : t("sendLink")}
             </Button>
             <Button variant="link" asChild>
               <Link href="/" className="text-white hover:text-blue-300">
-                Voltar para o login
+                {t("backToLogin")}
               </Link>
             </Button>
           </CardFooter>

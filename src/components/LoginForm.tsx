@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { handleApiError } from "@/utils/apiErrors";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 type LoginFormProps = {
   onSuccess?: () => void;
@@ -25,12 +26,13 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const auth = useAuth();
   const router = useRouter();
+  const t = useTranslations("auth");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error("Por favor, preencha todos os campos.");
+      toast.error(t("emailRequired"));
       return;
     }
     setLoading(true);
@@ -42,8 +44,8 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
         router.push("/");
       }
     } catch (error) {
-      handleApiError(error, "Ocorreu uma falha inesperada.");
-      toast.error("Ocorreu um erro durante o login.");
+      handleApiError(error, t("loginButton"));
+      toast.error(t("loginButton"));
     } finally {
       setLoading(false);
     }
@@ -53,7 +55,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="grid gap-2">
         <Label htmlFor="email" className="text-white">
-          Email
+          {t("email")}
         </Label>
         <Input
           id="email"
@@ -62,7 +64,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           autoFocus
-          placeholder="seu@email.com"
+          placeholder={t("emailPlaceholder")}
           required
           className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
           disabled={loading}
@@ -71,13 +73,13 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
       <div className="grid gap-2">
         <div className="flex items-center">
           <Label htmlFor="password" className="text-white">
-            Senha
+            {t("password")}
           </Label>
           <Link
             href="/recovery-password"
             className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-slate-400 hover:text-white"
           >
-            Esqueceu a senha?
+            {t("forgotPassword")}
           </Link>
         </div>
         <div className="relative">
@@ -120,7 +122,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           htmlFor="keep-logged-in"
           className="text-sm font-medium leading-none text-white"
         >
-          Mantenha-me conectado
+          {t("rememberMe")}
         </Label>
       </div>
       <div className="flex flex-col gap-4 pt-2">
@@ -129,16 +131,16 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 text-white"
           disabled={loading}
         >
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? t("loggingIn") : t("loginButton")}
         </Button>
         <div className="text-center text-sm text-slate-400">
-          Não tem uma conta?{" "}
+          {t("noAccount")}{" "}
           <Button
             type="button"
             onClick={onSwitchToRegister}
             className="text-blue-400 hover:underline hover:text-blue-300 transition-colors bg-transparent hover:bg-transparent"
           >
-            Registre-se
+            {t("registerHere")}
           </Button>
         </div>
       </div>

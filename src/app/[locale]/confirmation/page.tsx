@@ -9,10 +9,12 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export default function SuccessRegister() {
   const [countdown, setCountdown] = useState(7);
   const router = useRouter();
+  const t = useTranslations("pages.confirmation");
 
   useEffect(() => {
     if (countdown === 0) {
@@ -28,16 +30,14 @@ export default function SuccessRegister() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="max-w-md w-full bg-slate-800 text-white border-slate-700">
         <CardHeader className="text-center">
-          <CardTitle>Conta criada com sucesso!</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <CardDescription>
-            Você será redirecionado para a página de login em {countdown}{" "}
-            segundo{countdown !== 1 ? "s" : ""}.
+            {t("redirecting")} {countdown} {t("seconds")}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-slate-300">
-            Obrigado por se registrar! Seja Bem-Vindo ao Fórum da Auditore
-            Family.
+            {t("welcome")}
           </p>
         </CardContent>
       </Card>

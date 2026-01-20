@@ -17,11 +17,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 export default function SettingsPage() {
   const auth = useAuth();
   const user = auth?.user;
   const router = useRouter();
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
 
   const [activeForm, setActiveForm] = useState<"profile" | "password" | null>(
     null
@@ -37,7 +40,7 @@ export default function SettingsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-        <p className="ml-2">Verificando sessão...</p>
+        <p className="ml-2">{t("checkingSession")}</p>
       </div>
     );
   }
@@ -52,22 +55,22 @@ export default function SettingsPage() {
       ) : (
         <div className="flex-1 space-y-8 p-8 pt-6 text-white">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Configurações</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
             <p className="text-muted-foreground">
-              Gerencie as configurações da sua conta e preferências.
+              {t("manageSettings")}
             </p>
           </div>
           <Card className="bg-slate-800 text-white border-slate-700">
             <CardHeader>
-              <CardTitle>Perfil e Senha</CardTitle>
+              <CardTitle>{t("profileAndPassword")}</CardTitle>
               <CardDescription>
-                Atualize suas informações de perfil ou altere sua senha.
+                {t("profileAndPasswordDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0 mr-4">
-                  <p className="font-medium">Nome de Usuário</p>
+                  <p className="font-medium">{tAuth("username")}</p>
                   <p className="text-sm text-muted-foreground truncate">
                     {user.username}
                   </p>
@@ -76,7 +79,7 @@ export default function SettingsPage() {
               <Separator className="bg-slate-600" />
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0 mr-4">
-                  <p className="font-medium">Email</p>
+                  <p className="font-medium">{tAuth("email")}</p>
                   <p className="text-sm text-muted-foreground truncate">
                     {user.email ?? "N/A"}
                   </p>
@@ -85,20 +88,20 @@ export default function SettingsPage() {
                   className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
                   onClick={() => setActiveForm("profile")}
                 >
-                  Alterar Perfil
+                  {t("updateProfile")}
                 </Button>
               </div>
               <Separator className="bg-slate-600" />
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0 mr-4">
-                  <p className="font-medium">Senha</p>
+                  <p className="font-medium">{tAuth("password")}</p>
                   <p className="text-sm text-muted-foreground">********</p>
                 </div>
                 <Button
                   className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
                   onClick={() => setActiveForm("password")}
                 >
-                  Alterar Senha
+                  {t("changePassword")}
                 </Button>
               </div>
             </CardContent>

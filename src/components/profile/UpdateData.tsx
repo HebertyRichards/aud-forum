@@ -23,6 +23,7 @@ import { Loader2 } from "lucide-react";
 import { formatDateForInput } from "@/utils/dateUtils";
 import { UserProfile } from "@/schema/user";
 import { useUpdateProfileData } from "@/hooks/useUpdateProfileData";
+import { useTranslations } from "next-intl";
 
 interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
@@ -38,6 +39,10 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     birthdate: formatDateForInput(profile.birthdate),
     location: profile.location || "",
   });
+
+  const tSettings = useTranslations("settings");
+  const tProfile = useTranslations("profile");
+  const tCommon = useTranslations("common");
 
   const { mutate, isPending, error } = useUpdateProfileData(() => {
     setOpen(false);
@@ -62,16 +67,16 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
-          Atualizar Perfil
+          {tSettings("updateProfile")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
         <DialogHeader>
-          <DialogTitle>Editar Informações Pessoais</DialogTitle>
+          <DialogTitle>{tSettings("editPersonalInfo")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-1">
-            <Label htmlFor="gender">Gênero</Label>
+            <Label htmlFor="gender">{tProfile("gender")}</Label>
             <Select
               value={form.gender}
               onValueChange={handleSelectChange}
@@ -81,17 +86,17 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
                 id="gender"
                 className="w-full border-slate-600 bg-slate-700 text-white"
               >
-                <SelectValue placeholder="Selecione" />
+                <SelectValue placeholder={tCommon("select")} />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 text-white border-slate-700">
-                <SelectItem value="Masculino">Masculino</SelectItem>
-                <SelectItem value="Feminino">Feminino</SelectItem>
-                <SelectItem value="Outro">Outro</SelectItem>
+                <SelectItem value="Masculino">{tProfile("genderOptions.male")}</SelectItem>
+                <SelectItem value="Feminino">{tProfile("genderOptions.female")}</SelectItem>
+                <SelectItem value="Outro">{tProfile("genderOptions.other")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1">
-            <Label htmlFor="birthdate">Nascimento</Label>
+            <Label htmlFor="birthdate">{tProfile("birthdate")}</Label>
             <Input
               id="birthdate"
               name="birthdate"
@@ -103,14 +108,14 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="location">Localização</Label>
+            <Label htmlFor="location">{tProfile("location")}</Label>
             <Input
               id="location"
               name="location"
               value={form.location}
               onChange={handleChange}
               disabled={isPending}
-              placeholder="Ex: São Paulo, Brasil"
+              placeholder={tProfile("locationPlaceholder")}
               className="bg-slate-700 border-slate-600 text-white"
             />
           </div>
@@ -122,10 +127,10 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                Salvando...
+                {tSettings("saving")}
               </>
             ) : (
-              "Salvar alterações"
+              tSettings("saveChanges")
             )}
           </Button>
         </form>

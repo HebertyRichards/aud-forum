@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { TopicDetails, UpdateTopic } from "@/schema/forum";
@@ -18,6 +20,7 @@ import { formatPostTimestamp } from "@/utils/dateUtils";
 import { getRoleColor } from "@/utils/colors";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import sanitizeHtml from "sanitize-html";
+import { useTranslations } from "next-intl";
 
 interface TopicHandlers {
   handleDeleteTopic: () => void;
@@ -67,6 +70,9 @@ export const TopicView = ({
     content: topic.content,
   });
 
+  const t = useTranslations("topics");
+  const tCommon = useTranslations("common");
+
   const isMobile = useMediaQuery("(max-width: 768px)");
   const tagsWithoutEmptyTags = topic.content.replace(
     /<[^/>][^>]*><\/[^>]+>/g,
@@ -92,7 +98,7 @@ export const TopicView = ({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setIsEditing(true)}>
               <Edit className="h-4 w-4 mr-2" />
-              Editar
+              {tCommon("edit")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={handlers.handleDeleteTopic}
@@ -100,7 +106,7 @@ export const TopicView = ({
               className="text-red-500"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              {isSubmitting ? "..." : "Deletar"}
+              {isSubmitting ? "..." : tCommon("delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -114,7 +120,7 @@ export const TopicView = ({
           onClick={() => setIsEditing(true)}
         >
           <Edit className="h-4 w-4 mr-2" />
-          Editar
+          {tCommon("edit")}
         </Button>
         <Button
           variant="destructive"
@@ -123,7 +129,7 @@ export const TopicView = ({
           disabled={isSubmitting}
         >
           <Trash2 className="h-4 w-4 mr-2" />
-          {isSubmitting ? "..." : "Deletar"}
+          {isSubmitting ? "..." : tCommon("delete")}
         </Button>
       </div>
     );
@@ -135,7 +141,7 @@ export const TopicView = ({
         <form onSubmit={handleUpdate} className="p-6">
           <div className="space-y-4">
             <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="title">Título</Label>
+              <Label htmlFor="title">{t("title")}</Label>
               <Input
                 id="title"
                 type="text"
@@ -147,7 +153,7 @@ export const TopicView = ({
               />
             </div>
             <div className="grid w-full gap-1.5">
-              <Label htmlFor="content">Conteúdo</Label>
+              <Label htmlFor="content">{t("content")}</Label>
               <RichTextEditor
                 content={editData.content}
                 setContent={(newContent) =>
@@ -162,10 +168,10 @@ export const TopicView = ({
               variant="ghost"
               onClick={() => setIsEditing(false)}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+              {isSubmitting ? tCommon("loading") : tCommon("save")}
             </Button>
           </div>
         </form>
@@ -200,12 +206,12 @@ export const TopicView = ({
                 </p>
               </Link>
               <p className="text-xs text-gray-400">
-                Postado {formatPostTimestamp(topic.created_in).toLowerCase()}
+                {t("postedBy")} {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
               {topic.updated_in &&
                 new Date(topic.updated_in) > new Date(topic.created_in) && (
                   <p className="text-xs text-gray-300 italic mt-1">
-                    Atualizado{" "}
+                    {tCommon("edit")}{" "}
                     {formatPostTimestamp(topic.updated_in).toLowerCase()}
                   </p>
                 )}

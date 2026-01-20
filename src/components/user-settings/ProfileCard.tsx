@@ -15,6 +15,7 @@ import {
 import type { UserWithProfile } from "@/types/autentication";
 import { X } from "lucide-react";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+import { useTranslations } from "next-intl";
 
 type ProfileCardProps = {
   user: UserWithProfile;
@@ -24,6 +25,10 @@ type ProfileCardProps = {
 export function ProfileCard({ user, onClose }: ProfileCardProps) {
   const [username, setUsername] = useState(user.username ?? "");
   const [email, setEmail] = useState(user.email ?? "");
+
+  const t = useTranslations("settings");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
 
   const { mutate, isPending } = useUpdateProfile();
 
@@ -39,15 +44,14 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
       <Card className="text-white w-full max-w-md bg-slate-800 border-slate-700 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader>
-          <CardTitle>Alterar Perfil</CardTitle>
+          <CardTitle>{t("updateProfile")}</CardTitle>
           <CardDescription>
-            Para alterar seu e-mail, um link de confirmação será enviado para o
-            novo endereço.
+            {t("profileUpdated")}
           </CardDescription>
           <button
             onClick={onClose}
             className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-opacity"
-            aria-label="Fechar modal"
+            aria-label={tCommon("cancel")}
           >
             <X size={24} />
           </button>
@@ -55,7 +59,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 p-6">
             <div className="space-y-2">
-              <Label htmlFor="username">Nome de Usuário</Label>
+              <Label htmlFor="username">{tAuth("username")}</Label>
               <Input
                 id="username"
                 value={username}
@@ -65,7 +69,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{tAuth("email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -82,7 +86,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
               className="bg-blue-500 border border-blue-400 hover:bg-blue-400"
               disabled={isPending}
             >
-              {isPending ? "Salvando..." : "Salvar Alterações"}
+              {isPending ? tCommon("loading") : tCommon("save")}
             </Button>
             <Button
               type="button"
@@ -90,7 +94,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
               onClick={onClose}
               disabled={isPending}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
           </CardFooter>
         </form>

@@ -15,6 +15,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth";
 import { UserProfile } from "@/schema/user";
 import { useUpdateContacts } from "@/hooks/useUpdateContacts";
+import { useTranslations } from "next-intl";
 
 interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
@@ -31,6 +32,9 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
     discord: profile.discord || "",
     steam: profile.steam || "",
   });
+
+  const tSettings = useTranslations("settings");
+  const tProfile = useTranslations("profile");
 
   const { mutate, isPending } = useUpdateContacts(() => {
     setOpen(false);
@@ -51,18 +55,18 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
-          Atualizar Contatos
+          {tSettings("updateContacts")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
         <DialogHeader>
-          <DialogTitle>Editar Informações de Contato</DialogTitle>
+          <DialogTitle>{tSettings("editContacts")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-1">
-            <Label htmlFor="website">Website</Label>
+            <Label htmlFor="website">{tProfile("website")}</Label>
             <Input
               id="website"
               name="website"
@@ -73,7 +77,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="facebook">Facebook</Label>
+            <Label htmlFor="facebook">{tProfile("facebook")}</Label>
             <Input
               id="facebook"
               name="facebook"
@@ -84,7 +88,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="instagram">Instagram</Label>
+            <Label htmlFor="instagram">{tProfile("instagram")}</Label>
             <Input
               id="instagram"
               name="instagram"
@@ -95,7 +99,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="discord">Discord</Label>
+            <Label htmlFor="discord">{tProfile("discord")}</Label>
             <Input
               id="discord"
               name="discord"
@@ -106,7 +110,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="steam">Steam</Label>
+            <Label htmlFor="steam">{tProfile("steam")}</Label>
             <Input
               id="steam"
               name="steam"
@@ -124,10 +128,10 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                Salvando...
+                {tSettings("saving")}
               </>
             ) : (
-              "Salvar alterações"
+              tSettings("saveChanges")
             )}
           </Button>
         </form>

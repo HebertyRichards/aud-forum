@@ -25,7 +25,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   const t = useTranslations("forum");
 
   if (isLoading) {
-    return <div className="text-center mt-10">Carregando membros...</div>;
+    return <div className="text-center mt-10">{t("loading")}</div>;
   }
 
   if (error) {
@@ -33,7 +33,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   if (members.length === 0) {
-    return <div className="text-center mt-10">Nenhum membro encontrado.</div>;
+    return <div className="text-center mt-10">{t("noMembersFound")}</div>;
   }
 
   return (

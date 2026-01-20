@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useAuth } from "@/providers/auth";
@@ -25,9 +25,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, LogOut, Settings, UserCircle, Menu, X } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
-import { API_URL } from "@/utils/forum-structure";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslations } from "next-intl";
+import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,8 +36,12 @@ export default function Header() {
   const t = useTranslations("header");
 
   const auth = useAuth();
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
+  const username = auth.user?.username ?? "";
+  
+  const { data: profileData } = useFetchUserProfile(username);
+  
+  const userRole = profileData?.profile?.role ?? null;
+  const userAvatarUrl = profileData?.profile?.avatar_url ?? null;
 
   const openLogin = () => {
     setIsRegisterOpen(false);
@@ -48,34 +52,6 @@ export default function Header() {
     setIsLoginOpen(false);
     setIsRegisterOpen(true);
   };
-
-  useEffect(() => {
-    const username = auth.user?.username;
-    if (!username) {
-      setUserRole(null);
-      setUserAvatarUrl(null);
-      return;
-    }
-
-    const fetchUserProfile = async () => {
-      try {
-        const res = await fetch(`${API_URL}/profile/${username}`);
-        if (res.ok) {
-          const profileData = await res.json();
-          setUserRole(profileData.role);
-          setUserAvatarUrl(profileData.avatar_url);
-        } else {
-          setUserRole(null);
-          setUserAvatarUrl(null);
-        }
-      } catch {
-        setUserRole(null);
-        setUserAvatarUrl(null);
-      }
-    };
-
-    fetchUserProfile();
-  }, [auth.user?.username]);
 
   const allowedRoles = ["Fundador", "Leader", "Auditore", "Desenvolvedor"];
   const canViewRules = userRole && allowedRoles.includes(userRole);

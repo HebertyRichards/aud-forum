@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "./RichTextEditor";
+import { useTranslations } from "next-intl";
 
 interface PublishFormProps<T extends "topic" | "comment"> {
   type: T;
@@ -34,6 +35,7 @@ export function PublishForm<T extends "topic" | "comment">({
   setTitle,
   onImageAdd,
 }: PublishFormProps<T>) {
+  const tCommon = useTranslations("common");
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit();
@@ -47,8 +49,8 @@ export function PublishForm<T extends "topic" | "comment">({
         <CardHeader>
           <CardTitle>
             {type === "topic"
-              ? "Publique um novo tópico"
-              : "Adicionar um comentário"}
+              ? tCommon("publishTopic")
+              : tCommon("publishComment")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -56,10 +58,10 @@ export function PublishForm<T extends "topic" | "comment">({
             <div className="space-y-6">
               {type === "topic" && (
                 <div className="space-y-2">
-                  <Label htmlFor="topic-title">Título do tópico</Label>
+                  <Label htmlFor="topic-title">{tCommon("topicTitle")}</Label>
                   <Input
                     id="topic-title"
-                    placeholder="Digite o título do seu tópico aqui..."
+                    placeholder={tCommon("topicTitlePlaceholder")}
                     value={title}
                     onChange={(e) => setTitle?.(e.target.value)}
                     className="border-slate-600 bg-slate-700"
@@ -84,10 +86,10 @@ export function PublishForm<T extends "topic" | "comment">({
             form={formId}
           >
             {isSubmitting
-              ? "Enviando..."
+              ? tCommon("submitting")
               : type === "topic"
-              ? "Publicar Tópico"
-              : "Enviar Comentário"}
+              ? tCommon("publishTopic")
+              : tCommon("publishComment")}
           </Button>
         </CardFooter>
       </Card>

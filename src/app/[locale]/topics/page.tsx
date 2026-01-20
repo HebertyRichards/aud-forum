@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { categoryDetailsMap } from "@/utils/utilities";
 import { useCategory } from "@/hooks/useCategory";
 import { Folder, ChevronRight, ArrowLeft, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type ApiCategory = {
   slug: string;
@@ -15,6 +16,7 @@ type ApiCategory = {
 
 export default function TopicsIndexPage() {
   const { data, isLoading, error } = useCategory();
+  const t = useTranslations("pages.topicsIndex");
 
   if (isLoading) {
     return (
@@ -23,7 +25,7 @@ export default function TopicsIndexPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
-              Carregando categorias...
+              {t("loading")}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -37,7 +39,7 @@ export default function TopicsIndexPage() {
         <Card className="w-full max-w-md bg-slate-900 text-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-500">
-              Ocorreu um erro ao carregar as categorias.
+              {t("error")}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -55,16 +57,16 @@ export default function TopicsIndexPage() {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Folder className="h-5 w-5 text-blue-500" />
-                Categorias
+                {t("categories")}
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-10 gap-4">
             <p className="text-center text-muted-foreground text-lg">
-              Nenhuma categoria encontrada no momento.
+              {t("empty")}
             </p>
             <Button variant="outline" asChild>
-              <Link href="/">Voltar ao Início</Link>
+              <Link href="/">{t("backHome")}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -83,13 +85,13 @@ export default function TopicsIndexPage() {
           >
             <Link href="/">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar para Início
+              {t("backHome")}
             </Link>
           </Button>
           <div className="grow text-center">
-            <h1 className="text-4xl font-bold mb-2 text-white">Fóruns</h1>
+            <h1 className="text-4xl font-bold mb-2 text-white">{t("title")}</h1>
             <p className="text-gray-400">
-              Navegue pelas categorias para encontrar o que procura.
+              {t("description")}
             </p>
           </div>
         </div>
@@ -123,7 +125,7 @@ export default function TopicsIndexPage() {
                     </p>
 
                     <div className="mt-6 flex justify-end items-center text-xs font-medium text-gray-500 group-hover:text-blue-500 transition-colors">
-                      Acessar categoria
+                      {t("access")}
                       <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
                     </div>
                   </CardContent>

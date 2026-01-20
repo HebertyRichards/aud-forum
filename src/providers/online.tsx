@@ -63,21 +63,25 @@ export function OnlineUserProvider({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isConnectingRef = useRef(false);
+  const lastTokenRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (auth.loading) return;
-
-    if (user && !token) return;
+    if (lastTokenRef.current === token && socketRef.current?.readyState === WebSocket.OPEN) {
+      return;
+    }
+    lastTokenRef.current = token;
 
     const cleanApiUrl = API_URL?.trim().replace(/\/$/, "");
+    if (!cleanApiUrl) return;
+
     const isBrowser = typeof window !== "undefined";
     const isHttps = isBrowser && window.location.protocol === "https:";
     const isProduction = process.env.NODE_ENV === "production" || isHttps;
 
     let wsBaseUrl: string;
-    if (cleanApiUrl?.startsWith("https://")) {
+    if (cleanApiUrl.startsWith("https://")) {
       wsBaseUrl = cleanApiUrl.replace(/^https:\/\//, "wss://");
-    } else if (cleanApiUrl?.startsWith("http://")) {
+    } else if (cleanApiUrl.startsWith("http://")) {
       wsBaseUrl = isHttps
         ? `wss://${cleanApiUrl.replace(/^http:\/\//, "")}`
         : cleanApiUrl.replace(/^http:\/\//, "ws://");
@@ -88,11 +92,9 @@ export function OnlineUserProvider({
           : `ws://${cleanApiUrl}`;
     }
 
-    let wsUrl = `${wsBaseUrl}/forum/ws/online`;
-
-    if (token) {
-      wsUrl += `?token=${token}`;
-    }
+    const wsUrl = token 
+      ? `${wsBaseUrl}/forum/ws/online?token=${token}`
+      : `${wsBaseUrl}/forum/ws/online`;
 
     let shouldReconnect = true;
     let reconnectAttempts = 0;
@@ -189,13 +191,11 @@ export function OnlineUserProvider({
 
               setOnlineUsers(validUsers);
             }
-          } catch (error) {
-            console.error(error);
+          } catch {
           }
         };
 
-        ws.onerror = (error) => {
-          console.error(error);
+        ws.onerror = () => {
           isConnectingRef.current = false;
           setIsConnected(false);
         };
@@ -225,8 +225,7 @@ export function OnlineUserProvider({
         };
 
         socketRef.current = ws;
-      } catch (error) {
-        console.error(error);
+      } catch {
         isConnectingRef.current = false;
         if (shouldReconnect && reconnectAttempts < maxReconnectAttempts) {
           reconnectTimeoutRef.current = setTimeout(connect, 3000);

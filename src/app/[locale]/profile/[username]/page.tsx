@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
 import { useFollowHook } from "@/hooks/useFollow";
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
+import { useTranslations } from "next-intl";
 
 export default function OtherProfile() {
   const auth = useAuth();
@@ -15,6 +16,7 @@ export default function OtherProfile() {
   const { username } = useParams<{ username: string }>();
   const { data, isLoading, error, handleSuccessUpdate } =
     useFetchUserProfile(username);
+  const t = useTranslations("pages.profile");
 
   const profile = data?.profile;
   const initialStats = data?.stats;
@@ -47,13 +49,13 @@ export default function OtherProfile() {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-        <p className="ml-2">Carregando...</p>
+        <p className="ml-2">{t("loading")}</p>
       </div>
     );
   }
 
   const errorMessage =
-    error instanceof Error ? error.message : "Falha ao carregar o perfil.";
+    error instanceof Error ? error.message : t("error");
 
   const followState = {
     stats: {

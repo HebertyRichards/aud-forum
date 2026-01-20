@@ -13,11 +13,13 @@ import { PaginationControls } from "@/components/PaginationControls";
 import { TopicView } from "@/components/topics/TopicView";
 import { CommentList } from "@/components/topics/CommentList";
 import { DisabledCommentForm } from "@/components/topics/DisabledCommentForm";
+import { useTranslations } from "next-intl";
 
 const COMMENTS_PER_PAGE = 10;
 
 export default function TopicPage() {
   const router = useRouter();
+  const t = useTranslations("topics");
   const {
     topic,
     isLoading,
@@ -93,7 +95,7 @@ export default function TopicPage() {
 
   if (isLoading) {
     return (
-      <div className="text-center p-10 text-white">Carregando tópico...</div>
+      <div className="text-center p-10 text-white">{t("loading")}</div>
     );
   }
 
@@ -103,7 +105,7 @@ export default function TopicPage() {
 
   if (!topic) {
     return (
-      <div className="text-center p-10 text-white">Tópico não encontrado.</div>
+      <div className="text-center p-10 text-white">{t("topicNotFound")}</div>
     );
   }
 
@@ -114,17 +116,17 @@ export default function TopicPage() {
   const renderCommentBox = () => {
     if (!user) {
       return (
-        <DisabledCommentForm message="É necessário estar logado para comentar." />
+        <DisabledCommentForm message={t("loginToComment")} />
       );
     }
     if (isCheckingComment) {
       return (
-        <DisabledCommentForm message="Verificando permissão para comentar..." />
+        <DisabledCommentForm message={t("checkingPermission")} />
       );
     }
     if (canCreateComment === false) {
       return (
-        <DisabledCommentForm message="Você não pode comentar nesta seção." />
+        <DisabledCommentForm message={t("cannotComment")} />
       );
     }
     if (canCreateComment === true) {
@@ -154,7 +156,7 @@ export default function TopicPage() {
             >
               <Link href={`/topics/${category}`}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Voltar para{" "}
+                {t("backToCategory")}
                 {categoryTitles[category] || category.replace(/-/g, " ")}{" "}
               </Link>
             </Button>
@@ -170,7 +172,7 @@ export default function TopicPage() {
           <Separator className="bg-gray-700" />
 
           <h2 className="text-2xl font-semibold">
-            Comentários ({totalComments})
+            {t("comments")} ({totalComments})
           </h2>
 
           <CommentList topic={topic} user={user} handlers={handlers} />

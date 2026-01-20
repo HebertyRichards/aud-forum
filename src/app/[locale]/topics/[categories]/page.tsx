@@ -25,6 +25,7 @@ import { topicService } from "@/services";
 import { useGetTopicsByCategory } from "@/hooks/useGetTopicsByCategory";
 import { TopicSummary } from "@/schema/forum";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 type PaginationControlsProps = {
   currentPage: number;
@@ -41,6 +42,8 @@ const PaginationControls = ({
   if (totalPages <= 1) {
     return null;
   }
+
+  const tPagination = useTranslations("pagination");
 
   const getPageNumbers = () => {
     const pages = [];
@@ -82,7 +85,7 @@ const PaginationControls = ({
         className="h-9 w-9 p-0"
       >
         <ChevronLeft className="h-4 w-4" />
-        <span className="sr-only">Anterior</span>
+        <span className="sr-only">{tPagination("previous")}</span>
       </Button>
       {pageNumbers.map((page, index) =>
         page === "..." ? (
@@ -110,7 +113,7 @@ const PaginationControls = ({
         className="h-9 w-9 p-0"
       >
         <ChevronRight className="h-4 w-4" />
-        <span className="sr-only">Próxima</span>
+        <span className="sr-only">{tPagination("next")}</span>
       </Button>
     </div>
   );
@@ -128,6 +131,10 @@ export default function CategoryTopicPage() {
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
 
+  const tTopics = useTranslations("topics");
+  const tCommon = useTranslations("common");
+  const tAuth = useTranslations("auth");
+
   const { isLoading, data, isFetching, TOPICS_PER_PAGE } = useGetTopicsByCategory(
     category,
     currentPage,
@@ -137,7 +144,7 @@ export default function CategoryTopicPage() {
   const topics = data?.data ?? [];
   const totalTopics = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalTopics / TOPICS_PER_PAGE);
-  const pageTitle = category ?? "Tópicos";
+  const pageTitle = category ?? tTopics("title");
 
   useEffect(() => {
     if (user && category) {
@@ -170,12 +177,12 @@ export default function CategoryTopicPage() {
 
   const handleNewTopicClick = () => {
     if (!user) {
-      toast.error("É necessário estar logado para criar um tópico.");
+      toast.error(tTopics("loginToPost"));
       return;
     }
     if (canCreateTopic === false) {
       toast.error(
-        "Você não tem permissão para criar um tópico nesta categoria."
+        "Você não tem permissão para criar um tópico nesta categoria." // TODO: Add translation for this specific permission error if needed
       );
       return;
     }
@@ -199,7 +206,7 @@ export default function CategoryTopicPage() {
             size="sm"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
+            {tCommon("back")}
           </Button>
         ) : (
           <Button
@@ -209,7 +216,7 @@ export default function CategoryTopicPage() {
             size="sm"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
-            {isCheckingTopic ? "Verificando..." : "Novo Tópico"}
+            {isCheckingTopic ? tCommon("loading") : tTopics("newTopic")}
           </Button>
         )}
       </div>
@@ -219,7 +226,7 @@ export default function CategoryTopicPage() {
   const renderMainContent = () => {
     if (isLoading) {
       return (
-        <div className="text-center p-10 text-white">Carregando tópicos...</div>
+        <div className="text-center p-10 text-white">{tCommon("loading")}</div>
       );
     }
 
@@ -260,7 +267,7 @@ export default function CategoryTopicPage() {
                     <div>
                       <h3 className="font-semibold text-lg">{topic.title}</h3>
                       <p className="text-xs text-slate-500">
-                        por {topic.profiles.username} •{" "}
+                        {tTopics("postedBy")} {topic.profiles.username} •{" "}
                         {formatPostTimestamp(topic.created_in)}
                       </p>
                     </div>
@@ -293,7 +300,7 @@ export default function CategoryTopicPage() {
           >
             <Link href="/topics">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar para Fóruns
+              {tTopics("backToForums") || "Fóruns"} 
             </Link>
           </Button>
         </div>
