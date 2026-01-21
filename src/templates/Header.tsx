@@ -40,6 +40,11 @@ export default function Header() {
   
   const { data: profileData } = useFetchUserProfile(username);
   
+  console.log("[Header] Dados do auth.user:", auth.user);
+  console.log("[Header] Avatar do auth:", auth.user?.avatar_url);
+  console.log("[Header] ProfileData:", profileData);
+  console.log("[Header] Avatar do profileData:", profileData?.profile?.avatar_url);
+  
   const userRole = profileData?.profile?.role ?? null;
   const userAvatarUrl = profileData?.profile?.avatar_url ?? null;
 

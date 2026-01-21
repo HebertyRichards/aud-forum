@@ -24,4 +24,5 @@ export interface UserWithProfile
   extends User,
     Partial<Pick<UserProfile, "username" | "avatar_url" | "role">> {
   access_token?: string;
+  avatarUrl?: string; // camelCase version from backend
 }

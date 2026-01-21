@@ -11,7 +11,6 @@ type OnlineContextType = {
 };
 
 type PresenceState = {
-  user_id: string;
   username: string;
   role: string;
   avatar_url: string | null;
@@ -68,10 +67,9 @@ export function OnlineUserProvider({
 
           if (user) {
             await channel.track({
-              user_id: user.id,
               username: user.username,
               role: user.role || "Visitante",
-              avatar_url: user.avatar_url || null,
+              avatar_url: user.avatarUrl || null,
               online_at: new Date().toISOString(),
             });
           }
