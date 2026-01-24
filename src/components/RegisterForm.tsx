@@ -58,7 +58,7 @@ export function RegisterForm({
 
   return (
     <form onSubmit={handleRegister} className="space-y-4 py-2">
-      <div className="space-y-2 text-white">
+      <div className="space-y-2">
         <Label htmlFor="username">{t("username")}</Label>
         <Input
           id="username"
@@ -66,11 +66,11 @@ export function RegisterForm({
           onChange={(e) => setUsername(e.target.value)}
           placeholder={t("usernamePlaceholder")}
           disabled={loading}
-          className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
+          className="dark:bg-slate-900 dark:border-slate-600 dark:placeholder:text-slate-400 bg-slate-300 border-slate-100 placeholder:text-slate-800"
           required
         />
       </div>
-      <div className="space-y-2 text-white">
+      <div className="space-y-2">
         <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
@@ -79,11 +79,11 @@ export function RegisterForm({
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t("emailPlaceholder")}
           disabled={loading}
-          className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
+          className="dark:bg-slate-900 dark:border-slate-600 dark:placeholder:text-slate-400 bg-slate-300 border-slate-100 placeholder:text-slate-800"
           required
         />
       </div>
-      <div className="space-y-2 text-white">
+      <div className="space-y-2">
         <Label htmlFor="password">{t("password")}</Label>
         <div className="relative">
           <Input
@@ -92,7 +92,7 @@ export function RegisterForm({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
-            className="bg-slate-900 border-slate-600 pr-10 text-white placeholder:text-slate-400"
+            className="dark:bg-slate-900 dark:border-slate-600 dark:placeholder:text-slate-400 bg-slate-300 border-slate-100 placeholder:text-slate-800"
             required
             placeholder="********"
           />
@@ -108,7 +108,7 @@ export function RegisterForm({
       </div>
       <Button
         type="submit"
-        className="w-full bg-blue-600 hover:bg-blue-500 mt-2"
+        className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 mt-2"
         disabled={loading}
       >
         {loading ? (
@@ -117,12 +117,12 @@ export function RegisterForm({
           t("registerButton")
         )}
       </Button>
-      <div className="text-center text-sm text-slate-400 mt-4">
+      <div className="text-center text-sm text-slate-700 dark:text-slate-400 mt-4">
         {t("hasAccount")}{" "}
         <Button
           type="button"
           onClick={onSwitchToLogin}
-          className="text-blue-400 hover:underline hover:text-blue-300 transition-colors bg-transparent hover:bg-transparent"
+          className="text-blue-500 hover:underline hover:text-blue-400 transition-colors bg-transparent hover:bg-transparent"
         >
           {t("loginHere")}
         </Button>

@@ -74,7 +74,7 @@ export default function NewPasswordForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md shadow-xl bg-slate-800 border-slate-700 text-white">
+      <Card className="w-full max-w-md shadow-xl dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
         <CardHeader>
           <CardTitle className="text-center">{t("title")}</CardTitle>
         </CardHeader>
@@ -86,7 +86,7 @@ export default function NewPasswordForm() {
               type={mostrarSenha ? "text" : "password"}
               value={novaSenha}
               onChange={(e) => setNovaSenha(e.target.value)}
-              className="bg-slate-700 border-slate-600"
+              className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
             />
             <button
               type="button"
@@ -101,11 +101,11 @@ export default function NewPasswordForm() {
               type="password"
               value={confirmacaoSenha}
               onChange={(e) => setConfirmacaoSenha(e.target.value)}
-              className="bg-slate-700 border-slate-600"
+              className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
             />
             <Button
               type="submit"
-              className="w-full mt-4 border border-slate-600 bg-slate-700 hover:bg-slate-600"
+              className="w-full mt-4 dark:border-slate-600 dark:bg-slate-700 dark:hover:bg-slate-600 border border-slate-100 bg-slate-200 hover:bg-slate-100"
               disabled={loading || !accessToken}
             >
               {loading ? t("updating") : t("updatePassword")}

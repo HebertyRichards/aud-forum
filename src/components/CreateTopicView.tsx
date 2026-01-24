@@ -5,7 +5,7 @@ import { useCreateTopic } from "@/hooks/useCreateTopic";
 import { useTranslations } from "next-intl";
 
 export function CreateTopicView({ category }: { category: string }) {
-  const tCommon = useTranslations("common");
+  const t = useTranslations("topics");
   const {
     title,
     setTitle,
@@ -17,9 +17,9 @@ export function CreateTopicView({ category }: { category: string }) {
   } = useCreateTopic(category);
 
   return (
-    <div className="flex w-full max-w-6xl mx-auto gap-6 p-4 text-white">
+    <div className="flex w-full max-w-6xl mx-auto gap-6 p-4">
       <div className="flex-1">
-        <h1 className="text-3xl font-bold mb-4">{tCommon("createTopic")}</h1>
+        <h1 className="text-3xl font-bold mb-4">{t("createTopic")}</h1>
         <PublishForm
           type="topic"
           onSubmit={() => handleTopicSubmit(true)}
@@ -29,7 +29,7 @@ export function CreateTopicView({ category }: { category: string }) {
           content={content}
           setContent={setContent}
           onImageAdd={addImage}
-          className="bg-slate-800"
+          className="bg-slate-200 dark:bg-slate-800"
         />
       </div>
     </div>

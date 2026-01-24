@@ -200,7 +200,7 @@ export function RichTextEditor({
   };
 
   return (
-    <div className="border rounded-md border-slate-600">
+    <div className="border rounded-md border-slate-400">
       <input
         type="file"
         accept="image/*"
@@ -209,7 +209,7 @@ export function RichTextEditor({
         className="hidden"
       />
       <TooltipProvider delayDuration={100}>
-        <div className="border-b border-slate-600 rounded-t-md p-2 flex items-center gap-1 flex-wrap">
+        <div className="border-b border-slate-400 rounded-t-md p-2 flex items-center gap-1 flex-wrap">
           <ToolbarButton
             tooltip="Negrito"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -273,7 +273,7 @@ export function RichTextEditor({
                 <ChevronDown size={16} className="ml-1" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2 max-h-72 overflow-y-auto bg-slate-700 text-white">
+            <PopoverContent className="w-64 p-2 max-h-72 overflow-y-auto dark:bg-slate-700 bg-slate-400">
               <div className="grid grid-cols-4 gap-1">
                 {[
                   8, 10, 12, 14, 16, 20, 24, 26, 30, 32, 36, 40, 48, 60, 72, 80,
@@ -318,7 +318,7 @@ export function RichTextEditor({
                 <Smile size={16} />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-2 bg-slate-700">
+            <PopoverContent className="w-auto p-2 dark:bg-slate-700 bg-slate-200">
               <div className="text-xl grid grid-cols-8 gap-1">
                 {smilies.map((smiley, index) => (
                   <span

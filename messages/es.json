@@ -35,7 +35,14 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "search": "Buscar",
-    "noResults": "No se encontraron resultados"
+    "noResults": "No se encontraron resultados",
+    "publishTopic": "Publicar tema",
+    "publishComment": "Publicar comentario",
+    "light": "Claro",
+    "dark": "Oscuro", 
+    "system": "Sistema",
+    "topicTitle": "Título del tema",
+    "topicTitlePlaceholder": "Introduce el título del tema"
   },
   "footer": {
     "slogan": "Una de las familias más respetadas de SA-MP, construyendo legado y tradición durante más de 5 años.",
@@ -109,8 +116,14 @@
     "totalComments": "Comentarios Totales",
     "allAbout": "Todo sobre {name}",
     "avatarAlt": "Avatar de {name}",
-    "noTopics": "Sin temas aún."
-  },
+    "noTopics": "Sin temas aún.",
+    "genderOptions": {
+      "male": "Masculino",
+      "female": "Feminino",
+      "other": "Outro"
+    },
+    "percentagePosts": "% Posts" 
+    },
   "auth": {
     "email": "Correo electrónico",
     "password": "Contraseña",
@@ -164,7 +177,8 @@
     "topicNotFound": "Tema no encontrado.",
     "checkingPermission": "Verificando permisos...",
     "cannotComment": "No puedes comentar en esta sección.",
-    "backToCategory": "Volver a "
+    "backToCategory": "Volver a ",
+    "loading": "Cargando..."  
   },
   "editor": {
     "bold": "Negrita",

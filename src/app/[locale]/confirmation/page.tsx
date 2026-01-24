@@ -28,7 +28,7 @@ export default function SuccessRegister() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="max-w-md w-full bg-slate-800 text-white border-slate-700">
+      <Card className="max-w-md w-full dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
         <CardHeader className="text-center">
           <CardTitle>{t("title")}</CardTitle>
           <CardDescription>
@@ -36,7 +36,7 @@ export default function SuccessRegister() {
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <p className="text-slate-300">
+          <p className="text-slate-700 dark:text-slate-300">
             {t("welcome")}
           </p>
         </CardContent>

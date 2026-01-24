@@ -54,12 +54,12 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
+        <Button className="w-full cursor-pointer dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border border-slate-100 hover:bg-slate-100 dark:hover:bg-slate-600">
           {tSettings("updateContacts")}
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
+      <DialogContent className="max-w-md mx-auto dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
         <DialogHeader>
           <DialogTitle>{tSettings("editContacts")}</DialogTitle>
         </DialogHeader>
@@ -73,7 +73,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
               value={form.website}
               onChange={handleChange}
               disabled={isPending}
-              className="bg-slate-700 border border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <div className="space-y-1">
@@ -84,7 +84,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
               value={form.facebook}
               onChange={handleChange}
               disabled={isPending}
-              className="bg-slate-700 border border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <div className="space-y-1">
@@ -95,7 +95,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
               value={form.instagram}
               onChange={handleChange}
               disabled={isPending}
-              className="bg-slate-700 border border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <div className="space-y-1">
@@ -106,7 +106,7 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
               value={form.discord}
               onChange={handleChange}
               disabled={isPending}
-              className="bg-slate-700 border border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <div className="space-y-1">
@@ -117,13 +117,13 @@ export function UpdateContacts({ profile, onSuccess }: ProfileUpdateFormProps) {
               value={form.steam}
               onChange={handleChange}
               disabled={isPending}
-              className="bg-slate-700 border border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <Button
             type="submit"
             disabled={isPending}
-            className="w-full bg-blue-600 hover:bg-blue-500 mt-4"
+            className="w-full bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-400 mt-4"
           >
             {isPending ? (
               <>

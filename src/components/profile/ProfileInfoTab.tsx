@@ -28,7 +28,7 @@ export function ProfileInfoTab({
 
   return (
     <TabsContent value="perfil" className="mt-4">
-      <Card className="border-gray-700 bg-slate-800 text-white">
+      <Card className="dark:border-gray-700 dark:bg-slate-800 border-gray-100 bg-slate-200">
         <CardHeader>
           <CardTitle>{t("info")}</CardTitle>
           {isOwnProfile && profile && (
@@ -52,7 +52,7 @@ export function ProfileInfoTab({
         </CardHeader>
         <CardContent className="space-y-4">
           {isUpdating && (
-            <div className="text-sm text-white flex items-center gap-2 mb-2">
+            <div className="text-sm flex items-center gap-2 mb-2">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               {tCommon("loading")}
             </div>
@@ -61,27 +61,27 @@ export function ProfileInfoTab({
             <span className="font-semibold">{t("gender")}:</span>
             <span>{profile?.gender || "--"}</span>
           </div>
-          <Separator className="bg-gray-600" />
+          <Separator className="dark:bg-gray-700 bg-gray-100" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">{tForum("messages")}:</span>
             <span>{profile?.mensagens_count ?? "--"}</span>
           </div>
-          <Separator className="bg-gray-600" />
+          <Separator className="dark:bg-gray-700 bg-gray-100" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">{t("birthdate")}:</span>
             <span>{formatDate(profile?.birthdate)}</span>
           </div>
-          <Separator className="bg-gray-600" />
+          <Separator className="dark:bg-gray-700 bg-gray-100" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">{t("dateOfSubscribed")}:</span>
             <span>{formatDate(profile?.joined_at)}</span>
           </div>
-          <Separator className="bg-gray-600" />
+          <Separator className="dark:bg-gray-700 bg-gray-100" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">{t("lastVisit")}:</span>
             <span>{formatLastLogin(profile?.last_login ?? null)}</span>
           </div>
-          <Separator className="bg-gray-600" />
+          <Separator className="dark:bg-gray-700 bg-gray-100" />
           <div className="flex justify-between py-3">
             <span className="font-semibold">{t("location")}:</span>
             <span>{profile?.location || "--"}</span>

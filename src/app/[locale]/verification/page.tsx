@@ -9,9 +9,9 @@ export default function VerificationEmail() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md shadow-xl bg-slate-800 text-white border-slate-700">
+      <Card className="w-full max-w-md shadow-xl dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
         <CardHeader className="flex flex-col items-center text-center space-y-2">
-          <MailCheck className="w-10 h-10 text-white" />
+          <MailCheck className="w-10 h-10" />
           <CardTitle className="text-2xl font-semibold">
             {t("title")}
           </CardTitle>

@@ -58,9 +58,9 @@ export default function RecoveryPassword() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <main className="grow flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-gray-700 text-gray-300 bg-slate-800">
+        <Card className="w-full max-w-md dark:border-gray-700 dark:text-gray-300 dark:bg-slate-800 border-gray-100 text-gray-700 bg-slate-200">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-white">
+            <CardTitle className="text-2xl">
               {t("title")}
             </CardTitle>
             <CardDescription className="pt-2">
@@ -70,7 +70,7 @@ export default function RecoveryPassword() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col space-y-2">
-                <Label htmlFor="email" className="text-gray-300">
+                <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
                   {tAuth("email")}
                 </Label>
                 <Input
@@ -79,7 +79,7 @@ export default function RecoveryPassword() {
                   placeholder={tAuth("emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-slate-700 border-slate-600 "
+                  className="dark:bg-slate-700 dark:border-slate-600 "
                 />
               </div>
             </form>
@@ -88,12 +88,12 @@ export default function RecoveryPassword() {
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              className="dark:bg-slate-700 dark:border-slate-600 bg-slate-100 border border-slate-100 dark:hover:bg-slate-600"
             >
               {loading ? t("sending") : t("sendLink")}
             </Button>
             <Button variant="link" asChild>
-              <Link href="/" className="text-white hover:text-blue-300">
+              <Link href="/" className="hover:text-blue-300">
                 {t("backToLogin")}
               </Link>
             </Button>

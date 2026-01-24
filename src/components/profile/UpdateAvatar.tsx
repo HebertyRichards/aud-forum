@@ -54,7 +54,7 @@ export function UpdateAvatar({ currentAvatarUrl }: UpdateAvatarProps) {
           <>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-full hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
               title="Alterar avatar"
             >
               <Camera className="h-6 w-6" />
@@ -62,7 +62,7 @@ export function UpdateAvatar({ currentAvatarUrl }: UpdateAvatarProps) {
             {currentAvatarUrl && (
               <button
                 onClick={() => deleteAvatar()}
-                className="p-2 rounded-full hover:bg-gray-700 transition-colors text-red-400"
+                className="p-2 rounded-full hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors text-red-400"
                 title="Remover avatar"
               >
                 <Trash2 className="h-6 w-6" />

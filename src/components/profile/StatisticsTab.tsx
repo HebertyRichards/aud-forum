@@ -28,7 +28,7 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
   if (!stats) return null;
 
   return (
-    <Card className="border-slate-700 bg-slate-800 text-white">
+    <Card className="dark:border-slate-700 dark:bg-slate-800 border-slate-100 bg-slate-200">
       <CardHeader>
         <CardTitle>{t("statistics")}</CardTitle>
       </CardHeader>
@@ -39,21 +39,21 @@ export function StatisticsTab({ username }: StatisticsTabProps) {
             {stats.topicsCount} ({stats.topicsPerDay}/day)
           </span>
         </div>
-        <Separator className="bg-slate-600" />
+        <Separator className="dark:bg-slate-600 bg-slate-200" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">{t("totalComments")}:</span>
           <span>
             {stats.messagesCount} ({stats.messagesPerDay}/day)
           </span>
         </div>
-        <Separator className="bg-slate-600" />
+        <Separator className="dark:bg-slate-600 bg-slate-200" />
         <div className="flex justify-between py-2">
           <span className="font-semibold">{t("lastVisit")}:</span>
           <span>{formatPostTimestamp(stats.lastPostDate ?? null)}</span>
         </div>
-        <Separator className="bg-slate-600" />
+        <Separator className="dark:bg-slate-600 bg-slate-200" />
         <div className="flex justify-between py-2">
-          <span className="font-semibold">% posts:</span>
+          <span className="font-semibold">{t("percentagePosts")}:</span>
           <span>{stats.messagesPercentage}%</span>
         </div>
       </CardContent>

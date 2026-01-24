@@ -38,14 +38,14 @@ export function FollowListModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <Card className="w-full max-w-md border-gray-700 bg-slate-800 relative animate-in fade-in-0 zoom-in-95">
+      <Card className="w-full max-w-md dark:border-gray-700 dark:bg-slate-800 border-gray-100 bg-slate-200 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader className="text-center">
-          <CardTitle className="capitalize text-white">
+          <CardTitle className="capitalize">
             {listType === "followers" ? t("followers") : t("following")}
           </CardTitle>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-opacity"
+            className="absolute top-3 right-3 dark:text-gray-400 text-gray-700 hover:text-red-500 transition-opacity"
           >
             <X size={24} />
           </button>
@@ -66,7 +66,7 @@ export function FollowListModal({
               {users.map((user) => (
                 <li
                   key={user.username}
-                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-slate-700 text-white"
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-100"
                 >
                   <Link
                     href={`/profile/${user.username}`}
@@ -75,7 +75,7 @@ export function FollowListModal({
                   >
                     <Avatar>
                       <AvatarImage src={user.avatar_url || undefined} />
-                      <AvatarFallback className="bg-slate-600">
+                      <AvatarFallback className="dark:bg-slate-600 bg-slate-100">
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -130,7 +130,7 @@ export function FollowListModal({
               ))}
             </ul>
           ) : (
-            <p className="text-center text-gray-400 py-4">
+            <p className="text-center text-gray-700 dark:text-gray-400 py-4">
               {t("noUsersToShow")}
             </p>
           )}

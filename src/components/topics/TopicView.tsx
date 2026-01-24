@@ -115,7 +115,7 @@ export const TopicView = ({
     return (
       <div className="flex items-center gap-2">
         <Button
-          className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+          className="dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-200 border-slate-200 hover:bg-slate-100"
           size="sm"
           onClick={() => setIsEditing(true)}
         >
@@ -136,7 +136,7 @@ export const TopicView = ({
   };
 
   return (
-    <Card className="border border-slate-700 bg-slate-800 text-white">
+    <Card className="bg-slate-200 border-slate-200 dark:border-slate-700 darkbg-slate-800">
       {isEditing ? (
         <form onSubmit={handleUpdate} className="p-6">
           <div className="space-y-4">
@@ -219,7 +219,15 @@ export const TopicView = ({
           </div>
           <div
             className="prose dark:prose-invert max-w-none prose-ol:list-decimal prose-ul:list-disc"
-            dangerouslySetInnerHTML={{ __html: topic.content }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(topic.content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+                allowedAttributes: {
+                  ...sanitizeHtml.defaults.allowedAttributes,
+                  "*": ["style", "class"],
+                },
+              }),
+            }}
           />
         </CardContent>
       )}

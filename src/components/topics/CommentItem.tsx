@@ -64,7 +64,7 @@ export const CommentItem = ({
   return (
     <Card
       key={comment.id}
-      className="bg-slate-800 border-slate-700/50 text-white"
+      className="dark:bg-slate-800 dark:border-slate-700/50 bg-slate-200 border-slate-100/50"
     >
       <CardContent className="p-5 flex gap-4">
         <Link href={`/profile/${comment.profiles.username}`}>
@@ -73,7 +73,7 @@ export const CommentItem = ({
               src={getOptimizedAvatarUrl(comment.profiles.avatar_url, 40)}
               alt={tProfile("avatarAlt", { name: comment.profiles.username })}
             />
-            <AvatarFallback className="bg-slate-600">
+            <AvatarFallback className="bg-slate-200 dark:bg-slate-600">
               {comment.profiles.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -90,7 +90,7 @@ export const CommentItem = ({
               </p>
             </Link>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-700 dark:text-gray-700">
                 {formatPostTimestamp(comment.created_in)}
               </p>
               {user && user.id === comment.author_id && !isEditing && (
@@ -139,7 +139,7 @@ export const CommentItem = ({
               />
               {comment.updated_in &&
                 new Date(comment.updated_in) > new Date(comment.created_in) && (
-                  <p className="text-xs text-slate-400 italic mt-1">
+                  <p className="text-xs text-slate-700 dark:text-slate-400 italic mt-1">
                     {tTopics("edited")}{" "}
                     {formatPostTimestamp(comment.updated_in).toLowerCase()}
                   </p>

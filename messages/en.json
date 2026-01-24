@@ -35,7 +35,14 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "search": "Search",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "publishTopic": "publish topic",
+    "publishComment": "publish comment",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "topicTitle": "Topic Title",
+    "topicTitlePlaceholder": "Enter topic title"
   },
   "footer": {
     "slogan": "One of the most respected families on SA-MP, building legacy and tradition for over 5 years.",
@@ -109,7 +116,13 @@
     "totalComments": "Total Comments",
     "allAbout": "All about {name}",
     "avatarAlt": "Avatar of {name}",
-    "noTopics": "No topics yet."
+    "noTopics": "No topics yet.",
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "percentagePosts": "% Posts" 
   },
   "auth": {
     "email": "Email",
@@ -164,7 +177,8 @@
     "topicNotFound": "Topic not found.",
     "checkingPermission": "Checking permission...",
     "cannotComment": "You cannot comment in this section.",
-    "backToCategory": "Back to "
+    "backToCategory": "Back to ",
+    "loading":"loading..."
   },
   "editor": {
     "bold": "Bold",

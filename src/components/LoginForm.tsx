@@ -54,7 +54,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   return (
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="grid gap-2">
-        <Label htmlFor="email" className="text-white">
+        <Label htmlFor="email">
           {t("email")}
         </Label>
         <Input
@@ -66,18 +66,18 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           autoFocus
           placeholder={t("emailPlaceholder")}
           required
-          className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
+          className="dark:bg-slate-900 dark:border-slate-600 dark:placeholder:text-slate-400 bg-slate-300 border-slate-100 placeholder:text-slate-800"
           disabled={loading}
         />
       </div>
       <div className="grid gap-2">
         <div className="flex items-center">
-          <Label htmlFor="password" className="text-white">
+          <Label htmlFor="password">
             {t("password")}
           </Label>
           <Link
             href="/recovery-password"
-            className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-slate-400 hover:text-white"
+            className="ml-auto inline-block text-sm underline-offset-4 hover:underline dark:text-slate-400 dark:hover:text-white text-slate-700 hover:text-black"
           >
             {t("forgotPassword")}
           </Link>
@@ -90,7 +90,7 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             required
-            className="bg-slate-900 border-slate-600 pr-10 text-white placeholder:text-slate-400"
+          className="dark:bg-slate-900 dark:border-slate-600 dark:placeholder:text-slate-400 bg-slate-300 border-slate-100 placeholder:text-slate-800"
             placeholder="********"
             disabled={loading}
           />
@@ -116,11 +116,11 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           checked={keepLoggedIn}
           onCheckedChange={(checked) => setKeepLoggedIn(!!checked)}
           disabled={loading}
-          className="border-slate-600 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-400"
+          className="dark:border-slate-600 border-slate-100 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-400"
         />
         <Label
           htmlFor="keep-logged-in"
-          className="text-sm font-medium leading-none text-white"
+          className="text-sm font-medium leading-none"
         >
           {t("rememberMe")}
         </Label>
@@ -128,12 +128,12 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
       <div className="flex flex-col gap-4 pt-2">
         <Button
           type="submit"
-          className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400 text-white"
+          className="w-full bg-blue-500 border border-blue-400 hover:bg-blue-400"
           disabled={loading}
         >
           {loading ? t("loggingIn") : t("loginButton")}
         </Button>
-        <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-slate-700 dark:text-slate-400">
           {t("noAccount")}{" "}
           <Button
             type="button"

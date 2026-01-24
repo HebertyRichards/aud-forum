@@ -53,14 +53,14 @@ export default function SettingsPage() {
       ) : activeForm === "password" ? (
         <PasswordCard onClose={() => setActiveForm(null)} />
       ) : (
-        <div className="flex-1 space-y-8 p-8 pt-6 text-white">
+        <div className="flex-1 space-y-8 p-8 pt-6">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
             <p className="text-muted-foreground">
               {t("manageSettings")}
             </p>
           </div>
-          <Card className="bg-slate-800 text-white border-slate-700">
+          <Card className="bg-slate-200 dark:bg-slate-800 dark:border-slate-700 border-slate-100">
             <CardHeader>
               <CardTitle>{t("profileAndPassword")}</CardTitle>
               <CardDescription>
@@ -76,7 +76,7 @@ export default function SettingsPage() {
                   </p>
                 </div>
               </div>
-              <Separator className="bg-slate-600" />
+              <Separator className="bg-slate-100 dark:bg-slate-700" />
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0 mr-4">
                   <p className="font-medium">{tAuth("email")}</p>
@@ -85,20 +85,20 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <Button
-                  className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
                   onClick={() => setActiveForm("profile")}
                 >
                   {t("updateProfile")}
                 </Button>
               </div>
-              <Separator className="bg-slate-600" />
+              <Separator className="bg-slate-100 dark:bg-slate-700" />
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0 mr-4">
                   <p className="font-medium">{tAuth("password")}</p>
                   <p className="text-sm text-muted-foreground">********</p>
                 </div>
                 <Button
-                  className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
                   onClick={() => setActiveForm("password")}
                 >
                   {t("changePassword")}

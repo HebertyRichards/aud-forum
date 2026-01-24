@@ -24,6 +24,7 @@ import { formatDateForInput } from "@/utils/dateUtils";
 import { UserProfile } from "@/schema/user";
 import { useUpdateProfileData } from "@/hooks/useUpdateProfileData";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 interface ProfileUpdateFormProps {
   profile: Partial<UserProfile>;
@@ -63,14 +64,18 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
     mutate({ ...form, id: user?.id });
   }
 
+if(error) {
+  toast.error("Erro ao atualizar perfil");
+}
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full cursor-pointer bg-slate-700 border border-slate-600 hover:bg-slate-600">
+        <Button className="w-full cursor-pointer dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border border-slate-100 hover:bg-slate-100 dark:hover:bg-slate-600">
           {tSettings("updateProfile")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto bg-slate-800 text-white border-slate-700">
+      <DialogContent className="max-w-md mx-auto dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
         <DialogHeader>
           <DialogTitle>{tSettings("editPersonalInfo")}</DialogTitle>
         </DialogHeader>
@@ -84,11 +89,11 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
             >
               <SelectTrigger
                 id="gender"
-                className="w-full border-slate-600 bg-slate-700 text-white"
+                className="w-full dark:border-slate-600 dark:bg-slate-700 border-slate-100 bg-slate-200"
               >
                 <SelectValue placeholder={tCommon("select")} />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 text-white border-slate-700">
+              <SelectContent className="dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
                 <SelectItem value="Masculino">{tProfile("genderOptions.male")}</SelectItem>
                 <SelectItem value="Feminino">{tProfile("genderOptions.female")}</SelectItem>
                 <SelectItem value="Outro">{tProfile("genderOptions.other")}</SelectItem>
@@ -102,9 +107,9 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
               name="birthdate"
               type="date"
               value={form.birthdate}
-              onChange={handleChange}
+              onChange={handleChange} 
               disabled={isPending}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <div className="space-y-1">
@@ -116,13 +121,13 @@ export function UpdateData({ profile, onSuccess }: ProfileUpdateFormProps) {
               onChange={handleChange}
               disabled={isPending}
               placeholder={tProfile("locationPlaceholder")}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100"
             />
           </div>
           <Button
             type="submit"
             disabled={isPending}
-            className="w-full bg-blue-600 hover:bg-blue-500 mt-4"
+            className="w-full bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-400 mt-4"
           >
             {isPending ? (
               <>

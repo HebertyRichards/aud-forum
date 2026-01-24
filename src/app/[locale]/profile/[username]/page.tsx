@@ -47,7 +47,7 @@ export default function OtherProfile() {
 
   if (auth.loading || (isLoading && !data)) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
         <p className="ml-2">{t("loading")}</p>
       </div>
@@ -69,7 +69,7 @@ export default function OtherProfile() {
   };
 
   return (
-    <div className="min-h-screen font-sans text-white">
+    <div className="min-h-screen font-sans">
       <main className="p-4 md:p-8 max-w-7xl mx-auto">
         <UserProfileLayout
           profile={profile ?? null}

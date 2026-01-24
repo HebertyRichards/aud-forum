@@ -25,7 +25,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
     );
 
   return (
-    <Card className="border-slate-700 bg-slate-800 text-white">
+    <Card className="dark:border-slate-700 dark:bg-slate-800 border-slate-100 bg-slate-200">
       <CardHeader>
         <CardTitle>{t("topics")}</CardTitle>
       </CardHeader>
@@ -35,7 +35,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
             {topics.map((topic) => (
               <li
                 key={topic.title}
-                className="border-b border-slate-700 pb-3 last:border-b-0"
+                className="dark:border-slate-700 border-slate-100 pb-3 last:border-b-0"
               >
                 <Link
                   href={`/topics/${topic.category}/${topic.slug}`}
@@ -43,7 +43,7 @@ export function TopicsTab({ username }: StatisticsTabProps) {
                 >
                   <h3 className="font-semibold">{topic.title}</h3>
                 </Link>
-                <div className="text-xs text-gray-400 flex justify-between items-center mt-1">
+                <div className="text-xs text-gray-400 dark:text-gray-700 flex justify-between items-center mt-1">
                   <span>{formatDate(topic.created_in)}</span>
                   <span className="flex items-center gap-1">
                     <MessageSquare size={12} />{" "}

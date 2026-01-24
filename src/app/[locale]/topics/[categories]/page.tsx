@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import {
   useQueryClient,
 } from "@tanstack/react-query";
@@ -121,19 +121,17 @@ const PaginationControls = ({
 
 export default function CategoryTopicPage() {
   const params = useParams();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
-  const isCategoryValid = !!category;
   const [currentPage, setCurrentPage] = useState(1);
   const [view, setView] = useState<"list" | "create">("list");
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
     usePermissions();
 
   const tTopics = useTranslations("topics");
+  const tCategories = useTranslations("categories");
   const tCommon = useTranslations("common");
-  const tAuth = useTranslations("auth");
 
   const { isLoading, data, isFetching, TOPICS_PER_PAGE } = useGetTopicsByCategory(
     category,
@@ -144,7 +142,11 @@ export default function CategoryTopicPage() {
   const topics = data?.data ?? [];
   const totalTopics = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalTopics / TOPICS_PER_PAGE);
-  const pageTitle = category ?? tTopics("title");
+  const finalCategory = tCategories.has(category)
+    ? tCategories(category)
+    : category.replace(/-/g, " ");
+
+  const pageTitle = finalCategory ?? tTopics("title");
 
   useEffect(() => {
     if (user && category) {
@@ -152,11 +154,14 @@ export default function CategoryTopicPage() {
     }
   }, [user, category, checkTopicPermission]);
 
+  const isValidCategory = tCategories.has(category);
+  const isCategoryValid = !!category && isValidCategory;
+
   useEffect(() => {
-    if (category && !isCategoryValid) {
-      router.replace("/not-found");
+    if (category && !isValidCategory) {
+      notFound();
     }
-  }, [category, isCategoryValid, router]);
+  }, [category, isValidCategory]);
 
   useEffect(() => {
     if (currentPage < totalPages && isCategoryValid) {
@@ -182,7 +187,7 @@ export default function CategoryTopicPage() {
     }
     if (canCreateTopic === false) {
       toast.error(
-        "Você não tem permissão para criar um tópico nesta categoria." // TODO: Add translation for this specific permission error if needed
+        "Você não tem permissão para criar um tópico nesta categoria."
       );
       return;
     }
@@ -196,12 +201,12 @@ export default function CategoryTopicPage() {
   };
 
   const renderHeader = () => (
-    <div className="flex justify-between items-center mb-6 text-white">
+    <div className="flex justify-between items-center mb-6">
       <h1 className="text-xl font-bold">{pageTitle}</h1>
       <div className="flex gap-2">
         {view === "create" ? (
           <Button
-            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            className="dark:bg-slate-700 bg-slate-200 dark:border-slate-600 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
             onClick={handleBackToList}
             size="sm"
           >
@@ -211,7 +216,7 @@ export default function CategoryTopicPage() {
         ) : (
           <Button
             onClick={handleNewTopicClick}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-400 cursor-pointer"
             disabled={isCheckingTopic || !isCategoryValid}
             size="sm"
           >
@@ -226,7 +231,7 @@ export default function CategoryTopicPage() {
   const renderMainContent = () => {
     if (isLoading) {
       return (
-        <div className="text-center p-10 text-white">{tCommon("loading")}</div>
+        <div className="text-center p-10">{tCommon("loading")}</div>
       );
     }
 
@@ -252,7 +257,7 @@ export default function CategoryTopicPage() {
               key={topic.slug}
               className="block"
             >
-              <Card className="p-4 border bg-slate-800 border-gray-700 hover:border-blue-500 transition-colors duration-300 text-white">
+              <Card className="p-4 border dark:bg-slate-800 dark:border-gray-700 bg-slate-200 border-slate-100 hover:border-blue-500 transition-colors duration-300">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Avatar>
@@ -295,7 +300,7 @@ export default function CategoryTopicPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 border-">
           <Button
-            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            className="bg-slate-200 dark:bg-slate-700 border-slate-100 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-100"
             asChild
           >
             <Link href="/topics">

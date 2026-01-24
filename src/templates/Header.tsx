@@ -83,7 +83,7 @@ export default function Header() {
 
   const fullScreenModalClasses =
     "fixed z-[100] left-0 top-0 w-screen h-[100dvh] max-w-none m-0 p-0 " +
-    "translate-x-0 translate-y-0 rounded-none border-none bg-slate-800 " +
+    "translate-x-0 translate-y-0 rounded-none border-none bg-slate-200 dark:bg-slate-800 " +
     "flex flex-col justify-center items-center data-[state=open]:animate-in data-[state=closed]:animate-out";
 
   return (
@@ -129,14 +129,14 @@ export default function Header() {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-slate-800 text-white border-slate-700" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
+                <DropdownMenuContent className="w-56 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700" align="end" forceMount>
+                      <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{getUsername()}</p>
-                      <p className="text-xs leading-none text-slate-400">{auth.user.email}</p>
+                      <p className="text-xs leading-none text-slate-600 dark:text-slate-400">{auth.user.email}</p>
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-slate-700" />
+                  <DropdownMenuSeparator className="bg-slate-300 dark:bg-slate-700" />
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer flex items-center">
                       <UserCircle className="mr-2 h-4 w-4" /> {t("profile")}
@@ -147,7 +147,7 @@ export default function Header() {
                       <Settings className="mr-2 h-4 w-4" /> {t("settings")}
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-slate-700" />
+                  <DropdownMenuSeparator className="bg-slate-300 dark:bg-slate-700" />
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="cursor-pointer text-red-500 data-highlighted:bg-red-900/50 data-highlighted:text-red-400"
@@ -163,16 +163,16 @@ export default function Header() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-blue-600 border-blue-500 text-white hover:bg-blue-500 hover:text-white"
+                      className="bg-blue-600 border-blue-500 hover:bg-blue-500"
                     >
                       {t("login")}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:rounded-lg md:border md:border-slate-700 md:bg-slate-800 md:p-6`}>
+                  <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:rounded-lg md:border border-slate-200 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 p-6`}>
                     <div className="w-full max-w-md px-6 md:px-0">
                       <DialogHeader className="mb-6">
-                        <DialogTitle className="text-center text-2xl text-white">{t("welcomeBack")}</DialogTitle>
-                        <DialogDescription className="text-center text-slate-400">{t("accessAccount")}</DialogDescription>
+                        <DialogTitle className="text-center text-2xl text-slate-900 dark:text-white">{t("welcomeBack")}</DialogTitle>
+                        <DialogDescription className="text-center text-slate-600 dark:text-slate-400">{t("accessAccount")}</DialogDescription>
                       </DialogHeader>
                       <LoginForm onSuccess={() => setIsLoginOpen(false)} onSwitchToRegister={openRegister} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsLoginOpen(false)}>
@@ -191,11 +191,11 @@ export default function Header() {
                       {t("register")}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:max-h-[85vh] md:rounded-lg md:border md:border-slate-700 md:bg-slate-800 md:p-6 md:overflow-y-auto`}>
+                  <DialogContent className={`${fullScreenModalClasses} md:fixed md:z-50 md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-full md:max-w-md md:h-auto md:rounded-lg md:border border-slate-200 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 md:p-6`}>
                     <div className="w-full max-w-md px-6 md:px-0 flex flex-col items-center">
                       <DialogHeader className="mb-6 w-full">
-                        <DialogTitle className="text-center text-2xl text-white">{t("createAccount")}</DialogTitle>
-                        <DialogDescription className="text-center text-slate-400">{t("fillData")}</DialogDescription>
+                        <DialogTitle className="text-center text-2xl text-slate-900 dark:text-white">{t("createAccount")}</DialogTitle>
+                        <DialogDescription className="text-center text-slate-600 dark:text-slate-400">{t("fillData")}</DialogDescription>
                       </DialogHeader>
                       <RegisterForm onSuccess={() => setIsRegisterOpen(false)} onSwitchToLogin={openLogin} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsRegisterOpen(false)}>
@@ -207,7 +207,8 @@ export default function Header() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="dark:bg-slate-700 bg-slate-200 border dark:border-slate-600 border-slate-400 hover:dark:bg-slate-600 hover:bg-slate-300 dark:text-white text-slate-900 md:hidden"
+                  className="dark:bg-slate-700 bg-slate-200 border dark:border-s
+                  late-600 border-slate-400 hover:dark:bg-slate-600 hover:bg-slate-300 dark:text-white text-slate-900 md:hidden"
                   onClick={openRegister}
                 >
                       {t("register")}

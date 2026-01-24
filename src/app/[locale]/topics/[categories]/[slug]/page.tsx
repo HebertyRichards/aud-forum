@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { notFound } from "next/navigation";
+import { useEffect, useEffectEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTopicPage } from "@/hooks/useTopic";
 import { PublishForm } from "@/components/PublishTopicForm";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,13 @@ import { TopicView } from "@/components/topics/TopicView";
 import { CommentList } from "@/components/topics/CommentList";
 import { DisabledCommentForm } from "@/components/topics/DisabledCommentForm";
 import { useTranslations } from "next-intl";
+import sanitizeHtml from "sanitize-html";
 
 const COMMENTS_PER_PAGE = 10;
 
 export default function TopicPage() {
-  const router = useRouter();
   const t = useTranslations("topics");
+  const tCategories = useTranslations("categories");
   const {
     topic,
     isLoading,
@@ -38,15 +39,15 @@ export default function TopicPage() {
     handlePageChange,
   } = useTopicPage();
 
-  useEffect(() => {
+  const checkCategory = useEffectEvent(() => {
     if (topic && category && topic.category !== category) {
-      router.replace("/not-found");
+      notFound();
     }
-  }, [topic, category, router]);
+  });
 
   useEffect(() => {
     if (!topic) return;
-
+    checkCategory();
     const setupSpoilers = () => {
       const spoilerBlocks = document.querySelectorAll(
         ".prose blockquote:not(.spoiler-initialized)"
@@ -68,7 +69,13 @@ export default function TopicPage() {
 
         const content = document.createElement("div");
         content.className = "spoiler-content";
-        content.innerHTML = originalContent;
+        content.innerHTML = sanitizeHtml(originalContent, {
+          allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+          allowedAttributes: {
+            ...sanitizeHtml.defaults.allowedAttributes,
+            "*": ["style", "class"],
+          },
+        });
 
         spoiler.appendChild(header);
         spoiler.appendChild(content);
@@ -82,35 +89,27 @@ export default function TopicPage() {
     setupSpoilers();
   }, [topic]);
 
-  const categoryTitles: { [key: string]: string } = {
-    downloads: "Downloads",
-    manuals: "Manuais",
-    "general-discussions": "Discussões Gerais",
-    members: "Área dos Membros",
-    subscribe: "Inscrições",
-    updates: "Atualizações",
-  };
 
   const totalPages = Math.ceil(totalComments / COMMENTS_PER_PAGE);
 
   if (isLoading) {
     return (
-      <div className="text-center p-10 text-white">{t("loading")}</div>
+      <div className="text-center p-10">{t("loading")}</div>
     );
   }
 
   if (error) {
-    return <div className="text-center p-10 text-red-500">{error}</div>;
+    return notFound();
   }
 
   if (!topic) {
     return (
-      <div className="text-center p-10 text-white">{t("topicNotFound")}</div>
+      <div className="text-center p-10">{t("topicNotFound")}</div>
     );
   }
 
   if (!topic || (category && topic.category !== category)) {
-    return null;
+    return notFound();
   }
 
   const renderCommentBox = () => {
@@ -147,17 +146,17 @@ export default function TopicPage() {
   return (
     <>
       <Toaster position="bottom-right" richColors />
-      <div className="min-h-screen font-sans p-4 md:p-8 text-white">
+      <div className="min-h-screen font-sans p-4 md:p-8">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="mb-4">
             <Button
-            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            className="dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-200 border-slate-100 hover:bg-slate-100"
               asChild
             >
               <Link href={`/topics/${category}`}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 {t("backToCategory")}
-                {categoryTitles[category] || category.replace(/-/g, " ")}{" "}
+                {tCategories.has(category) ? tCategories(category) : category.replace(/-/g, " ")}{" "}
               </Link>
             </Button>
           </div>
@@ -169,7 +168,7 @@ export default function TopicPage() {
             isSubmitting={isSubmitting}
           />
 
-          <Separator className="bg-gray-700" />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
 
           <h2 className="text-2xl font-semibold">
             {t("comments")} ({totalComments})

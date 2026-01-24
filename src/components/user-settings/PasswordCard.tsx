@@ -43,7 +43,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
-      <Card className="bg-slate-800 text-white border-slate-700">
+      <Card className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
         <CardHeader>
           <CardTitle>{t("changePassword")}</CardTitle>
           <CardDescription>
@@ -59,14 +59,14 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
                 type={showPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="bg-slate-700 border-slate-600 pr-10"
+                className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 pr-10"
                 disabled={isPending}
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 text-slate-400 hover:bg-slate-600 hover:text-white"
+                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 dark:text-slate-400 text-slate-700 dark:hover:bg-slate-600 hover:bg-slate-100 hover:text-black dark:hover:text-white"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isPending}
               >
@@ -83,7 +83,7 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="max-w-sm bg-slate-700 border-slate-600"
+              className="max-w-sm dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
               disabled={isPending}
             />
           </CardContent>
@@ -91,13 +91,13 @@ export function PasswordCard({ onClose }: PasswordCardProps) {
             <Button
               type="submit"
               disabled={isPending}
-              className="bg-blue-500 hover:bg-blue-600"
+              className="bg-blue-500 dark:over:bg-blue-600 hover:bg-blue-400"
             >
               {isPending ? tCommon("loading") : t("updatePassword")}
             </Button>
             <Button
               type="button"
-              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
               onClick={onClose}
               disabled={isPending}
             >

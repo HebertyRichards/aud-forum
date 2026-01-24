@@ -34,7 +34,7 @@ export const FollowerList = ({ username, type }: FollowerListProps) => {
 
   if (!list || list.length === 0) {
     return (
-      <p className="text-center text-sm text-gray-400 py-4">
+      <p className="text-center text-sm dark:text-gray-400 text-gray-700 py-4">
         {t("noUsersToShow")}
       </p>
     );
@@ -49,7 +49,7 @@ export const FollowerList = ({ username, type }: FollowerListProps) => {
               src={user.avatar_url || undefined}
               alt={`Avatar de ${user.username}`}
             />
-            <AvatarFallback className="bg-slate-700 text-white">
+            <AvatarFallback className="dark:bg-slate-600 bg-slate-200">
               {user.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>

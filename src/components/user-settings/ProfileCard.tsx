@@ -42,7 +42,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <Card className="text-white w-full max-w-md bg-slate-800 border-slate-700 relative animate-in fade-in-0 zoom-in-95">
+      <Card className="w-full max-w-md dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100 relative animate-in fade-in-0 zoom-in-95">
         <CardHeader>
           <CardTitle>{t("updateProfile")}</CardTitle>
           <CardDescription>
@@ -50,7 +50,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
           </CardDescription>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-opacity"
+            className="absolute top-3 right-3 dark:text-gray-400 text-gray-700 hover:text-red-500 transition-opacity"
             aria-label={tCommon("cancel")}
           >
             <X size={24} />
@@ -64,7 +64,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-slate-700 border-slate-600"
+                className="w-full dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
                 disabled={isPending}
               />
             </div>
@@ -75,7 +75,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-700 border-slate-600"
+                className="w-full dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
                 disabled={isPending}
               />
             </div>
@@ -90,7 +90,7 @@ export function ProfileCard({ user, onClose }: ProfileCardProps) {
             </Button>
             <Button
               type="button"
-              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+              className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
               onClick={onClose}
               disabled={isPending}
             >

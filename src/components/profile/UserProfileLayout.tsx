@@ -123,7 +123,7 @@ export function UserProfileLayout({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="w-full justify-between border border-slate-600 bg-slate-700">
+            <Button className="w-full justify-between border dark:border-slate-600 border-slate-100 bg-slate-200 dark:bg-slate-700">
               {currentLabel}
               <ChevronDown className="h-4 w-4" />
             </Button>
@@ -143,12 +143,12 @@ export function UserProfileLayout({
     }
 
     return (
-      <TabsList className="border border-slate-700 bg-slate-800">
+      <TabsList className="border dark:border-slate-700 border-slate-100 bg-slate-200 dark:bg-slate-800">
         {navItems.map((item) => (
           <TabsTrigger
             key={item.value}
             value={item.value}
-            className="text-white data-[state=active]:bg-slate-700 data-[state=active]:text-white"
+            className="dark:data-[state=active]:bg-slate-700 data-[state=active]:bg-slate-100 data-[state=active]:text-black"
           >
             {item.label}
           </TabsTrigger>
@@ -211,7 +211,7 @@ export function UserProfileLayout({
                 </>
               )}
               {activeTab === "seguidores" && (
-                <Card className="border-slate-700 bg-slate-800 text-white">
+                <Card className="dark:border-slate-700 dark:bg-slate-800 bg-slate-200 border-slate-100">
                   <CardHeader>
                     <CardTitle>{tProfile("followers")}</CardTitle>
                   </CardHeader>

@@ -54,7 +54,7 @@ export function DangerZoneCard() {
   };
 
   return (
-    <Card className="border-slate-700 bg-slate-800 hover:border-red-500/50 transition-all duration-500">
+    <Card className="dark:border-slate-700 dark:bg-slate-800 border-slate-100 bg-slate-200 hover:border-red-500/50 transition-all duration-500">
       <CardHeader>
         <CardTitle className="text-red-500">{t("deleteAccount")}</CardTitle>
         <CardDescription>
@@ -66,7 +66,7 @@ export function DangerZoneCard() {
           <AlertDialogTrigger asChild>
             <Button variant="destructive">{t("deleteAccount")}</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-slate-800 text-white border border-slate-700">
+          <AlertDialogContent className="bg-slate-200 border-slate-100 dark:bg-slate-800 dark:border-slate-700">
             <AlertDialogHeader>
               <AlertDialogTitle>{t("deleteAccount")}</AlertDialogTitle>
               <AlertDialogDescription>
@@ -86,13 +86,13 @@ export function DangerZoneCard() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isPending}
-                  className="bg-slate-700 border border-slate-600 text-white"
+                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100"
                 />
               </div>
             )}
             <AlertDialogFooter>
               <AlertDialogCancel
-                className="bg-slate-700 border border-slate-600 hover:bg-slate-600 cursor-pointer"
+                className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer"
                 disabled={isPending}
               >
                 {tCommon("cancel")}
@@ -100,7 +100,7 @@ export function DangerZoneCard() {
 
               {step === "initial" ? (
                 <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
+                  className="dark:bg-destructive dark:text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     setStep("confirmPassword");
@@ -110,7 +110,7 @@ export function DangerZoneCard() {
                 </AlertDialogAction>
               ) : (
                 <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/50"
+                  className="dark:bg-destructive dark:text-destructive-foreground hover:bg-destructive/50"
                   onClick={handleConfirmDelete}
                   disabled={isPending}
                 >

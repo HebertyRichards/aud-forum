@@ -23,7 +23,7 @@ export function ProfileContactTab({
 
   return (
     <TabsContent value="contato" className="mt-4">
-      <Card className="border-slate-700 bg-slate-800 text-white">
+      <Card className="dark:border-slate-700 dark:bg-slate-800 border-slate-100 bg-slate-200">
         <CardHeader>
           <CardTitle>{t("contacts")}</CardTitle>
           {isOwnProfile && profile && (
@@ -53,7 +53,7 @@ export function ProfileContactTab({
                 href={formatUrl(profile.website)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-200 hover:text-blue-500"
+                className="hover:text-blue-500"
               >
                 <Globe size={20} />
               </a>
@@ -61,7 +61,7 @@ export function ProfileContactTab({
               <span>--</span>
             )}
           </div>
-          <Separator className="bg-slate-600" />
+          <Separator className="dark:bg-slate-700 bg-slate-100" />
           <div className="flex justify-between py-3 items-center">
             <span className="font-semibold">{t("facebook")}:</span>
             {profile?.facebook ? (
@@ -69,7 +69,7 @@ export function ProfileContactTab({
                 href={formatUrl(profile.facebook)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-200 hover:text-blue-500"
+                className="hover:text-blue-500"
               >
                 <Facebook size={20} />
               </a>
@@ -77,7 +77,7 @@ export function ProfileContactTab({
               <span>--</span>
             )}
           </div>
-          <Separator className="bg-slate-600" />
+          <Separator className="dark:bg-slate-700 bg-slate-100" />
           <div className="flex justify-between py-3 items-center">
             <span className="font-semibold">{t("instagram")}:</span>
             {profile?.instagram ? (
@@ -85,7 +85,7 @@ export function ProfileContactTab({
                 href={formatUrl(profile.instagram)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-200 hover:text-pink-500"
+                className="hover:text-pink-500"
               >
                 <Instagram size={20} />
               </a>
@@ -93,7 +93,7 @@ export function ProfileContactTab({
               <span>--</span>
             )}
           </div>
-          <Separator className="bg-slate-600" />
+          <Separator className="dark:bg-slate-700 bg-slate-100" />
           <div className="flex justify-between py-3 items-center">
             <span className="font-semibold">{t("discord")}:</span>
             {profile?.discord ? (
@@ -101,7 +101,7 @@ export function ProfileContactTab({
                 href={formatUrl(profile.discord)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-200 hover:text-indigo-500"
+                className="hover:text-indigo-500"
               >
                 <FaDiscord size={20} />
               </a>
@@ -109,7 +109,7 @@ export function ProfileContactTab({
               <span>--</span>
             )}
           </div>
-          <Separator className="bg-slate-600" />
+          <Separator className="dark:bg-slate-700 bg-slate-100" />
           <div className="flex justify-between py-3 items-center">
             <span className="font-semibold">{t("steam")}:</span>
             {profile?.steam ? (
@@ -117,7 +117,7 @@ export function ProfileContactTab({
                 href={formatUrl(profile.steam)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-200 hover:text-blue-700"
+                className="hover:text-blue-700"
               >
                 <FaSteam size={20} />
               </a>
