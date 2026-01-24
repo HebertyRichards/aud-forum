@@ -125,7 +125,7 @@ export default function CategoryTopicPage() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const category = (params.categories as string) || "";
-  const isCategoryValid = Object.keys(category).includes(category);
+  const isCategoryValid = !!category;
   const [currentPage, setCurrentPage] = useState(1);
   const [view, setView] = useState<"list" | "create">("list");
   const { canCreateTopic, isCheckingTopic, checkTopicPermission } =
