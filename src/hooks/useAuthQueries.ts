@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/services";
-import { handleApiError } from "@/utils/apiErrors";
+import { handleError } from "@/utils/errorsApi";
 
 export const useAuthQueries = () => {
   const queryClient = useQueryClient();
@@ -18,7 +18,7 @@ export const useAuthQueries = () => {
       queryClient.invalidateQueries({ queryKey: ["auth-user"] });
     },
     onError: (error) =>
-      handleApiError(error, "Não foi possível fazer o login."),
+      handleError(error, "Não foi possível fazer o login."),
   });
 
   const logoutMutation = useMutation({
@@ -28,7 +28,7 @@ export const useAuthQueries = () => {
       queryClient.setQueryData(["auth-user"], null);
     },
     onError: (error) =>
-      handleApiError(error, "Não foi possível fazer o logout."),
+      handleError(error, "Não foi possível fazer o logout."),
   });
 
   const registerMutation = useMutation({
@@ -41,7 +41,7 @@ export const useAuthQueries = () => {
       email: string;
       password: string;
     }) => authService.register({ username, email, password }),
-    onError: (error) => handleApiError(error, "Erro ao criar conta."),
+    onError: (error) => handleError(error, "Erro ao criar conta."),
   });
 
   const updatePasswordMutation = useMutation({
@@ -52,13 +52,13 @@ export const useAuthQueries = () => {
       newPassword: string;
       accessToken?: string;
     }) => authService.updatePassword({ newPassword, accessToken }),
-    onError: (error) => handleApiError(error, "Erro ao atualizar senha."),
+    onError: (error) => handleError(error, "Erro ao atualizar senha."),
   });
 
   const forgotPasswordMutation = useMutation({
     mutationFn: (email: string) => authService.forgotPassword(email),
     onError: (error) =>
-      handleApiError(error, "Não foi possível processar o pedido."),
+      handleError(error, "Não foi possível processar o pedido."),
   });
 
   return {

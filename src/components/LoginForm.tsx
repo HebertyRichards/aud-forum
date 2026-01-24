@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { handleApiError } from "@/utils/apiErrors";
+import { handleError } from "@/utils/errorsApi";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -44,8 +44,8 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
         router.push("/");
       }
     } catch (error) {
-      handleApiError(error, t("loginButton"));
       toast.error(t("loginButton"));
+      handleError(error, t("loginButton"));
     } finally {
       setLoading(false);
     }

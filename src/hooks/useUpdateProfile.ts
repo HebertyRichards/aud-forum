@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { profileService } from "@/services";
 import { toast } from "sonner";
-import { handleApiError } from "@/utils/apiErrors";
+import { handleError } from "@/utils/errorsApi";
 
 export const useUpdateProfile = () => {
   return useMutation({
@@ -13,7 +13,7 @@ export const useUpdateProfile = () => {
       }, 1500);
     },
     onError: (error) => {
-      handleApiError(error, "Falha ao atualizar o perfil.");
+      handleError(error, "Falha ao atualizar o perfil.");
       toast.error("Falha ao atualizar o perfil.");
     },
   });

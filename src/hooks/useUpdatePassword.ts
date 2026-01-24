@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { profileService } from "@/services";
 import { toast } from "sonner";
-import { handleApiError } from "@/utils/apiErrors";
+import { handleError } from "@/utils/errorsApi";
 
 export const useUpdatePassword = (onClose: () => void) => {
   return useMutation({
@@ -13,7 +13,7 @@ export const useUpdatePassword = (onClose: () => void) => {
       }, 1500);
     },
     onError: (error) => {
-      handleApiError(error, "Falha ao alterar a senha.");
+      handleError(error, "Falha ao alterar a senha.");
       toast.error("Falha ao alterar a senha.");
     },
   });

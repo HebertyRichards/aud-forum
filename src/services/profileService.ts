@@ -1,6 +1,7 @@
 import { UserStats } from "@/schema/user";
 import { TopicSummary } from "@/schema/forum";
 import { httpClient } from "./core/httpClient";
+import { handleError } from "@/utils/errorsApi";
 
 export interface UpdateProfileData {
   username: string;
@@ -30,47 +31,83 @@ export interface AvatarResponse {
 
 export const profileService = {
   async updateProfile(data: UpdateProfileData): Promise<void> {
-    await httpClient.patch("/profile/update-data", data);
+    try {
+      await httpClient.patch("/profile/update-data", data);
+    } catch (error) {
+      throw handleError(error, "Failed to update profile");
+    }
   },
 
   async updatePassword(newPassword: string): Promise<void> {
-    await httpClient.patch("/auth/update-password", { newPassword });
+    try {
+      await httpClient.patch("/auth/update-password", { newPassword });
+    } catch (error) {
+      throw handleError(error, "Failed to update password");
+    }
   },
 
   async deleteAccount(password: string): Promise<void> {
-    await httpClient.delete("/auth/delete-account", { password });
+    try {
+      await httpClient.delete("/auth/delete-account", { password });
+    } catch (error) {
+      throw handleError(error, "Failed to delete account");
+    }
   },
 
   async uploadAvatar(file: File): Promise<AvatarResponse> {
-    const formData = new FormData();
-    formData.append("avatar", file);
-    const response = await httpClient.patch<AvatarResponse>("/profile/user/avatar", formData);
-    if (!response) throw new Error("Failed to upload avatar");
-    return response;
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
+      const response = await httpClient.patch<AvatarResponse>("/profile/user/avatar", formData);
+      if (!response) throw new Error("Failed to upload avatar");
+      return response;
+    } catch (error) {
+      throw handleError(error, "Failed to upload avatar");
+    }
   },
 
   async deleteAvatar(): Promise<AvatarResponse> {
-    const response = await httpClient.delete<AvatarResponse>("/profile/user/avatar");
-    if (!response) throw new Error("Failed to delete avatar");
-    return response;
+    try {
+      const response = await httpClient.delete<AvatarResponse>("/profile/user/avatar");
+      if (!response) throw new Error("Failed to delete avatar");
+      return response;
+    } catch (error) {
+      throw handleError(error, "Failed to delete avatar");
+    }
   },
 
   async updateContacts(payload: UpdateContactsPayload): Promise<unknown> {
-    return httpClient.put("/profile/update", payload);
+    try {
+      return await httpClient.put("/profile/update", payload);
+    } catch (error) {
+      throw handleError(error, "Failed to update contacts");
+    }
   },
 
   async updateProfileData(payload: UpdateProfileDataPayload): Promise<unknown> {
-    return httpClient.put("/profile/update", payload);
+    try {
+      return await httpClient.put("/profile/update", payload);
+    } catch (error) {
+      throw handleError(error, "Failed to update profile data");
+    }
   },
 
   async getUserStats(username: string): Promise<UserStats> {
-    const response = await httpClient.get<UserStats>(`/statistic/profile/${username}/stats`);
-    if (!response) throw new Error("Failed to get user stats");
-    return response;
+    try {
+      const response = await httpClient.get<UserStats>(`/statistic/profile/${username}/stats`);
+      if (!response) throw new Error("Failed to get user stats");
+      return response;
+    } catch (error) {
+      throw handleError(error, "Failed to get user stats");
+    }
   },
 
   async getTopicsByAuthor(username: string): Promise<TopicSummary[]> {
-    const response = await httpClient.get<TopicSummary[]>(`/statistic/profile/${username}/topics`);
-    return response ?? [];
+    try {
+      const response = await httpClient.get<TopicSummary[]>(`/statistic/profile/${username}/topics`);
+      return response ?? [];
+    } catch (error) {
+      throw handleError(error, "Failed to get topics by author");
+    }
   },
 };

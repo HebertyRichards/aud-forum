@@ -1,5 +1,6 @@
 import { UserWithProfile } from "@/types/autentication";
 import { httpClient } from "./core/httpClient";
+import { handleError } from "@/utils/errorsApi";
 
 export interface LoginCredentials {
   email: string;
@@ -20,31 +21,54 @@ export interface UpdatePasswordData {
 
 export const authService = {
   async getSession(): Promise<UserWithProfile> {
-    const response = await httpClient.get<UserWithProfile>("/auth/session");
-    if (!response) {
-      throw new Error("Failed to get session");
+    try {
+      const response = await httpClient.get<UserWithProfile>("/auth/session");
+      if (!response) {
+        throw new Error("Failed to get session");
+      }
+      return response;
+    } catch (error) {
+      throw handleError(error, "Failed to get session");
     }
-    return response;
   },
 
   async login(credentials: LoginCredentials) {
-    return httpClient.post("/auth/login", credentials);
-  
+    try {
+      return await httpClient.post("/auth/login", credentials);
+    } catch (error) {
+      throw handleError(error, "Failed to login");
+    }
   },
 
   async register(data: RegisterData) {
-    return httpClient.post("/auth/register", data);
+    try {
+      return await httpClient.post("/auth/register", data);
+    } catch (error) {
+      throw handleError(error, "Failed to register");
+    }
   },
 
   async logout(): Promise<void> {
-    await httpClient.post("/auth/logout", {});
+    try {
+      await httpClient.post("/auth/logout", {});
+    } catch (error) {
+      throw handleError(error, "Failed to logout");
+    }
   },
 
   async updatePassword(data: UpdatePasswordData) {
-    return httpClient.put("/auth/change-password", data);
+    try {
+      return await httpClient.put("/auth/change-password", data);
+    } catch (error) {
+      throw handleError(error, "Failed to update password");
+    }
   },
 
   async forgotPassword(email: string) {
-    return httpClient.post("/auth/forgot-password", { email });
+    try {
+      return await httpClient.post("/auth/forgot-password", { email });
+    } catch (error) {
+      throw handleError(error, "Failed to send forgot password email");
+    }
   },
 };

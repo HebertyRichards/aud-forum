@@ -7,7 +7,7 @@ import { NewTopic } from "@/schema/forum";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/providers/auth";
-import { handleApiError } from "@/utils/apiErrors";
+import { handleError } from "@/utils/errorsApi";
 
 export function useCreateTopic(category: string) {
   const router = useRouter();
@@ -53,8 +53,8 @@ export function useCreateTopic(category: string) {
       });
       router.push(`/topics/${category}/${newTopic.slug}`);
     } catch (error) {
-      handleApiError(error, "Falha ao criar o tópico.");
       toast.error("Falha ao criar o tópico");
+      handleError(error, "Falha ao criar o tópico.");
     } finally {
       setIsSubmitting(false);
     }
