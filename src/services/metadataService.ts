@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { API_URL } from "@/utils/forum-structure";
+import { getTranslations } from "next-intl/server";
 
 export type PageMetadataConfig = {
   title: string;
@@ -10,14 +11,7 @@ export type PageMetadataConfig = {
   };
 };
 
-const categoryTitleMap: Record<string, string> = {
-  downloads: "Downloads",
-  manuals: "Manuais",
-  "general-discussions": "Discussões Gerais",
-  members: "Área dos Membros",
-  subscribes: "Inscrições",
-  updates: "Atualizações",
-};
+
 
 function formatSlugAsTitle(slug: string): string {
   return slug
@@ -44,12 +38,12 @@ export const staticMetadata = {
         "Gerencie suas informações, configurações e atividades na comunidade Auditore Family.",
     },
     notFound: {
-      title: "Auditore Family - Perfil não encontrado",
+      title: "Perfil não encontrado",
       description: "Usuário não encontrado na Auditore Family.",
       robots: ERROR_ROBOTS,
     },
     error: {
-      title: "Auditore Family - Erro ao carregar",
+      title: "Erro ao carregar",
       description: "Não foi possível carregar as informações do perfil.",
       robots: ERROR_ROBOTS,
     },
@@ -153,11 +147,14 @@ export async function generateUserProfileMetadata(
 export async function generateCategoryMetadata(
   categorySlug: string
 ): Promise<Metadata> {
-  const categoryName =
-    categoryTitleMap[categorySlug] || formatSlugAsTitle(categorySlug);
+  const t = await getTranslations("categories");
+
+  const categoryName = t.has(categorySlug) 
+    ? t(categorySlug) 
+    : formatSlugAsTitle(categorySlug);
 
   return {
-    title: `Auditore Family - ${categoryName}`,
+    title: `${categoryName}`,
     description: "Crie um tópico e interaja com a comunidade!",
   };
 }
@@ -166,7 +163,7 @@ export async function generateTopicMetadata(slug: string): Promise<Metadata> {
   const title = formatSlugAsTitle(slug);
 
   return {
-    title: `Auditore Family - ${title}`,
+    title: `${title}`,
     description: "Leia e participe da discussão neste tópico.",
   };
 }

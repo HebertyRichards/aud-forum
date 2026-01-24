@@ -35,26 +35,26 @@ export function ForumStats() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">{t("members")}</span>
+          <span className="text-sm dark:text-slate-300 text-slate-700">{t("members")}</span>
           <span className="font-semibold">
             {data?.stats?.activeMembers ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">{t("totalPosts")}</span>
+          <span className="text-sm dark:text-slate-300 text-slate-700">{t("totalPosts")}</span>
           <span className="font-semibold">
             {data?.stats?.totalPosts ?? "..."}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">{t("totalTopics")}</span>
+          <span className="text-sm dark:text-slate-300 text-slate-700">{t("totalTopics")}</span>
           <span className="font-semibold">
             {data?.stats?.totalTopics ?? "..."}
           </span>
         </div>
         <Separator className="bg-slate-600" />
         <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-500">{t("lastUser")}</span>
+          <span className="text-sm dark:text-slate-300 text-slate-700">{t("lastUser")}</span>
           {lastUser ? (
             <Link href={`/profile/${lastUser.username}`}>
               <span

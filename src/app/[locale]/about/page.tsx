@@ -1,29 +1,11 @@
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import type { Metadata } from "next";
+import { getAboutMetadata } from "@/services/metadataService";
+import AboutPageClient from "./AboutPageClient";
 
-export default function About() {
-  const t = useTranslations("pages.about");
+export async function generateMetadata(): Promise<Metadata> {
+  return getAboutMetadata();
+}
 
-  return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-4 font-sans text-center">
-      <div className="max-w-4xl w-full">
-        <div className="mb-8">
-          <Image
-            src="/about.png"
-            alt="Logo da Família Auditore"
-            width={420}
-            height={420}
-            className="w-48 md:w-64 h-auto mx-auto rounded-full shadow-lg"
-          />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">{t("title")}</h1>
-        <p className="text-lg md:text-xl leading-relaxed text-justify">
-          {t("description1")}
-          <br />
-          <br />
-          {t("description2")}
-        </p>
-      </div>
-    </main>
-  );
+export default async function About() {
+  return <AboutPageClient />;
 }

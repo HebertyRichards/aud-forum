@@ -45,7 +45,7 @@ export function ForumCategoryList() {
               {t(`${category.id}.title`)}
             </AccordionTrigger>
             <AccordionContent className="p-0">
-              <div className="divide-y divide-gray-700">
+              <div className="divide-y dark:divide-gray-700 divide-gray-300">
                 {category.subItems.map((item) => {
                   const subItemKey = item.href.split('/').pop() || "";
                   
@@ -53,7 +53,7 @@ export function ForumCategoryList() {
                     <Link
                       href={item.href}
                       key={item.title}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/50 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 dark:hover:bg-gray-700/50 hover:bg-gray-300/50 transition-colors"
                     >
                       <item.icon className="h-5 w-5" />
                       <span className="text-sm font-semibold">
