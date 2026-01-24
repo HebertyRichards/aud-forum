@@ -90,7 +90,7 @@ export const CommentItem = ({
               </p>
             </Link>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-700 dark:text-gray-700">
+              <p className="text-xs text-gray-700 dark:text-gray-400">
                 {formatPostTimestamp(comment.created_in)}
               </p>
               {user && user.id === comment.author_id && !isEditing && (

@@ -42,7 +42,8 @@
     "dark": "Oscuro", 
     "system": "Sistema",
     "topicTitle": "Título del tema",
-    "topicTitlePlaceholder": "Introduce el título del tema"
+    "topicTitlePlaceholder": "Introduce el título del tema",
+    "submitting": "Enviando..."
   },
   "footer": {
     "slogan": "Una de las familias más respetadas de SA-MP, construyendo legado y tradición durante más de 5 años.",
@@ -119,8 +120,8 @@
     "noTopics": "Sin temas aún.",
     "genderOptions": {
       "male": "Masculino",
-      "female": "Feminino",
-      "other": "Outro"
+      "female": "Femenino",
+      "other": "Otro"
     },
     "percentagePosts": "% Posts" 
     },
@@ -331,7 +332,7 @@
     }
   },
   "categories": {
-    "rules": "Regras",
+    "rules": "Reglas",
     "updates": "Actualizaciones",
     "subscribes": "Suscríbete",
     "members": "Miembros",

@@ -53,20 +53,36 @@ export function MembersFilters({
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger
                 id="sort-by"
-                className="w-full sm:w-45 border-slate-600 bg-slate-200 dark:bg-slate-700 text-black dark:text-white"
+                className="w-full sm:w-45 border-slate-600 bg-slate-200 dark:bg-slate-700"
                 aria-label="Ordenar por"
               >
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
-              <SelectContent className="bg-popover dark:bg-slate-700 border-slate-600">
-                <SelectItem value="ultima-visita">
+              <SelectContent className="bg-slate-300 border-slate-200 dark:bg-slate-800 dark:border-slate-700 cursor-pointer">
+                <SelectItem 
+                  value="ultima-visita" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
                   {t("latestVisit")}
                 </SelectItem>
-                <SelectItem value="data-inscricao">
+                <SelectItem 
+                  value="data-inscricao" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
                   {t("dateOfSubscribed")}
                 </SelectItem>
-                <SelectItem value="mensagens">{t("messages")}</SelectItem>
-                <SelectItem value="nome-usuario">{t("nameOfUser")}</SelectItem>
+                <SelectItem 
+                  value="mensagens" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
+                  {t("messages")}
+                </SelectItem>
+                <SelectItem 
+                  value="nome-usuario" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
+                  {t("nameOfUser")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -75,11 +91,19 @@ export function MembersFilters({
               <SelectTrigger className="w-full sm:w-37.5 bg-slate-200 dark:bg-slate-700 text-black dark:text-white border-slate-600">
                 <SelectValue placeholder="Ordem" />
               </SelectTrigger>
-              <SelectContent className="bg-popover dark:bg-slate-700 border-slate-600">
-                <SelectItem value="decrescente">
+              <SelectContent className="bg-slate-300 border-slate-200 dark:bg-slate-800 dark:border-slate-700 cursor-pointer">
+                <SelectItem 
+                  value="decrescente" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
                   {t("descending")}
                 </SelectItem>
-                <SelectItem value="crescente">{t("ascending")}</SelectItem>
+                <SelectItem 
+                  value="crescente" 
+                  className="focus:bg-slate-200 dark:focus:bg-slate-700 data-[state=checked]:bg-slate-200 dark:data-[state=checked]:bg-slate-700 cursor-pointer"
+                >
+                  {t("ascending")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

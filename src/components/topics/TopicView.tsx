@@ -136,7 +136,7 @@ export const TopicView = ({
   };
 
   return (
-    <Card className="bg-slate-200 border-slate-200 dark:border-slate-700 darkbg-slate-800">
+    <Card className="bg-slate-200 border-slate-200 dark:border-slate-700 dark:bg-slate-800">
       {isEditing ? (
         <form onSubmit={handleUpdate} className="p-6">
           <div className="space-y-4">
@@ -190,7 +190,7 @@ export const TopicView = ({
                   src={getOptimizedAvatarUrl(topic.profiles.avatar_url, 48)}
                   alt={`Avatar de ${topic.profiles.username}`}
                 />
-                <AvatarFallback className="bg-slate-600">
+                <AvatarFallback className="dark:bg-slate-600 bg-slate-100">
                   {topic.profiles.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -205,12 +205,12 @@ export const TopicView = ({
                   {topic.profiles.username}
                 </p>
               </Link>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs dark:text-gray-400 text-gray-700">
                 {t("postedBy")} {formatPostTimestamp(topic.created_in).toLowerCase()}
               </p>
               {topic.updated_in &&
                 new Date(topic.updated_in) > new Date(topic.created_in) && (
-                  <p className="text-xs text-gray-300 italic mt-1">
+                  <p className="text-xs dark:text-gray-300 text-gray-700 italic mt-1">
                     {tCommon("edit")}{" "}
                     {formatPostTimestamp(topic.updated_in).toLowerCase()}
                   </p>

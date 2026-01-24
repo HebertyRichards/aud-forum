@@ -42,7 +42,8 @@
     "dark": "Dark",
     "system": "System",
     "topicTitle": "Topic Title",
-    "topicTitlePlaceholder": "Enter topic title"
+    "topicTitlePlaceholder": "Enter topic title",
+    "submitting": "Submitting..."
   },
   "footer": {
     "slogan": "One of the most respected families on SA-MP, building legacy and tradition for over 5 years.",

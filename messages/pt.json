@@ -42,7 +42,8 @@
     "dark": "Escuro",
     "system": "Sistema",
     "topicTitle": "Título do Tópico",
-    "topicTitlePlaceholder": "Digite o título do tópico"
+    "topicTitlePlaceholder": "Digite o título do tópico",
+    "submitting": "Enviando..."
   },
   "footer": {
     "slogan": "Uma das famílias mais respeitadas do SA-MP, construindo legado e tradição há mais de 5 anos.",

@@ -23,9 +23,10 @@ type MembersTableProps = {
 export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   const { user } = useAuth();
   const t = useTranslations("forum");
+  const tCommon = useTranslations("common");
 
   if (isLoading) {
-    return <div className="text-center mt-10">{t("loading")}</div>;
+    return <div className="text-center mt-10">{tCommon("loading")}</div>;
   }
 
   if (error) {

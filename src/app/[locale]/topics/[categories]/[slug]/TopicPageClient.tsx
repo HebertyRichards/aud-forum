@@ -150,7 +150,7 @@ export default function TopicPageClient() {
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="mb-4">
             <Button
-            className="dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-200 border-slate-100 hover:bg-slate-100"
+            className="dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-200 border-slate-100"
               asChild
             >
               <Link href={`/topics/${category}`}>
