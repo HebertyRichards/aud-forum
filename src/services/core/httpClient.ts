@@ -26,22 +26,6 @@ async function handleResponse<T>(
     return undefined;
   }
 
-  if (response.status === 401) {
-    throw new Error("Unauthorized");
-  }
-
-  if (response.status === 403) {
-    throw new Error("Forbidden");
-  }
-
-  if (response.status === 404) {
-    throw new Error("Not Found");
-  }
-
-  if (response.status === 500) {
-    throw new Error("Internal Server Error");
-  }
-
   return response.json();
 }
 

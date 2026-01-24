@@ -26,6 +26,7 @@ import { User, LogOut, Settings, UserCircle, Menu, X } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ModeToggle } from "@/components/toggle-mode";
 import { useTranslations } from "next-intl";
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 
@@ -39,11 +40,6 @@ export default function Header() {
   const username = auth.user?.username ?? "";
   
   const { data: profileData } = useFetchUserProfile(username);
-  
-  console.log("[Header] Dados do auth.user:", auth.user);
-  console.log("[Header] Avatar do auth:", auth.user?.avatar_url);
-  console.log("[Header] ProfileData:", profileData);
-  console.log("[Header] Avatar do profileData:", profileData?.profile?.avatar_url);
   
   const userRole = profileData?.profile?.role ?? null;
   const userAvatarUrl = profileData?.profile?.avatar_url ?? null;
@@ -91,7 +87,7 @@ export default function Header() {
     "flex flex-col justify-center items-center data-[state=open]:animate-in data-[state=closed]:animate-out";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b shadow-sm bg-slate-800/80 backdrop-blur supports-backdrop-filter:bg-slate-800/60 border-slate-700">
+    <header className="sticky top-0 z-50 w-full border-b shadow-sm bg-slate-200/80 dark:bg-slate-800/80 backdrop-blur supports-backdrop-filter:bg-slate-300/60 dark:supports-backdrop-filter:bg-slate-800/60 border-slate-300 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2" onClick={closeNav}>
@@ -108,7 +104,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-300 hover:text-blue-400 transition-colors text-xs lg:text-sm"
+                className="dark:text-gray-300 text-gray-700 hover:text-blue-400 transition-colors text-xs lg:text-sm"
               >
                 {t(link.label)}
               </Link>
@@ -116,6 +112,9 @@ export default function Header() {
             <LanguageSwitcher />
           </nav>
           <div className="flex items-center space-x-3">
+            <div className="flex items-center">
+              <ModeToggle />
+            </div>
             {auth?.loading ? (
               <div className="h-8 w-8 md:h-9 md:w-9 bg-slate-700 rounded-full animate-pulse" />
             ) : auth?.user ? (
@@ -124,8 +123,8 @@ export default function Header() {
                   <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full">
                     <Avatar className="h-8 w-8 md:h-9 md:w-9 border border-slate-600">
                       <AvatarImage src={userAvatarUrl || ""} alt={getUsername()} />
-                      <AvatarFallback className="bg-slate-700 text-white">
-                        <User className="h-5 w-5 text-slate-300" />
+                      <AvatarFallback className="bg-slate-100 dark:bg-slate-600">
+                        <User className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -187,7 +186,7 @@ export default function Header() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-slate-300 hover:text-white hover:bg-slate-700 hidden md:flex"
+                      className="dark:text-slate-300 text-slate-700 dark:hover:text-white hover:text-slate-900 dark:hover:bg-slate-700 hover:bg-slate-200/50 hidden md:flex"
                     >
                       {t("register")}
                     </Button>
@@ -208,7 +207,7 @@ export default function Header() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="bg-slate-700 border border-slate-600 hover:bg-slate-600 text-white md:hidden"
+                  className="dark:bg-slate-700 bg-slate-200 border dark:border-slate-600 border-slate-400 hover:dark:bg-slate-600 hover:bg-slate-300 dark:text-white text-slate-900 md:hidden"
                   onClick={openRegister}
                 >
                       {t("register")}

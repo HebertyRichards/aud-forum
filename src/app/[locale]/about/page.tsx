@@ -5,7 +5,7 @@ export default function About() {
   const t = useTranslations("pages.about");
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-4 font-sans text-center text-white">
+    <main className="flex flex-col items-center justify-center min-h-screen p-4 font-sans text-center">
       <div className="max-w-4xl w-full">
         <div className="mb-8">
           <Image

@@ -24,22 +24,22 @@ const t = useTranslations("Index");
   const userCount = users.length;
 
   return (
-    <Card className="bg-slate-800 border-slate-700 text-white">
+    <Card className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Users className="w-5 h-5" />
           <span>{t("onlineUsers")}</span>
-          <Badge className="ml-auto bg-slate-700 text-white">{userCount}</Badge>
-        </CardTitle>
+          <Badge className="ml-auto dark:bg-slate-700 dark:text-white bg-slate-100 text-slate-800">{userCount}</Badge>
+        </CardTitle>  
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           {!isConnected ? (
-            <p className="text-sm text-slate-400 text-center py-2 animate-pulse">
+            <p className="text-sm dark:text-slate-300 text-slate-600 text-center py-2 animate-pulse">
               {t("loading")}
             </p>
           ) : users.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-2">
+            <p className="text-sm dark:text-slate-300 text-slate-600 text-center py-2">
               {t("noOnlineUsers")}
             </p>
           ) : (
@@ -58,13 +58,13 @@ const t = useTranslations("Index");
                   className="flex items-center space-x-2"
                 >
                   <Avatar className="w-6 h-6">
-                    {hasValidAvatar ? (
+                    {hasValidAvatar ? ( 
                       <AvatarImage
                         src={user.avatar_url!}
                         alt={`avatar de ${user.username}`}
                       />
                     ) : (
-                      <AvatarFallback className="text-xs bg-slate-600 select-none">
+                      <AvatarFallback className="text-xs dark:bg-slate-600 bg-slate-100 select-none">
                         {user.username[0].toUpperCase()}
                       </AvatarFallback>
                     )}

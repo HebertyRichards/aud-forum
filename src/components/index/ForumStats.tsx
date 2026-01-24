@@ -15,7 +15,7 @@ export function ForumStats() {
 
   if (isLoading) {
     return (
-      <Card className="bg-slate-800 text-white border-slate-700">
+      <Card className="dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
         <CardHeader>
           <CardTitle className="text-lg">{t("stats")}</CardTitle>
         </CardHeader>
@@ -29,7 +29,7 @@ export function ForumStats() {
   const lastUser = data?.lastUser;
 
   return (
-    <Card className="bg-slate-800 text-white border-slate-700">
+    <Card className="dark:bg-slate-800 bg-slate-200 dark:border-slate-700 border-slate-100">
       <CardHeader>
         <CardTitle className="text-lg">{t("stats")}</CardTitle>
       </CardHeader>

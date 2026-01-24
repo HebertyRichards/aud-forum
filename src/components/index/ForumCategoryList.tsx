@@ -29,7 +29,7 @@ export function ForumCategoryList() {
   );
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full">
       <Accordion
         type="multiple"
         defaultValue={defaultOpenCategories}
@@ -39,7 +39,7 @@ export function ForumCategoryList() {
           <AccordionItem
             key={category.id}
             value={category.id}
-            className="border-none rounded-md overflow-hidden shadow-md bg-slate-800"
+            className="border-none rounded-md overflow-hidden shadow-md dark:bg-slate-800 bg-slate-200"
           >
             <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full bg-blue-500">
               {t(`${category.id}.title`)}

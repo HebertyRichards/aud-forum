@@ -36,8 +36,8 @@ export default function Rules() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8 max-w-4xl text-white">
-      <div className="bg-slate-800 p-6 rounded-lg shadow-md">
+    <div className="container mx-auto p-4 md:p-8 max-w-4xl">
+      <div className="dark:bg-slate-800 bg-slate-200 p-6 rounded-lg shadow-md">
         <div className="flex justify-center items-center gap-x-4 mb-6">
           <Image
             src="/header.png"
@@ -58,8 +58,8 @@ export default function Rules() {
           />
         </div>
         <ol
-          className="list-decimal list-inside space-y-4 text-gray-400 text-justify 
-                     marker:font-bold marker:text-white"
+          className="list-decimal list-inside space-y-4 text-gray-700 dark:text-gray-300 text-justify 
+                     marker:font-bold"
         >
           {Array.from({ length: 10 }).map((_, i) => (
             <li key={i}>{t(`rule${i + 1}`)}</li>

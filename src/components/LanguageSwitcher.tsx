@@ -40,14 +40,14 @@ export function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="sm"
-          className="text-slate-300 hover:text-white hover:bg-slate-700"
+          className="dark:text-slate-300 text-slate-700 hover:text-blue-500 hover:bg-slate-300 dark:hover:bg-slate-700 cursor-pointer"
         >
           <Globe className="h-4 w-4 mr-2" />
           {languageNames[locale]}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="bg-slate-800 text-white border-slate-700"
+        className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100 text-black dark:text-white"
         align="end"
       >
         {routing.locales.map((loc) => (
@@ -55,7 +55,7 @@ export function LanguageSwitcher() {
             key={loc}
             onClick={() => handleLocaleChange(loc)}
             className={`cursor-pointer ${
-              loc === locale ? "bg-slate-700" : ""
+              loc === locale ? "bg-slate-100 dark:bg-slate-700" : ""
             }`}
           >
             {languageNames[loc]}

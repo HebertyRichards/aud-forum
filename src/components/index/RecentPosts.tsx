@@ -35,7 +35,7 @@ export function RecentPosts() {
 
   if (isLoading) {
     return (
-      <Card className="bg-slate-800 border-slate-700 text-white">
+      <Card className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -51,7 +51,7 @@ export function RecentPosts() {
 
   if (error) {
     return (
-      <Card className="bg-slate-800 border-slate-700 text-white">
+      <Card className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
@@ -69,7 +69,7 @@ export function RecentPosts() {
   const posts: RecentPost[] | undefined = data?.recentPosts;
   
   return (
-    <Card className="bg-slate-800 text-white border-slate-700">
+    <Card className="dark:bg-slate-800 dark:border-slate-700 bg-slate-200 border-slate-100">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
@@ -86,7 +86,7 @@ export function RecentPosts() {
                     src={post.author_avatar || undefined}
                     alt={`avatar de ${post.author_username}`}
                   />
-                  <AvatarFallback className="bg-slate-600">
+                  <AvatarFallback className="dark:bg-slate-600 bg-slate-100">
                     {post.author_username?.[0]}
                   </AvatarFallback>
                 </Avatar>
@@ -104,12 +104,12 @@ export function RecentPosts() {
                     {post.title}
                   </h4>
                 </Link>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700 dark:text-gray-300">
                   <span>
                     {t("Index.by")}:{" "}
                     <Link href={`/profile/${post.author_username}`}>
                       <span
-                        className={`truncate font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
+                        className={`truncate font-semibold hover:underline cursor-pointer ${getRoleColor(
                           post.role
                         )}`}
                       >
@@ -121,7 +121,7 @@ export function RecentPosts() {
                   <span>
                     {t("Index.in")}:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
-                      <span className="font-medium text-gray-300 hover:underline cursor-pointer">
+                      <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
                         {t(`categories.${post.category_slug}`)}
                       </span>
                     </Link>

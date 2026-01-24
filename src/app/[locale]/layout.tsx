@@ -8,6 +8,7 @@ import { AuthProvider } from "@/providers/auth";
 import { OnlineUserProvider } from "@/providers/online";
 import { Providers } from "@/providers/providers";
 import { routing, Locale } from "@/i18n/routing";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -58,7 +59,10 @@ type RootLayoutProps = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function RootLayout({ children, params }: RootLayoutProps) {
+export default async function RootLayout({
+  children,
+  params,
+}: RootLayoutProps) {
   const { locale: requestedLocale } = await params;
 
   const locale: Locale = routing.locales.includes(requestedLocale as Locale)
@@ -70,17 +74,24 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
-        <div className="min-h-screen bg-slate-900">
+        <div className="min-h-screen dark:bg-slate-900 bg-slate-300">
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <Providers>
-              <AuthProvider>
-                <OnlineUserProvider>
-                  <Header />
-                  {children}
-                  <Footer />
-                </OnlineUserProvider>
-              </AuthProvider>
-            </Providers>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Providers>
+                <AuthProvider>
+                  <OnlineUserProvider>
+                    <Header />
+                    {children}
+                    <Footer />
+                  </OnlineUserProvider>
+                </AuthProvider>
+              </Providers>
+            </ThemeProvider>
           </NextIntlClientProvider>
         </div>
       </body>

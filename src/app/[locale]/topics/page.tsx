@@ -21,7 +21,7 @@ export default function TopicsIndexPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-slate-900 text-white">
+        <Card className="w-full max-w-md dark:bg-slate-800 dark:text-white bg-slate-200 text-black">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
@@ -36,7 +36,7 @@ export default function TopicsIndexPage() {
   if(error) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-slate-900 text-white">
+        <Card className="w-full max-w-md dark:bg-slate-800 dark:text-white bg-slate-200 text-black">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-500">
               {t("error")}
@@ -52,7 +52,7 @@ export default function TopicsIndexPage() {
   if (categories.length === 0) {
     return (
       <div className="min-h-screen p-8 flex items-center justify-center">
-        <Card className="w-full max-w-2xl bg-slate-900">
+        <Card className="w-full max-w-2xl dark:bg-slate-800 dark:text-white bg-slate-200 text-black">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -81,7 +81,7 @@ export default function TopicsIndexPage() {
           <Button
             asChild
             variant="outline"
-            className="text-white bg-slate-800 hover:bg-slate-700 border-slate-700 hover:text-white"
+            className="dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 dark:hover:text-white bg-slate-200 border-slate-200 hover:bg-slate-100 hover:text-black"
           >
             <Link href="/">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -89,8 +89,8 @@ export default function TopicsIndexPage() {
             </Link>
           </Button>
           <div className="grow text-center">
-            <h1 className="text-4xl font-bold mb-2 text-white">{t("title")}</h1>
-            <p className="text-gray-400">
+            <h1 className="text-4xl font-bold mb-2">{t("title")}</h1>
+            <p className="dark:text-gray-300 text-gray-700">
               {t("description")}
             </p>
           </div>
@@ -109,18 +109,18 @@ export default function TopicsIndexPage() {
                 href={`/topics/${category.slug}`}
                 className="group block h-full"
               >
-                <Card className="bg-slate-800 border-slate-800 hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all duration-300 h-full text-white">
+                <Card className="dark:bg-slate-800 dark:border-slate-800 bg-slate-200 border-slate-200 dark:hover:border-blue-500 dark:hover:ring-1 dark:hover:ring-blue-500 transition-all duration-300 h-full">
                   <CardContent className="p-6 flex flex-col h-full">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-700 text-blue-500 group-hover:text-blue-600 group-hover:scale-110 transition-transform">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg dark:bg-slate-700 bg-slate-100 text-blue-500 group-hover:text-blue-600 group-hover:scale-110 transition-transform">
                         {categoryIcon}
                       </div>
-                      <h3 className="font-bold text-lg leading-tight group-hover:text-blue-500 transition-colors">
+                      <h3 className="font-bold text-lg leading-tight dark:text-white group-hover:text-blue-500 transition-colors">
                         {category.name}
                       </h3>
                     </div>
 
-                    <p className="text-sm text-gray-400 grow line-clamp-3">
+                    <p className="text-sm dark:text-gray-300 text-gray-700 grow line-clamp-3">
                       {categoryDescription}
                     </p>
 

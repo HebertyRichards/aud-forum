@@ -37,19 +37,19 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
   }
 
   return (
-    <div className="mt-6 rounded-md border bg-slate-800 overflow-x-auto border-slate-700">
+    <div className="mt-6 rounded-md border dark:bg-slate-800 bg-slate-200 overflow-x-auto dark:border-slate-700 border-slate-100">
       <Table>
         <TableHeader>
-          <TableRow className="border-slate-700 hover:bg-slate-800">
-            <TableHead className="w-12.5 text-white">#</TableHead>
-            <TableHead className="min-w-50 text-white">
+          <TableRow className="dark:border-slate-700 border-slate-100 dark:hover:bg-slate-800 hover:bg-slate-200">
+            <TableHead className="w-12.5">#</TableHead>
+            <TableHead className="min-w-50">
               {t("avatarOfNameOfUser")}
             </TableHead>
-            <TableHead className="text-white">{t("dateOfSubscribed")}</TableHead>
-            <TableHead className="hidden md:table-cell text-white">
+            <TableHead>{t("dateOfSubscribed")}</TableHead>
+            <TableHead className="hidden md:table-cell">
               {t("latestVisit")}
             </TableHead>
-            <TableHead className="hidden md:table-cell text-white">
+            <TableHead className="hidden md:table-cell">
               {t("messages")}
             </TableHead>
           </TableRow>
@@ -64,7 +64,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
             return (
               <TableRow
                 key={member.username}
-                className="border-slate-700 hover:bg-slate-700"
+                className="dark:border-slate-700 border-slate-100 dark:hover:bg-slate-800 hover:bg-slate-200 text-black dark:text-white"
               >
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
@@ -74,7 +74,7 @@ export function MembersTable({ members, isLoading, error }: MembersTableProps) {
                         src={member.avatar_url || undefined}
                         alt={`Avatar de ${member.username}`}
                       />
-                      <AvatarFallback className="bg-slate-600">
+                      <AvatarFallback className="dark:bg-slate-600 bg-slate-100">
                         {member.username.charAt(0)}
                       </AvatarFallback>
                     </Avatar>

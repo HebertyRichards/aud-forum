@@ -31,13 +31,13 @@ export function MembersFilters({
   const t = useTranslations("forum");
 
   return (
-    <div className="rounded-md border bg-slate-800 p-4 border-slate-700">
+    <div className="rounded-md border dark:bg-slate-800 bg-slate-200 p-4 dark:border-slate-700 border-slate-710">
       <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
         <div className="w-full sm:flex-1 sm:min-w-50">
           <Input
             type="text"
             placeholder="Nome de usuário"
-            className="border-slate-600 bg-slate-700"
+            className="dark:border-slate-600 dark:bg-slate-700 border-slate-100 bg-slate-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -46,19 +46,19 @@ export function MembersFilters({
           <div className="w-full sm:w-auto flex items-center gap-2">
             <Label
               htmlFor="sort-by"
-              className="text-sm font-medium text-slate-700"
+              className="text-sm font-medium text-slate-700 dark:text-slate-200"
             >
-              {t("orderBY")}
+              {t("orderBy")}
             </Label>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger
                 id="sort-by"
-                className="w-full sm:w-45 border-slate-600 bg-slate-700"
+                className="w-full sm:w-45 border-slate-600 bg-slate-200 dark:bg-slate-700 text-black dark:text-white"
                 aria-label="Ordenar por"
               >
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600 text-white">
+              <SelectContent className="bg-popover dark:bg-slate-700 border-slate-600">
                 <SelectItem value="ultima-visita">
                   {t("latestVisit")}
                 </SelectItem>
@@ -72,11 +72,11 @@ export function MembersFilters({
           </div>
           <div className="w-full sm:w-auto flex items-center gap-2">
             <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger className="w-full sm:w-37.5 bg-slate-700 border-slate-600">
+              <SelectTrigger className="w-full sm:w-37.5 bg-slate-200 dark:bg-slate-700 text-black dark:text-white border-slate-600">
                 <SelectValue placeholder="Ordem" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 text-white border-slate-600">
-                <SelectItem value="decrescente" className="bg-slate-600">
+              <SelectContent className="bg-popover dark:bg-slate-700 border-slate-600">
+                <SelectItem value="decrescente">
                   {t("descending")}
                 </SelectItem>
                 <SelectItem value="crescente">{t("ascending")}</SelectItem>
