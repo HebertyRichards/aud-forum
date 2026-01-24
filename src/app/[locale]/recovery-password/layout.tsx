@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Recuperar Senha",
-  robots: {
-    index: false,
-    follow: false,
-  }
-};
+import { getRecoveryPasswordMetadata } from "@/services/metadataService";
+
+export const metadata: Metadata = getRecoveryPasswordMetadata();
 
 export default function RecoveryPassowordRoot({
   children,

@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Nova Senha",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+import { getResetPasswordMetadata } from "@/services/metadataService";
+
+export const metadata: Metadata = getResetPasswordMetadata();
 
 export default function NewPassowordRoot({
   children,

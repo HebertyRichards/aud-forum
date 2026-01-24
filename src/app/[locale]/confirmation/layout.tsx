@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Confirmação",
-  robots: {
-    index: false,
-    follow: false,
-  }
-};
+import { getConfirmationMetadata } from "@/services/metadataService";
+
+export const metadata: Metadata = getConfirmationMetadata();
 
 export default function SuccessRegisterRoot({
   children,

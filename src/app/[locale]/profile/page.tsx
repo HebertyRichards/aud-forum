@@ -1,53 +1,11 @@
-"use client";
+import type { Metadata } from "next";
+import { getOwnProfileMetadata } from "@/services/metadataService";
+import ProfilePageClient from "@/app/[locale]/profile/ProfilePageClient";
 
-import { Loader2 } from "lucide-react";
-import { useAuth } from "@/providers/auth";
-import { UserProfileLayout } from "@/components/profile/UserProfileLayout";
-import { useFetchOwnProfile } from "@/hooks/useFetchOwnProfile";
-import { useTranslations } from "next-intl";
+export async function generateMetadata(): Promise<Metadata> {
+  return getOwnProfileMetadata();
+}
 
-export default function Profile() {
-  const auth = useAuth();
-  const {
-    profile: data,
-    isLoading,
-    isFetching,
-    error,
-    handleSuccessUpdate,
-  } = useFetchOwnProfile();
-  const t = useTranslations("pages.profile");
-
-  if (auth.loading || (isLoading && !data)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-        <p className="ml-2">
-          {auth.loading ? t("loading") : t("loading")}
-        </p>
-      </div>
-    );
-  }
-
-  const errorMessage =
-    error instanceof Error ? error.message : t("error");
-
-  const followState = {
-    stats: data?.stats,
-  };
-
-  return (
-    <div className="min-h-screen font-sans">
-      <main className="p-4 md:p-8 max-w-7xl mx-auto">
-        <UserProfileLayout
-          profile={data?.profile ?? null}
-          isLoading={isLoading && !data}
-          isUpdating={isFetching && !!data}
-          error={error ? errorMessage : null}
-          isOwnProfile={true}
-          onSuccessUpdate={handleSuccessUpdate}
-          followState={followState}
-        />
-      </main>
-    </div>
-  );
+export default async function ProfilePage() {
+  return <ProfilePageClient />;
 }

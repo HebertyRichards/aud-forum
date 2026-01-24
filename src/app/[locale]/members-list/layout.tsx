@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Membros da Comunidade",
-  description:
-    "Veja a lista de membros da Auditore Family e descubra quem faz parte da nossa comunidade gamer e de modding.",
-};
+import { getMembersMetadata } from "@/services/metadataService";
+
+export const metadata: Metadata = getMembersMetadata();
 
 export default function MembersListRoot({
   children,
