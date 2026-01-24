@@ -55,7 +55,9 @@ export function LanguageSwitcher() {
             key={loc}
             onClick={() => handleLocaleChange(loc)}
             className={`cursor-pointer ${
-              loc === locale ? "bg-slate-100 dark:bg-slate-700" : ""
+              loc === locale
+                ? "bg-slate-100 dark:bg-slate-700"
+                : "bg-slate-200 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
             }`}
           >
             {languageNames[loc]}
