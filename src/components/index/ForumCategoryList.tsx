@@ -10,9 +10,11 @@ import {
 import { forumStructure } from "@/utils/forum-structure";
 import { RolesAuthorizedSchema } from "@/schema/user";
 import { useSearchUserProfile } from "@/hooks/useSearchUserProfile";
+import { useTranslations } from "next-intl";
 
 export function ForumCategoryList() {
   const { data: userProfile } = useSearchUserProfile();
+  const t = useTranslations("forumStructure");
 
   const filteredForumStructure = forumStructure.filter((category) => {
     if (category.id !== "area-oculta") {
@@ -40,20 +42,26 @@ export function ForumCategoryList() {
             className="border-none rounded-md overflow-hidden shadow-md bg-slate-800"
           >
             <AccordionTrigger className="px-4 py-2 text-base font-semibold hover:no-underline hover:brightness-110 w-full bg-blue-500">
-              {category.title}
+              {t(`${category.id}.title`)}
             </AccordionTrigger>
             <AccordionContent className="p-0">
               <div className="divide-y divide-gray-700">
-                {category.subItems.map((item) => (
-                  <Link
-                    href={item.href}
-                    key={item.title}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/50 transition-colors"
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span className="text-sm font-semibold">{item.title}</span>
-                  </Link>
-                ))}
+                {category.subItems.map((item) => {
+                  const subItemKey = item.href.split('/').pop() || "";
+                  
+                  return (
+                    <Link
+                      href={item.href}
+                      key={item.title}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/50 transition-colors"
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-sm font-semibold">
+                        {t(`${category.id}.subItems.${subItemKey}`)}
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

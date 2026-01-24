@@ -13,15 +13,24 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, enUS, es } from "date-fns/locale";
 import Link from "next/link";
 import { RecentPost } from "@/schema/forum";
 import { getRoleColor } from "@/utils/colors";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+
+const dateLocales: Record<string, any> = {
+  pt: ptBR,
+  en: enUS,
+  es: es,
+};
 
 export function RecentPosts() {
   const [visiblePosts, setVisiblePosts] = useState(4);
-  const t = useTranslations("Index");
+  const t = useTranslations();
+  const locale = useLocale();
+  const dateLocale = dateLocales[locale] || ptBR;
+
   const { data, isLoading, error } = useForumData();
 
   if (isLoading) {
@@ -30,7 +39,7 @@ export function RecentPosts() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
-            <span>{t("recentPosts")}</span>
+            <span>{t("Index.recentPosts")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-48">
@@ -46,7 +55,7 @@ export function RecentPosts() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp />
-            <span>{t("recentPosts")}</span>
+            <span>{t("Index.recentPosts")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col text-red-500 justify-center items-center h-48">
@@ -64,7 +73,7 @@ export function RecentPosts() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
-          <span>{t("recentPosts")}</span>
+          <span>{t("Index.recentPosts")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -97,7 +106,7 @@ export function RecentPosts() {
                 </Link>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
                   <span>
-                    {t("by")}:{" "}
+                    {t("Index.by")}:{" "}
                     <Link href={`/profile/${post.author_username}`}>
                       <span
                         className={`truncate font-semibold text-gray-300 hover:underline cursor-pointer ${getRoleColor(
@@ -110,10 +119,10 @@ export function RecentPosts() {
                     </Link>
                   </span>
                   <span>
-                    {t("in")}:{" "}
+                    {t("Index.in")}:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
                       <span className="font-medium text-gray-300 hover:underline cursor-pointer">
-                        {post.category_name}
+                        {t(`categories.${post.category_slug}`)}
                       </span>
                     </Link>
                   </span>
@@ -127,7 +136,7 @@ export function RecentPosts() {
                       {post.created_in
                         ? formatDistanceToNow(new Date(post.created_in), {
                             addSuffix: true,
-                            locale: ptBR,
+                            locale: dateLocale,
                           })
                         : ""}
                     </span>
@@ -144,7 +153,7 @@ export function RecentPosts() {
               variant="outline"
               className="w-full"
             >
-              {t("viewMostPosts")}
+              {t("Index.viewMostPosts")}
             </Button>
           </div>
         )}

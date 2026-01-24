@@ -58,7 +58,7 @@ export function RegisterForm({
 
   return (
     <form onSubmit={handleRegister} className="space-y-4 py-2">
-      <div className="space-y-2">
+      <div className="space-y-2 text-white">
         <Label htmlFor="username">{t("username")}</Label>
         <Input
           id="username"
@@ -66,11 +66,11 @@ export function RegisterForm({
           onChange={(e) => setUsername(e.target.value)}
           placeholder={t("usernamePlaceholder")}
           disabled={loading}
-          className="bg-slate-900 border-slate-700"
+          className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
           required
         />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2 text-white">
         <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
@@ -79,11 +79,11 @@ export function RegisterForm({
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t("emailPlaceholder")}
           disabled={loading}
-          className="bg-slate-900 border-slate-700"
+          className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-400"
           required
         />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2 text-white">
         <Label htmlFor="password">{t("password")}</Label>
         <div className="relative">
           <Input
@@ -92,7 +92,7 @@ export function RegisterForm({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
-            className="bg-slate-900 border-slate-700 pr-10"
+            className="bg-slate-900 border-slate-600 pr-10 text-white placeholder:text-slate-400"
             required
             placeholder="********"
           />

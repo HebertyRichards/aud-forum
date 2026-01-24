@@ -290,5 +290,39 @@
       "description": "¡Vaya! La dirección a la que intentas acceder no existe o ha sido eliminada.",
       "backHome": "Volver a la Página de Inicio"
     }
+  },
+  "forumStructure": {
+    "area-oculta": {
+      "title": "Área Oculta",
+      "subItems": {
+        "rules": "Reglas"
+      }
+    },
+    "auditore": {
+      "title": "Auditore",
+      "subItems": {
+        "updates": "Actualizaciones",
+        "subscribes": "Suscríbete",
+        "about": "Sobre"
+      }
+    },
+    "info-gerais": {
+      "title": "Informaciones Generales",
+      "subItems": {
+        "members": "Miembros",
+        "general-discussions": "Discusiones Generales",
+        "manuals": "Manuales",
+        "downloads": "Descargas"
+      }
+    }
+  },
+  "categories": {
+    "rules": "Regras",
+    "updates": "Actualizaciones",
+    "subscribes": "Suscríbete",
+    "members": "Miembros",
+    "general-discussions": "Discusiones Generales",
+    "manuals": "Manuales",
+    "downloads": "Descargas"
   }
 }

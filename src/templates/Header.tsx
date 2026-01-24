@@ -198,7 +198,7 @@ export default function Header() {
                         <DialogTitle className="text-center text-2xl text-white">{t("createAccount")}</DialogTitle>
                         <DialogDescription className="text-center text-slate-400">{t("fillData")}</DialogDescription>
                       </DialogHeader>
-                      <RegisterForm onSuccess={() => { }} onSwitchToLogin={openLogin} />
+                      <RegisterForm onSuccess={() => setIsRegisterOpen(false)} onSwitchToLogin={openLogin} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsRegisterOpen(false)}>
                         {t("cancel")}
                       </Button>

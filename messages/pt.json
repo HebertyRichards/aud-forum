@@ -291,5 +291,39 @@
       "description": "Oops! O endereço que você está tentando acessar não existe ou foi removido.",
       "backHome": "Voltar para a Página Inicial"
     }
+  },
+  "forumStructure": {
+    "area-oculta": {
+      "title": "Área Oculta",
+      "subItems": {
+        "rules": "Regras"
+      }
+    },
+    "auditore": {
+      "title": "Auditore",
+      "subItems": {
+        "updates": "Atualizações",
+        "subscribes": "Inscreva-se",
+        "about": "Sobre"
+      }
+    },
+    "info-gerais": {
+      "title": "Informações Gerais",
+      "subItems": {
+        "members": "Membros",
+        "general-discussions": "Discussões Gerais",
+        "manuals": "Manuais",
+        "downloads": "Downloads"
+      }
+    }
+  },
+  "categories": {
+    "rules": "Regras",
+    "updates": "Atualizações",
+    "subscribes": "Inscreva-se",
+    "members": "Membros",
+    "general-discussions": "Discussões Gerais",
+    "manuals": "Manuais",
+    "downloads": "Downloads"
   }
 }

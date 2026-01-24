@@ -290,5 +290,39 @@
       "description": "Oops! The address you are trying to access does not exist or has been removed.",
       "backHome": "Back to Home Page"
     }
+  },
+  "forumStructure": {
+    "area-oculta": {
+      "title": "Hidden Area",
+      "subItems": {
+        "rules": "Rules"
+      }
+    },
+    "auditore": {
+      "title": "Auditore",
+      "subItems": {
+        "updates": "Updates",
+        "subscribes": "Subscribe",
+        "about": "About"
+      }
+    },
+    "info-gerais": {
+      "title": "General Information",
+      "subItems": {
+        "members": "Members",
+        "general-discussions": "General Discussions",
+        "manuals": "Manuals",
+        "downloads": "Downloads"
+      }
+    }
+  },
+  "categories": {
+    "rules": "Rules",
+    "updates": "Updates",
+    "subscribes": "Subscribe",
+    "members": "Members",
+    "general-discussions": "General Discussions",
+    "manuals": "Manuals",
+    "downloads": "Downloads"
   }
 }

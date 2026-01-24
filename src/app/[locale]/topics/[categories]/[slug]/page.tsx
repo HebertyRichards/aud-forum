@@ -151,7 +151,7 @@ export default function TopicPage() {
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="mb-4">
             <Button
-              className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
+            className="bg-slate-700 border border-slate-600 hover:bg-slate-600"
               asChild
             >
               <Link href={`/topics/${category}`}>
