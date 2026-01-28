@@ -23,6 +23,7 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 - **Restrições nas categorias (cargos específicos podem postar tópicos em categorias especificas)**
 - **Restrições nos tópicos (cargos específicos podem postas comentários em categorias específicas)**
 - **Conteúdo dinâmico com tópicos recentes, quantidade de posts, quantidade de membros ativos e último membro registrado**
+- **useTranslations para tradução de outras linguagens**
 
 ## 🛠️ Tecnologias Utilizadas
 
