@@ -43,7 +43,8 @@
     "system": "Sistema",
     "topicTitle": "Título do Tópico",
     "topicTitlePlaceholder": "Digite o título do tópico",
-    "submitting": "Enviando..."
+    "submitting": "Enviando...",
+    "select": "Selecionar"
   },
   "footer": {
     "slogan": "Uma das famílias mais respeitadas do SA-MP, construindo legado e tradição há mais de 5 anos.",
@@ -112,6 +113,7 @@
     "location": "Localização",
     "gender": "Gênero",
     "birthdate": "Data de Nascimento",
+    "locationPlaceholder": "Sua localização",
     "memberSince": "Membro desde",
     "lastVisit": "Última visita",
     "totalTopics": "Total de Tópicos",
@@ -239,6 +241,10 @@
     "saveChanges": "Salvar alterações"
   },
   "pages": {
+    "profile": {
+      "loading": "Carregando perfil...",
+      "error": "Erro ao carregar perfil"
+    },
     "about": {
       "title": "Auditore Family",
       "description1": "A Auditore foi fundada em 12 de maio de 2020. Eu, AizeN, sempre tive o desejo de criar um grupo, mas esperava o momento certo para torná-lo realidade. O sobrenome \"Auditore\" foi inspirado no jogo Assassin's Creed; achei muito foda e decidi batizar o grupo com esse nome.",

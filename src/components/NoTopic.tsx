@@ -13,7 +13,7 @@ export function EmptyState({ onNewTopicClick }: EmptyStateProps) {
   const t = useTranslations("topics");
 
   return (
-    <Card className="border dark:border-slate-700 p-4 text-center dark:bg-slate-800 border-slate-200 bg-slate-100">
+    <Card className="border dark:border-slate-700 p-4 text-center dark:bg-slate-800 border-slate-100 bg-slate-200">
       <CardHeader>
         <CardTitle>{t("noTopicsInCategory")}</CardTitle>
       </CardHeader>

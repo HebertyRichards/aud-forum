@@ -92,14 +92,14 @@ export function UserProfileSidebar({
         <CardContent className="flex justify-around text-center">
           <button
             onClick={() => onOpenModal?.("followers")}
-            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-slate-700 hover:bg-slate-200 cursor-pointer"
+            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-slate-700 hover:bg-slate-300 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.followers_count ?? 0}</p>
             <p className="text-sm dark:text-gray-400 text-gray-700">{t("followers")}</p>
           </button>
           <button
             onClick={() => onOpenModal?.("following")}
-            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-slate -700 hover:bg-slate-200 cursor-pointer"
+            className="p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-slate-700 hover:bg-slate-300 cursor-pointer"
           >
             <p className="font-bold text-xl">{stats?.following_count ?? 0}</p>
             <p className="text-sm dark:text-gray-400 text-gray-700">{t("following")}</p>

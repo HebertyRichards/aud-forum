@@ -217,7 +217,7 @@ export default function Header() {
             )}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-300 hover:bg-gray-700 md:hidden"
+              className="p-2 rounded-md transition-colors md:hidden border border-slate-400 dark:border-transparent text-slate-900 dark:text-gray-300 hover:bg-slate-300 dark:hover:bg-gray-700"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -232,12 +232,15 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-slate-700 transition-colors"
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
                 onClick={closeNav}
               >
                 {t(link.label)}
               </Link>
             ))}
+            <div className="px-3 py-2">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       )}

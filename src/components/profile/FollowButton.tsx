@@ -34,7 +34,7 @@ export function FollowButton({
         disabled={isLoading}
         className={`w-full transition-colors ${
           isFollowing
-            ? "dark:bg-gray-600 dark:hover:bg-gray-700 bg-gray-200 hover:bg-gray-100"
+            ? "dark:bg-gray-600 dark:hover:bg-gray-700 bg-slate-200 hover:bg-slate-100"
             : "bg-blue-500 hover:bg-blue-400 dark:hover:bg-blue-600"
         }`}
       >

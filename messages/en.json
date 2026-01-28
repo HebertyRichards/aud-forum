@@ -43,7 +43,8 @@
     "system": "System",
     "topicTitle": "Topic Title",
     "topicTitlePlaceholder": "Enter topic title",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "select": "Select"
   },
   "footer": {
     "slogan": "One of the most respected families on SA-MP, building legacy and tradition for over 5 years.",
@@ -111,6 +112,7 @@
     "location": "Location",
     "gender": "Gender",
     "birthdate": "Birthdate",
+    "locationPlaceholder": "Your location",
     "memberSince": "Member since",
     "lastVisit": "Last visit",
     "totalTopics": "Total Topics",
@@ -238,6 +240,10 @@
     "saveChanges": "Save changes"
   },
   "pages": {
+    "profile": {
+      "loading": "Loading profile...",
+      "error": "Error loading profile"
+    },
     "about": {
       "title": "Auditore Family",
       "description1": "Auditore was founded on May 12, 2020. I, AizeN, always had the desire to create a group, but I was waiting for the right moment to make it a reality. The surname \"Auditore\" was inspired by the game Assassin's Creed; I thought it was really cool and decided to name the group after it.",
