@@ -43,7 +43,7 @@ const t = useTranslations("Index");
               {t("noOnlineUsers")}
             </p>
           ) : (
-            users.map((user, index) => {
+            users.map((user) => {
               const isCurrentUser =
                 currentUser && user.username === currentUser.username;
               const profileUrl = isCurrentUser
@@ -54,7 +54,7 @@ const t = useTranslations("Index");
 
               return (
                 <div
-                  key={`${user.username}-${index}`}
+                  key={user.username}
                   className="flex items-center space-x-2"
                 >
                   <Avatar className="w-6 h-6">

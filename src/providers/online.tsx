@@ -39,26 +39,30 @@ export function OnlineUserProvider({
     channel
       .on("presence", { event: "sync" }, () => {
         const newState = channel.presenceState<PresenceState>();
-        const usersArray: RawOnlineUser[] = [];
+        const uniqueUsers = new Map<string, RawOnlineUser>();
 
         for (const key in newState) {
           const presenceList = newState[key];
           
           if (presenceList && presenceList.length > 0) {
-            const presenceData = presenceList[0];
-
-            usersArray.push({
-              profiles: {
-                username: presenceData.username,
-                role: presenceData.role,
-                avatar_url: presenceData.avatar_url,
-              },
-              last_seen_at: presenceData.online_at,
+            presenceList.forEach(presenceData => {
+              const existingUser = uniqueUsers.get(presenceData.username);
+              
+              if (!existingUser || new Date(presenceData.online_at) > new Date(existingUser.last_seen_at)) {
+                uniqueUsers.set(presenceData.username, {
+                  profiles: {
+                    username: presenceData.username,
+                    role: presenceData.role,
+                    avatar_url: presenceData.avatar_url,
+                  },
+                  last_seen_at: presenceData.online_at,
+                });
+              }
             });
           }
         }
 
-        setOnlineUsers(usersArray);
+        setOnlineUsers(Array.from(uniqueUsers.values()));
         setIsConnected(true);
       })
       .subscribe(async (status) => {

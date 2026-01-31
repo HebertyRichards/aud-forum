@@ -129,7 +129,7 @@ export default function Header() {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700" align="end" forceMount>
+                <DropdownMenuContent className="w-56 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700" align="end" forceMount>
                       <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{getUsername()}</p>
@@ -137,12 +137,12 @@ export default function Header() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-slate-300 dark:bg-slate-700" />
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="focus:bg-slate-200 dark:focus:bg-slate-700 focus:text-slate-900 dark:focus:text-white">
                     <Link href="/profile" className="cursor-pointer flex items-center">
                       <UserCircle className="mr-2 h-4 w-4" /> {t("profile")}
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="focus:bg-slate-200 dark:focus:bg-slate-700 focus:text-slate-900 dark:focus:text-white">
                     <Link href="/user-settings" className="cursor-pointer flex items-center">
                       <Settings className="mr-2 h-4 w-4" /> {t("settings")}
                     </Link>
@@ -150,7 +150,7 @@ export default function Header() {
                   <DropdownMenuSeparator className="bg-slate-300 dark:bg-slate-700" />
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="cursor-pointer text-red-500 data-highlighted:bg-red-900/50 data-highlighted:text-red-400"
+                    className="cursor-pointer text-red-500 focus:bg-red-600 focus:text-white dark:focus:bg-red-700"
                   >
                     <LogOut className="mr-2 h-4 w-4" /> {t("logout")}
                   </DropdownMenuItem>
@@ -172,7 +172,7 @@ export default function Header() {
                     <div className="w-full max-w-md px-6 md:px-0">
                       <DialogHeader className="mb-6">
                         <DialogTitle className="text-center text-2xl text-slate-900 dark:text-white">{t("welcomeBack")}</DialogTitle>
-                        <DialogDescription className="text-center text-slate-600 dark:text-slate-400">{t("accessAccount")}</DialogDescription>
+                        <DialogDescription className="text-center text-slate-700 dark:text-slate-400">{t("accessAccount")}</DialogDescription>
                       </DialogHeader>
                       <LoginForm onSuccess={() => setIsLoginOpen(false)} onSwitchToRegister={openRegister} />
                       <Button variant="ghost" className="mt-4 w-full text-slate-500 md:hidden" onClick={() => setIsLoginOpen(false)}>

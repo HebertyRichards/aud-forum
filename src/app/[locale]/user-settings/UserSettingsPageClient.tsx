@@ -85,7 +85,7 @@ export default function UserSettingsPageClient() {
                   </p>
                 </div>
                 <Button
-                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
+                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-100 border-slate-50 dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer"
                   onClick={() => setActiveForm("profile")}
                 >
                   {t("updateProfile")}
@@ -98,7 +98,7 @@ export default function UserSettingsPageClient() {
                   <p className="text-sm text-muted-foreground">********</p>
                 </div>
                 <Button
-                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-200 border-slate-100 dark:hover:bg-slate-600 hover:bg-slate-100"
+                  className="dark:bg-slate-700 dark:border-slate-600 bg-slate-100 border-slate-50 dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer"
                   onClick={() => setActiveForm("password")}
                 >
                   {t("changePassword")}
