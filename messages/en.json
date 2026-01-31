@@ -338,12 +338,33 @@
     }
   },
   "categories": {
-    "rules": "Rules",
-    "updates": "Updates",
-    "subscribes": "Subscribe",
-    "members": "Members",
-    "general-discussions": "General Discussions",
-    "manuals": "Manuals",
-    "downloads": "Downloads"
+    "rules": {
+      "name": "Rules",
+      "description": "Forum rules and general information."
+    },
+    "updates": {
+      "name": "Updates",
+      "description": "Stay informed about the latest news and updates."
+    },
+    "subscribes": {
+      "name": "Subscribe",
+      "description": "Information on how to become an official member."
+    },
+    "members": {
+      "name": "Members",
+      "description": "List and discussions related to members."
+    },
+    "general-discussions": {
+      "name": "General Discussions",
+      "description": "Conversations on various community-related topics."
+    },
+    "manuals": {
+      "name": "Manuals",
+      "description": "Guides and tutorials to help you on the forum."
+    },
+    "downloads": {
+      "name": "Downloads",
+      "description": "Useful files and resources for download."
+    }
   }
 }

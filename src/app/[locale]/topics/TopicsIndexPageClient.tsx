@@ -17,6 +17,7 @@ type ApiCategory = {
 export default function TopicsIndexPageClient() {
   const { data, isLoading, error } = useCategory();
   const t = useTranslations("pages.topicsIndex");
+  const tCategories = useTranslations("categories");
 
   if (isLoading) {
     return (
@@ -77,7 +78,7 @@ export default function TopicsIndexPageClient() {
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
           <Button
             asChild
             variant="outline"
@@ -101,7 +102,14 @@ export default function TopicsIndexPageClient() {
             const categoryIcon = categoryInfo?.icon || (
               <Folder className="h-5 w-5" />
             );
-            const categoryDescription = category.description ?? '';
+            
+            const categoryName = tCategories.has(`${category.slug}.name`)
+              ? tCategories(`${category.slug}.name`)
+              : category.name;
+            
+            const categoryDescription = tCategories.has(`${category.slug}.description`)
+              ? tCategories(`${category.slug}.description`)
+              : (category.description ?? '');
 
             return (
               <Link
@@ -116,7 +124,7 @@ export default function TopicsIndexPageClient() {
                         {categoryIcon}
                       </div>
                       <h3 className="font-bold text-lg leading-tight dark:text-white group-hover:text-blue-500 transition-colors">
-                        {category.name}
+                        {categoryName}
                       </h3>
                     </div>
 

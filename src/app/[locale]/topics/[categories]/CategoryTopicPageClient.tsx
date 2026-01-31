@@ -142,8 +142,10 @@ export default function CategoryTopicPageClient() {
   const topics = data?.data ?? [];
   const totalTopics = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalTopics / TOPICS_PER_PAGE);
-  const finalCategory = tCategories.has(category)
-    ? tCategories(category)
+
+  const translatedNameKey = `${category}.name`;
+  const finalCategory = tCategories.has(translatedNameKey)
+    ? tCategories(translatedNameKey)
     : category.replace(/-/g, " ");
 
   const pageTitle = finalCategory ?? tTopics("title");

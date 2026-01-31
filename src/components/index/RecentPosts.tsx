@@ -122,7 +122,7 @@ export function RecentPosts() {
                     {t("Index.in")}:{" "}
                     <Link href={`/topics/${post.category_slug}`}>
                       <span className="font-medium text-gray-500 dark:text-gray-300 hover:underline cursor-pointer">
-                        {t(`categories.${post.category_slug}`)}
+                        {t(`categories.${post.category_slug}.name`)}
                       </span>
                     </Link>
                   </span>

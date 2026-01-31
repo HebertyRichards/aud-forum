@@ -156,7 +156,7 @@ export default function TopicPageClient() {
               <Link href={`/topics/${category}`}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 {t("backToCategory")}
-                {tCategories.has(category) ? tCategories(category) : category.replace(/-/g, " ")}{" "}
+                {tCategories.has(`${category}.name`) ? tCategories(`${category}.name`) : category.replace(/-/g, " ")}{" "}
               </Link>
             </Button>
           </div>
