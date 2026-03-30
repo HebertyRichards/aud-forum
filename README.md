@@ -1,4 +1,4 @@
-# 🗨️ Auditore Fórum - Next.js + FastAPI + Supabase
+# 🗨️ Auditore Fórum - Next.js + FastAPI + Supabase + Docker
 
 Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **Tailwind CSS** e **shadcn/ui** no frontend, e **Python** + **FastAPI** no backend e integração no **Supabase**.
 
@@ -7,7 +7,7 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 - **Autenticação de usuários com JWT**
 - **Visualização de perfis acesso ao perfil próprio e de outros membros do fórum**
 - **Atualização de perfil com proteção por middleware**
-- **Exibição de usuários online em tempo real (WebSocket)**
+- **Exibição de usuários online em tempo real (WebSocket via Supabase)**
 - **Seguir e parar de seguir outros usuários**
 - **Alteração de senha em caso "esqueci minha senha"**
 - **Alteração de senha em caso de usuário autenticado**
@@ -38,16 +38,22 @@ Um fórum moderno e interativo desenvolvido com **Next.js**, **TypeScript**, **T
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Supabase](https://supabase.com)
 
+**Infraestrutura & Deploy**
+- [Docker](https://www.docker.com)
+- [Railway](https://railway.com)
+
 ## 📌 Estrutura do Projeto
 
 - **Frontend**: Consome a API do backend, gerencia autenticação e interface do usuário.
 - **Backend**: Responsável pela lógica de negócios e segurança.
 - **Middlewares**: Autenticação e CORS configurados via variáveis de ambiente.
+- **Docker**: Orquestração dos containers de frontend e backend para ambiente de desenvolvimento unificado.
 
 ## 📅 Próximos Passos
 
 - Melhoria de performance
 - Implementar **mensagens privadas** entre usuários
 
+Link Api: (https://github.com/HebertyRichards/auditore-forum-api)
 
 📢 *Este projeto está em desenvolvimento ativo e novas funcionalidades serão adicionadas em breve.*
