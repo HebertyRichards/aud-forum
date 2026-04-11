@@ -1,25 +1,22 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useAuth } from "@/providers/auth";
 import { RawOnlineUser } from "@/schema/forum";
-import { supabase } from "@/lib/supabase";
+import { OnlineService } from "@/services/onlineService";
 
 type OnlineContextType = {
   onlineUsers: RawOnlineUser[];
   isConnected: boolean;
-};
-
-type PresenceState = {
-  username: string;
-  role: string;
-  avatar_url: string | null;
-  online_at: string;
+  onlineCount: number;
+  usernames: string[];
 };
 
 const OnlineContext = createContext<OnlineContextType>({
   onlineUsers: [],
   isConnected: false,
+  onlineCount: 0,
+  usernames: [],
 });
 
 export function OnlineUserProvider({
@@ -29,64 +26,41 @@ export function OnlineUserProvider({
 }) {
   const [onlineUsers, setOnlineUsers] = useState<RawOnlineUser[]>([]);
   const [isConnected, setIsConnected] = useState(false);
-
+  const serviceRef = useRef<OnlineService | null>(null);
+  
   const auth = useAuth();
   const user = auth?.user;
 
+  const onlineCount = onlineUsers.length;
+  const usernames = onlineUsers.map(u => u.profiles.username);
+
   useEffect(() => {
-    const channel = supabase.channel("forum_online_presence");
-
-    channel
-      .on("presence", { event: "sync" }, () => {
-        const newState = channel.presenceState<PresenceState>();
-        const uniqueUsers = new Map<string, RawOnlineUser>();
-
-        for (const key in newState) {
-          const presenceList = newState[key];
-          
-          if (presenceList && presenceList.length > 0) {
-            presenceList.forEach(presenceData => {
-              const existingUser = uniqueUsers.get(presenceData.username);
-              
-              if (!existingUser || new Date(presenceData.online_at) > new Date(existingUser.last_seen_at)) {
-                uniqueUsers.set(presenceData.username, {
-                  profiles: {
-                    username: presenceData.username,
-                    role: presenceData.role,
-                    avatar_url: presenceData.avatar_url,
-                  },
-                  last_seen_at: presenceData.online_at,
-                });
-              }
-            });
-          }
-        }
-
-        setOnlineUsers(Array.from(uniqueUsers.values()));
-        setIsConnected(true);
-      })
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          setIsConnected(true);
-
-          if (user) {
-            await channel.track({
-              username: user.username,
-              role: user.role || "Visitante",
-              avatar_url: user.avatarUrl || null,
-              online_at: new Date().toISOString(),
-            });
-          }
-        }
-      });
-
+    const service = new OnlineService(user || null);
+    serviceRef.current = service;
+ 
+    service.connect(
+      (users) => {
+        setOnlineUsers(users);
+      },
+      (connected) => {
+        setIsConnected(connected); 
+      }
+    );
+ 
     return () => {
-      channel.unsubscribe();
+      serviceRef.current?.disconnect();
+      serviceRef.current = null;
     };
   }, [user]);
 
+  useEffect(() => {
+    if (serviceRef.current) {
+      serviceRef.current.updateUser(user ?? null);
+    }
+  }, [user]);
+
   return (
-    <OnlineContext.Provider value={{ onlineUsers, isConnected }}>
+    <OnlineContext.Provider value={{ onlineUsers, isConnected, onlineCount, usernames }}>
       {children}
     </OnlineContext.Provider>
   );

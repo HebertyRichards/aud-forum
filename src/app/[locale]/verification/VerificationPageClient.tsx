@@ -1,11 +1,20 @@
 "use client";
 
+import { useRouter } from "@/i18n/navigation";
+import { useAuth } from "@/providers/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MailCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function VerificationPageClient() {
+  const { user } = useAuth();
+  const router = useRouter();
   const t = useTranslations("pages.verification");
+
+  if (user) {
+    router.replace("/");
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -17,9 +26,7 @@ export default function VerificationPageClient() {
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center space-y-4">
-          <p className="text-muted-foreground">
-            {t("description")}
-          </p>
+          <p className="text-muted-foreground">{t("description")}</p>
         </CardContent>
       </Card>
     </div>

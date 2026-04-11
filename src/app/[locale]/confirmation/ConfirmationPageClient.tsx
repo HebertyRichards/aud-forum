@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useAuth } from "@/providers/auth";
 import {
   Card,
   CardContent,
@@ -12,19 +13,27 @@ import {
 import { useTranslations } from "next-intl";
 
 export default function ConfirmationPageClient() {
-  const [countdown, setCountdown] = useState(7);
+  const { user } = useAuth();
   const router = useRouter();
   const t = useTranslations("pages.confirmation");
+  const [countdown, setCountdown] = useState(7);
 
   useEffect(() => {
+    if (user) return;
+
     if (countdown === 0) {
       router.push("/");
       return;
     }
 
-    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
-  }, [countdown, router]);
+  }, [countdown, router, user]);
+
+  if (user) {
+    router.replace("/");
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
